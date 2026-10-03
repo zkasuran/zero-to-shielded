@@ -1,0 +1,14 @@
+# private, never pushed
+/submit/
+.env*
+*.cookie
+footage/raw/
+# renders and packages
+*.mp4
+*.mov
+upload-*/
+tools/video-kit/out/
+tools/video-kit/artifacts/
+__pycache__/
+node_modules/
+.DS_Store

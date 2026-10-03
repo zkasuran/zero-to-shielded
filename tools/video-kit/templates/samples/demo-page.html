@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledgerlite demo</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; font: 16px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; color: #1a212e; background: #fff; }
+  header { padding: 40px 48px 8px; }
+  header h1 { margin: 0 0 6px; font-size: 30px; }
+  header p { margin: 0; color: #68748a; }
+  #demo { padding: 24px 48px 48px; max-width: 760px; }
+  #demo h2 { font-size: 20px; margin: 0 0 18px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; margin: 0 0 14px;
+          border: 1px solid #e6ebf2; border-radius: 12px; transition: opacity .18s ease; }
+  .step .num { flex: 0 0 28px; height: 28px; border-radius: 999px; background: #1c5cbe; color: #fff;
+               display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+  .step .body strong { display: block; }
+  .step .body span { color: #68748a; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ledgerlite</h1>
+  <p>Double-entry accounting for people who never wanted to learn double-entry accounting.</p>
+</header>
+
+<section id="demo">
+  <h2>How one payment moves through the book</h2>
+  <div class="step" data-step><div class="num">1</div><div class="body"><strong>Record the invoice</strong><span>One line in, the app posts both sides of the entry.</span></div></div>
+  <div class="step" data-step><div class="num">2</div><div class="body"><strong>Match the payment</strong><span>The bank feed drops in and the app links it to the open invoice.</span></div></div>
+  <div class="step" data-step><div class="num">3</div><div class="body"><strong>Reconcile</strong><span>Cleared balance and book balance agree, to the cent.</span></div></div>
+  <div class="step" data-step><div class="num">4</div><div class="body"><strong>Close the month</strong><span>The trial balance is generated and locked so nothing moves under it.</span></div></div>
+</section>
+
+<script>
+  // The one hook the web scene needs: reveal the first k items by opacity, never by
+  // display, so the layout does not reflow between reveal states.
+  window.setReveal = function (k, scope) {
+    var root = scope ? document.querySelector(scope) : document;
+    var steps = root.querySelectorAll("[data-step]");
+    steps.forEach(function (el, i) { el.style.opacity = i < k ? "1" : "0.12"; });
+  };
+  window.setReveal(0, "#demo");
+</script>
+</body>
+</html>

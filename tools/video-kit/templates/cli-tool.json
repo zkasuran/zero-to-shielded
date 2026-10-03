@@ -1,0 +1,92 @@
+{
+  "note": "GENRE TEMPLATE: cli-tool. Terminal-led, showing a real command doing real work. Copy to projects/<id>.json, then point every term scene at your real binary and args. Read templates/cli-tool.md.",
+  "id": "template-cli-tool",
+  "header": "your-tool  ~  what it does",
+  "palette": "honey",
+  "voice": "en-US-AndrewNeural",
+  "rate": "+3%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: program name",
+      "lines": ["TODO: name the tool and what it saves you."],
+      "footer": "Every line is captured stdout from a real run",
+      "narration": ["TODO: one sentence on the chore this removes."],
+      "pad": 0.8
+    },
+    {
+      "type": "term",
+      "name": "help",
+      "note": "Open on --help or a version line, so a viewer sees the surface. Point cwd/cmd at your tool. This sample runs a real script's usage path.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "wordcount.py"],
+      "prompt": "your-tool --help",
+      "max_lines": 6,
+      "footer": "the surface, one command",
+      "narration": [
+        {"text": "TODO: the tool takes one thing and does one thing. Here is the shape.", "focus": "usage"}
+      ],
+      "pad": 0.9
+    },
+    {
+      "type": "term",
+      "name": "real-run",
+      "note": "The tool doing its real work on real input. This sample counts words in a real file and prints a real histogram.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "wordcount.py", "rate_limit.py"],
+      "prompt": "your-tool run ./input",
+      "max_lines": 14,
+      "footer": "real input, real output",
+      "narration": [
+        {"text": "TODO: point it at a real file and it does the work. This output was captured, not typed.", "focus": "top words"},
+        {"text": "TODO: name the one line that is the answer the user came for.", "focus": "words"}
+      ],
+      "pad": 1.0,
+      "hold": 1.8
+    },
+    {
+      "type": "code",
+      "name": "how",
+      "note": "One short slice of the source, so the tool is not a black box. Point file at a real source file.",
+      "file": "templates/samples/wordcount.py",
+      "title": "src/wordcount.py",
+      "from": "def main",
+      "to": "return 0",
+      "max_lines": 16,
+      "footer": "the core, in one function",
+      "narration": [
+        {"text": "TODO: the whole tool is this small. Here is the part that matters.", "focus": "counts = collections.Counter"}
+      ],
+      "pad": 0.9
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: how to install it.", "TODO: where it lives."],
+      "footer": "TODO: repo or package link",
+      "narration": ["TODO: the close. One line on install, the link, what is still rough."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "Pick a free thumbnail layout. A command line reads well as a motif.",
+    "title": "TODO: the tool in one line, under 100 characters",
+    "tags": ["CLI", "developer tools", "TODO stack", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: what it is"},
+      {"segment": "help", "title": "The surface"},
+      {"segment": "real-run", "title": "A real run"},
+      {"segment": "how", "title": "How it works"}
+    ],
+    "climaxes": ["real-run"],
+    "thumbnail": {
+      "layout": "tape",
+      "badge": "TODO: program",
+      "name": "TODO: tool name",
+      "claim": ["TODO: one line."],
+      "figure": ["TODO", "one number"]
+    },
+    "description": "TODO: what the tool does, how to install it, the repo link, the honesty paragraph, the AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

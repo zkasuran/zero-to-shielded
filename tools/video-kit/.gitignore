@@ -1,0 +1,14 @@
+# Build scratch and outputs, regenerable and large. artifacts/ holds captured stdout,
+# cached fields, synthesised cues and the silent picture; out/ holds finished mp4s.
+artifacts/
+out/
+cache/
+
+# Python bytecode and test caches.
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Golden reference frames are stored as a digest manifest (tests/golden.json), never as
+# PNGs, so if an older PNG directory is ever regenerated it stays out of the tree.
+tests/golden/

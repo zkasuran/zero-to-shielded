@@ -1,0 +1,83 @@
+{
+  "note": "GENRE TEMPLATE: short. A 9:16 vertical cut under 60 seconds for Shorts and TikTok. This is a different edit, not a crop of the long one: one hook, one payoff, one number, out. The cap of 58s makes build.py refuse a cut that runs long. Keep cues short, one per beat. Copy to projects/<id>.json. Read templates/short.md.",
+  "id": "template-short",
+  "palette": "berry",
+  "style": {"aspect": "9:16"},
+  "cap": 58,
+  "voice": "en-US-AndrewNeural",
+  "rate": "+4%",
+  "segments": [
+    {
+      "type": "card",
+      "lines": ["TODO: the hook,", "one line, big."],
+      "footer": "",
+      "narration": ["TODO: the hook in under four seconds. Say the surprising thing first."],
+      "pad": 0.4,
+      "min_seconds": 2.5
+    },
+    {
+      "type": "web",
+      "name": "it-works",
+      "note": "One glimpse of the real thing working. viewport is phone-width. Point url at your live site. This sample drives the bundled page so it preflights.",
+      "file": "templates/samples/demo-page.html",
+      "section": "#demo",
+      "items": "data-step",
+      "viewport": [390, 844],
+      "header": "your-site.example.com",
+      "footer": "live",
+      "narration": [
+        {"text": "TODO: the product, working, in one sentence.", "focus": "Reconcile"}
+      ],
+      "pad": 0.5,
+      "hold": 1.0,
+      "cadence": 0.3
+    },
+    {
+      "type": "chart",
+      "chart": "bar",
+      "name": "the-number",
+      "title": "TODO: the one number",
+      "unit": "x",
+      "rows": [
+        ["before", 1],
+        ["after", 5]
+      ],
+      "source": "TODO: real run",
+      "narration": [
+        {"text": "TODO: the payoff number, said once.", "focus": "after"}
+      ],
+      "pad": 0.5,
+      "hold": 1.0,
+      "cadence": 0.3
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: where to", "get it."],
+      "footer": "TODO: short link",
+      "narration": ["TODO: the call to action, one line."],
+      "pad": 0.4,
+      "min_seconds": 2.0
+    }
+  ],
+  "upload": {
+    "note": "A Short is public on YouTube the same way. Pick a free thumbnail layout. Keep the title punchy.",
+    "title": "TODO: the hook, under 100 characters",
+    "tags": ["shorts", "TODO stack", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "The hook"},
+      {"segment": "it-works", "title": "It works"},
+      {"segment": "the-number", "title": "The number"}
+    ],
+    "climaxes": ["the-number"],
+    "thumbnail": {
+      "layout": "bubble",
+      "badge": "TODO: program",
+      "name": "TODO: name",
+      "claim": ["TODO: the hook."],
+      "figure": ["5x", "one word"]
+    },
+    "description": "TODO: one paragraph, the link, the honesty note, the AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

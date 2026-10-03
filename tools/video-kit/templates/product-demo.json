@@ -1,0 +1,84 @@
+{
+  "note": "GENRE TEMPLATE: product-demo. The standard hackathon cut. Copy to projects/<id>.json, then swap every templates/samples path for your own live URL, source file and commands. Replace the palette with a free one (preflight.py prints the free list). Read templates/product-demo.md for why each scene is here.",
+  "id": "template-product-demo",
+  "header": "your-project  ~  what it is in four words",
+  "palette": "sky",
+  "voice": "en-US-AndrewNeural",
+  "rate": "+3%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: hackathon name",
+      "lines": ["TODO: the one line that names what this does."],
+      "footer": "Every frame in this video is real output from the project",
+      "narration": ["TODO: the cold open, one sentence that names the stake and who has it."],
+      "pad": 0.8
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: the problem, in the user's words.", "TODO: why it is not solved today."],
+      "narration": ["TODO: the problem in two sentences. No marketing voice, just the pain."],
+      "pad": 0.7
+    },
+    {
+      "type": "web",
+      "name": "live-site",
+      "note": "The live deployed URL the submission cites. Point url at your real site and section at a real element id. Show the URL as text so a viewer can type it. This sample drives a bundled page so the template preflights out of the box.",
+      "file": "templates/samples/demo-page.html",
+      "section": "#demo",
+      "items": "data-step",
+      "header": "your-project.example.com",
+      "footer": "the live site the submission links",
+      "narration": [
+        {"text": "TODO: open on the deployed product. Here is the thing, running, at the URL a judge can visit.", "focus": "Record the invoice"},
+        {"text": "TODO: walk one real task end to end. This is the feature working, not a slide about it.", "focus": "Reconcile"}
+      ],
+      "pad": 1.0,
+      "hold": 1.8
+    },
+    {
+      "type": "code",
+      "name": "source",
+      "note": "The code behind the feature. Point file at a real source file in your repo and set from/to to the slice worth reading.",
+      "file": "templates/samples/rate_limit.py",
+      "title": "src/rate_limit.py",
+      "from": "def allow",
+      "to": "return False",
+      "max_lines": 14,
+      "footer": "the part that does the work",
+      "narration": [
+        {"text": "TODO: the source that produces what you just saw. Nothing on screen is a mock.", "focus": "elapsed = now"},
+        {"text": "TODO: name the one line that carries the idea, then move on.", "focus": "self.tokens = min"}
+      ],
+      "pad": 0.9
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: what it proves.", "TODO: what it does not prove yet."],
+      "footer": "TODO: repo link  ·  live URL",
+      "narration": ["TODO: the close. What is verified today, what is still open. Give the link once more."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "Fill this before running upload.py. Pick a free thumbnail layout (preflight.py prints them). title under 100 chars, description under 5000, tags under 500.",
+    "title": "TODO: what it does, under 100 characters, no colon subtitle",
+    "tags": ["TODO tag", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: the hook"},
+      {"segment": "live-site", "title": "The product, running"},
+      {"segment": "source", "title": "The code behind it"}
+    ],
+    "climaxes": ["live-site"],
+    "thumbnail": {
+      "layout": "stack",
+      "badge": "TODO: program  ·  status",
+      "name": "TODO: product name",
+      "claim": ["TODO: one short claim."],
+      "figure": ["TODO", "one number"]
+    },
+    "description": "TODO: what the product does in two or three sentences. What each integration contributes. The live links. One line on what was newly built during the program. The chapter timestamps go here as {chapters}. An honesty paragraph naming what is real and what is staged. The measured numbers a judge can check. The licence. The AI disclosure with the synthesised-narration line.\n\nChapters:\n{chapters}\n"
+  }
+}

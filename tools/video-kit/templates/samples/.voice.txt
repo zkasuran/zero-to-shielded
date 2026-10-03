@@ -1,0 +1,12 @@
+32:VOICE = "en-US-AndrewNeural"
+33:RATE = "+3%"
+39:FISH_VOICE = os.environ.get("FISH_VOICE", "")
+46:GMI_VOICE = os.environ.get("GMI_VOICE", "English_expressive_narrator")
+53:MINIMAX_VOICE = os.environ.get("MINIMAX_VOICE", "English_expressive_narrator")
+233:def synth(text: str, out: Path, voice: str = VOICE, rate: str = RATE) -> Cue:
+264:def track(cues: list[Cue], total: float, out: Path, music: Path | None = None) -> Path:
+292:            f"atrim=duration={total:.3f},asetpts=N/SR/TB,volume=-21dB,"
+---audio keys in projects---
+projects/voice-preflight.json
+---transitions in projects---
+---mode dark usage---

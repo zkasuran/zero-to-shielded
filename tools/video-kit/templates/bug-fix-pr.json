@@ -1,0 +1,94 @@
+{
+  "note": "GENRE TEMPLATE: bug-fix-pr. The failing test, the diff, the passing test. Built around the diff scene. Copy to projects/<id>.json, then point the term scenes at your real test command and the diff scene at your real repo (repo+rev), a before/after pair or a patch. Read templates/bug-fix-pr.md.",
+  "id": "template-bug-fix-pr",
+  "header": "your-repo  ~  the bug and the fix",
+  "palette": "coral",
+  "voice": "en-US-AndrewNeural",
+  "rate": "+3%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: repo name, issue number",
+      "lines": ["TODO: name the bug in one line."],
+      "footer": "Every frame is a real run or a real diff",
+      "narration": ["TODO: one sentence on what was broken and who hit it."],
+      "pad": 0.8
+    },
+    {
+      "type": "term",
+      "name": "failing",
+      "note": "The failing test, run for real. Point cwd at your repo and cmd at your test command. This sample runs the bundled checks.py against the unfixed code so the failure is real.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "checks.py", "fail"],
+      "prompt": "pytest -q  # on the unfixed code",
+      "max_lines": 10,
+      "footer": "the test that catches the bug, failing",
+      "narration": [
+        {"text": "TODO: the test that reproduces it. Red before green, so the fix has something to prove.", "focus": "test_burst_respects_limit"},
+        {"text": "TODO: read the failure out. This is the behaviour that is wrong.", "focus": "1 failed"}
+      ],
+      "pad": 1.0,
+      "hold": 1.8
+    },
+    {
+      "type": "diff",
+      "name": "the-fix",
+      "note": "The change itself. Use repo+rev for a real git range, before+after for a file pair, or patch for a .patch file. This sample diffs the before and after of the bundled rate limiter.",
+      "before": "templates/samples/rate_limit_before.py",
+      "after": "templates/samples/rate_limit.py",
+      "title": "src/rate_limit.py",
+      "mode": "unified",
+      "max_lines": 24,
+      "narration": [
+        {"text": "TODO: the diff. The removed line is the bug, the added line is the fix.", "focus": "elapsed"},
+        {"text": "TODO: say why the old line was wrong in one sentence.", "focus": "self.calls"}
+      ],
+      "pad": 1.0,
+      "hold": 2.0
+    },
+    {
+      "type": "term",
+      "name": "passing",
+      "note": "The same test, now green. This sample runs checks.py against the fixed code.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "checks.py", "pass"],
+      "prompt": "pytest -q  # on the fixed code",
+      "max_lines": 10,
+      "footer": "same test, on the fix, green",
+      "narration": [
+        {"text": "TODO: the same test, on the fix. Green now, and nothing else moved.", "focus": "3 tests passed"}
+      ],
+      "pad": 1.1,
+      "hold": 2.0
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: what the fix changes.", "TODO: link to the PR."],
+      "footer": "TODO: PR link",
+      "narration": ["TODO: the close. The PR, the test that guards it, the disclosure lives in the PR body."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "For a bounty PR the content that matters is the PR body, not a social thread. This upload block is still needed if the fix earns a video, e.g. a hackathon that scores one. Pick a free thumbnail layout.",
+    "title": "TODO: the fix, under 100 characters",
+    "tags": ["bug fix", "TODO stack", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: the bug"},
+      {"segment": "failing", "title": "The failing test"},
+      {"segment": "the-fix", "title": "The diff"},
+      {"segment": "passing", "title": "Green"}
+    ],
+    "climaxes": ["the-fix", "passing"],
+    "thumbnail": {
+      "layout": "merge",
+      "badge": "TODO: repo  ·  PR #N",
+      "name": "TODO: what broke",
+      "claim": ["TODO: one line."],
+      "figure": ["TODO", "tests"]
+    },
+    "description": "TODO: what the bug was, what the fix does, the PR link. The honesty paragraph. The AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

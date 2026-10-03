@@ -1,0 +1,79 @@
+{
+  "note": "GENRE TEMPLATE: mobile-app. A phone app, shown vertical. The brief's target scene is `device` (a phone frame around a screenshot), which is not registered yet, so this template ships on a portrait `web` scene with a phone-width viewport, which preflights today. When device.py lands, swap the web block for a device block: see templates/mobile-app.md for the pending interface and the one-block swap. Copy to projects/<id>.json and point url at your live app.",
+  "id": "template-mobile-app",
+  "palette": "lilac",
+  "style": {"aspect": "9:16"},
+  "voice": "en-US-AndrewNeural",
+  "rate": "+3%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: program name",
+      "lines": ["TODO: name the app", "and what it does."],
+      "footer": "Shot from the live app",
+      "narration": ["TODO: one sentence on what the app is for."],
+      "pad": 0.8
+    },
+    {
+      "type": "web",
+      "name": "screens",
+      "note": "A phone-width capture of the live app. viewport is [width, height] in CSS pixels: 390x844 is an iPhone. Point url at your deployed app and section at a real element id. This sample drives the bundled page so the template preflights.",
+      "file": "templates/samples/demo-page.html",
+      "section": "#demo",
+      "items": "data-step",
+      "viewport": [390, 844],
+      "header": "your-app.example.com",
+      "footer": "the live app, on a phone-width screen",
+      "narration": [
+        {"text": "TODO: open on the first screen. This is the app running on a phone-width viewport.", "focus": "Record the invoice"},
+        {"text": "TODO: tap through one real flow. Each step is the real UI, revealed in turn.", "focus": "Match the payment"},
+        {"text": "TODO: land on the screen that is the whole point.", "focus": "Close the month"}
+      ],
+      "pad": 1.0,
+      "hold": 1.8
+    },
+    {
+      "type": "code",
+      "name": "source",
+      "note": "One slice of the app source, so it is not just screenshots. Point file at a real source file.",
+      "file": "templates/samples/rate_limit.py",
+      "title": "app/lib/rate_limit.py",
+      "from": "def allow",
+      "to": "return False",
+      "max_lines": 12,
+      "footer": "the logic behind the screen",
+      "narration": [
+        {"text": "TODO: the code behind the screen you just saw.", "focus": "self.tokens = min"}
+      ],
+      "pad": 0.9
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: where to get it.", "TODO: what platform."],
+      "footer": "TODO: app link or repo",
+      "narration": ["TODO: the close. Where to install it, what is still in progress."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "A 9:16 cut is vertical, so this reads as a Short too. Pick a free thumbnail layout.",
+    "title": "TODO: the app in one line, under 100 characters",
+    "tags": ["mobile app", "TODO platform", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: what it is"},
+      {"segment": "screens", "title": "The app, on a phone"},
+      {"segment": "source", "title": "The code behind it"}
+    ],
+    "climaxes": ["screens"],
+    "thumbnail": {
+      "layout": "stamp",
+      "badge": "TODO: program",
+      "name": "TODO: app name",
+      "claim": ["TODO: one line."],
+      "figure": ["TODO", "one number"]
+    },
+    "description": "TODO: what the app does, the store or repo link, the honesty paragraph, the AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

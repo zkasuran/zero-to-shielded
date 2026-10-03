@@ -1,0 +1,92 @@
+{
+  "note": "GENRE TEMPLATE: architecture. How the system fits together, built around the diagram scene. Copy to projects/<id>.json, then rewrite the nodes and edges to your real system and point the term/web scenes at your real repo and site. Read templates/architecture.md. Diagram nodes are declared inline, so this scene needs no external file to preflight.",
+  "id": "template-architecture",
+  "header": "your-system  ~  how it fits together",
+  "palette": "slate",
+  "voice": "en-US-AndrewNeural",
+  "rate": "+3%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: program name",
+      "lines": ["TODO: name the system in one line."],
+      "footer": "The diagram is the real topology, the run at the end proves it",
+      "narration": ["TODO: one sentence on what the system does and the one hard part."],
+      "pad": 0.8
+    },
+    {
+      "type": "diagram",
+      "name": "topology",
+      "title": "Request path",
+      "layout": "flow",
+      "note": "kind is one of box, service, store, decision, actor, cloud. layout is flow, stack, grid or hub. Every edge from/to must name a node id. highlight a node or edge with red, green or amber. route can be straight or elbow.",
+      "nodes": [
+        {"id": "user", "label": "Browser", "kind": "actor"},
+        {"id": "edge", "label": "Edge / CDN", "kind": "cloud"},
+        {"id": "api", "label": "API service", "kind": "service", "highlight": "green"},
+        {"id": "auth", "label": "Authorized?", "kind": "decision"},
+        {"id": "db", "label": "Postgres", "kind": "store"},
+        {"id": "queue", "label": "Job queue", "kind": "store"}
+      ],
+      "edges": [
+        {"from": "user", "to": "edge", "label": "https"},
+        {"from": "edge", "to": "api", "label": "route"},
+        {"from": "api", "to": "auth"},
+        {"from": "auth", "to": "db", "label": "yes", "highlight": "green", "route": "elbow"},
+        {"from": "auth", "to": "queue", "label": "async", "route": "elbow", "style": "dashed"}
+      ],
+      "footer": "every box is a real service in the repo",
+      "narration": [
+        {"text": "TODO: start at the entry point. A request comes in here.", "focus": "Browser"},
+        {"text": "TODO: name the one service that does the work, and what it owns.", "focus": "API service"},
+        {"text": "TODO: the decision every request passes through. Nothing reaches the store around it.", "focus": "Authorized"},
+        {"text": "TODO: what is written synchronously, and what is handed to the queue.", "focus": "async"}
+      ],
+      "pad": 1.0,
+      "hold": 2.2
+    },
+    {
+      "type": "term",
+      "name": "proof",
+      "note": "One real run that shows a box in the diagram is not a drawing. Point cwd and cmd at a command in your repo that exercises the path. This sample runs a real script over a real file.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "wordcount.py", "rate_limit.py"],
+      "prompt": "python3 wordcount.py rate_limit.py",
+      "max_lines": 12,
+      "footer": "a real run behind one of the boxes above",
+      "narration": [
+        {"text": "TODO: the diagram is not a drawing. Here is one of those boxes, running.", "focus": "top words"}
+      ],
+      "pad": 1.0,
+      "hold": 1.6
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: the one design decision worth remembering.", "TODO: what it buys."],
+      "footer": "TODO: repo link",
+      "narration": ["TODO: the close. The single choice that shapes the rest, and why."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "Pick a free thumbnail layout. The diagram makes a strong thumbnail motif.",
+    "title": "TODO: the system in one line, under 100 characters",
+    "tags": ["architecture", "system design", "TODO stack", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: what it is"},
+      {"segment": "topology", "title": "The request path"},
+      {"segment": "proof", "title": "One box, running"}
+    ],
+    "climaxes": ["topology"],
+    "thumbnail": {
+      "layout": "roster",
+      "badge": "TODO: program",
+      "name": "TODO: system name",
+      "claim": ["TODO: one line."],
+      "figure": ["TODO", "services"]
+    },
+    "description": "TODO: what the system does, how the pieces fit, the repo link, the honesty paragraph, the AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

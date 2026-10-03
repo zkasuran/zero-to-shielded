@@ -1,0 +1,108 @@
+{
+  "note": "GENRE TEMPLATE: walkthrough. A longer explanatory cut. The brief's target scene is `compose` (code beside its output in one frame), which is not registered yet, so this template alternates a `code` scene with the `term` scene that runs it, which reads the same way in sequence and preflights today. When compose.py lands, fold each code+term pair into one compose block: see templates/walkthrough.md for the pending interface. Copy to projects/<id>.json.",
+  "id": "template-walkthrough",
+  "header": "your-project  ~  a walk through the code",
+  "palette": "cipher",
+  "voice": "en-US-AndrewNeural",
+  "rate": "+2%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: program name",
+      "lines": ["TODO: what we are about to build or read."],
+      "footer": "Code on screen is the real file, output is a real run",
+      "narration": ["TODO: one sentence on what the viewer will understand by the end."],
+      "pad": 0.8
+    },
+    {
+      "type": "code",
+      "name": "part-one-code",
+      "note": "The first piece of source. Point file at a real file. Pair it with the term scene below that runs it. compose would show these two side by side once it lands.",
+      "file": "templates/samples/rate_limit.py",
+      "title": "src/rate_limit.py",
+      "from": "def allow",
+      "to": "return False",
+      "max_lines": 14,
+      "footer": "the code",
+      "narration": [
+        {"text": "TODO: read the first piece. What it takes in, what it returns.", "focus": "elapsed = now"},
+        {"text": "TODO: the one line that carries the logic.", "focus": "self.tokens = min"}
+      ],
+      "pad": 0.9
+    },
+    {
+      "type": "term",
+      "name": "part-one-run",
+      "note": "The output of the code above, run for real. Point cwd/cmd at the command that exercises it.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "checks.py", "pass"],
+      "prompt": "python3 -m pytest test_rate_limit.py -q",
+      "max_lines": 10,
+      "footer": "the same code, run",
+      "narration": [
+        {"text": "TODO: now run it. The behaviour you just read, proven.", "focus": "3 tests passed"}
+      ],
+      "pad": 1.0,
+      "hold": 1.6
+    },
+    {
+      "type": "code",
+      "name": "part-two-code",
+      "note": "The second piece. Reuse the same pattern: code, then its run.",
+      "file": "templates/samples/wordcount.py",
+      "title": "src/wordcount.py",
+      "from": "def main",
+      "to": "return 0",
+      "max_lines": 16,
+      "footer": "the next piece",
+      "narration": [
+        {"text": "TODO: the second piece, and how it uses the first.", "focus": "collections.Counter"}
+      ],
+      "pad": 0.9
+    },
+    {
+      "type": "term",
+      "name": "part-two-run",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "wordcount.py", "rate_limit.py"],
+      "prompt": "python3 wordcount.py rate_limit.py",
+      "max_lines": 12,
+      "footer": "the second piece, run",
+      "narration": [
+        {"text": "TODO: run the whole thing together. This is the result.", "focus": "top words"}
+      ],
+      "pad": 1.0,
+      "hold": 1.6
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: what the viewer now understands.", "TODO: where to read the rest."],
+      "footer": "TODO: repo link",
+      "narration": ["TODO: the close. Recap the one idea, point at the repo for the rest."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "A walkthrough is longer, so watch the cap. Pick a free thumbnail layout.",
+    "title": "TODO: what it teaches, under 100 characters",
+    "tags": ["walkthrough", "tutorial", "TODO stack", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: what we build"},
+      {"segment": "part-one-code", "title": "Part one, the code"},
+      {"segment": "part-one-run", "title": "Part one, running"},
+      {"segment": "part-two-code", "title": "Part two, the code"},
+      {"segment": "part-two-run", "title": "Part two, running"}
+    ],
+    "climaxes": ["part-two-run"],
+    "thumbnail": {
+      "layout": "stack",
+      "badge": "TODO: program",
+      "name": "TODO: project name",
+      "claim": ["TODO: one line."],
+      "figure": ["TODO", "one number"]
+    },
+    "description": "TODO: what the walkthrough covers, the repo link, the honesty paragraph, the AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

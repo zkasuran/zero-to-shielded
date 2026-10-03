@@ -1,0 +1,99 @@
+{
+  "note": "GENRE TEMPLATE: benchmark. A claim with numbers, built around the chart scene. Copy to projects/<id>.json. The chart reads inline rows here so it preflights out of the box, but the honest source is a real results file: swap rows for file+path once you have one, and set source to name it. Read templates/benchmark.md.",
+  "id": "template-benchmark",
+  "header": "your-project  ~  the numbers",
+  "palette": "moss",
+  "voice": "en-US-AndrewNeural",
+  "rate": "+3%",
+  "segments": [
+    {
+      "type": "card",
+      "kicker": "TODO: program name",
+      "lines": ["TODO: state the claim as a claim.", "TODO: against what baseline."],
+      "footer": "Every number on screen comes from a real run",
+      "narration": ["TODO: the claim in one sentence, and why it would matter if true."],
+      "pad": 0.8
+    },
+    {
+      "type": "chart",
+      "chart": "column",
+      "name": "latency",
+      "title": "p50 latency, milliseconds, lower is better",
+      "note": "chart is bar, column, line, progress or sparkline. rows is inline [label, value]. For a real file use file + path + label_key + value_key, or a .csv with x and y. thresholds colours a bar green or red.",
+      "unit": " ms",
+      "rows": [
+        ["baseline", 214],
+        ["ours", 47]
+      ],
+      "thresholds": {"good_below": 60},
+      "source": "TODO: bench/results.json from a real run",
+      "narration": [
+        {"text": "TODO: the headline number. This is the before and the after.", "focus": "ours"},
+        {"text": "TODO: say what the baseline is so the comparison is fair.", "focus": "baseline"}
+      ],
+      "pad": 1.0,
+      "hold": 2.0
+    },
+    {
+      "type": "chart",
+      "chart": "line",
+      "name": "throughput",
+      "title": "Requests per second under load",
+      "note": "A line chart takes series [{name, values}] and x_labels. Point it at a real metrics file with file + path once you have one.",
+      "x_labels": ["1", "2", "4", "8", "16"],
+      "series": [
+        {"name": "baseline", "values": [900, 1600, 2400, 2600, 2500]},
+        {"name": "ours", "values": [1000, 2000, 3900, 7200, 12800]}
+      ],
+      "source": "TODO: bench/throughput.json",
+      "narration": [
+        {"text": "TODO: how it holds up as load climbs. This is the shape that matters.", "focus": "16"}
+      ],
+      "pad": 1.0,
+      "hold": 1.8
+    },
+    {
+      "type": "term",
+      "name": "the-run",
+      "note": "The command that produced the numbers, run for real, so the chart is not a drawing. Point at your real bench command. This sample runs a real script.",
+      "cwd": "templates/samples",
+      "cmd": ["python3", "wordcount.py", "checks.py"],
+      "prompt": "python3 bench/run.py  # the command behind the chart",
+      "max_lines": 12,
+      "footer": "the run the chart was drawn from",
+      "narration": [
+        {"text": "TODO: the run itself, so the numbers trace to a command a judge can rerun.", "focus": "top words"}
+      ],
+      "pad": 1.0
+    },
+    {
+      "type": "card",
+      "lines": ["TODO: what the numbers prove.", "TODO: what they do not, e.g. the load they were taken under."],
+      "footer": "TODO: repo link with the bench harness",
+      "narration": ["TODO: the close. State the measured result plainly and the conditions it holds under."],
+      "pad": 1.0
+    }
+  ],
+  "upload": {
+    "note": "Pick a free thumbnail layout. A single number reads well here.",
+    "title": "TODO: the result, under 100 characters",
+    "tags": ["benchmark", "performance", "TODO stack", "hackathon"],
+    "category": "Science & Technology",
+    "language": "English",
+    "chapters": [
+      {"at": 0, "title": "TODO: the claim"},
+      {"segment": "latency", "title": "Latency, before and after"},
+      {"segment": "throughput", "title": "Throughput under load"},
+      {"segment": "the-run", "title": "The run behind the numbers"}
+    ],
+    "climaxes": ["latency", "throughput"],
+    "thumbnail": {
+      "layout": "wave",
+      "badge": "TODO: program",
+      "name": "TODO: project name",
+      "claim": ["TODO: the claim."],
+      "figure": ["4.5x", "faster"]
+    },
+    "description": "TODO: the claim, the method, the conditions, the repo link with the harness, the honesty paragraph, the AI disclosure.\n\nChapters:\n{chapters}\n"
+  }
+}

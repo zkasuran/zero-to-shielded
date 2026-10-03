@@ -1,0 +1,47 @@
+# Tasks
+
+Work top to bottom. Tick each box in a commit. Priority: P0 must ship, P1 should, P2 if
+time. Never start a P1 while a P0 is open, except the site skeleton (needed for `web`
+scenes).
+
+## P0: foundations (target done Oct 4 02:00 IST)
+
+- [ ] 1. Install the toolchain (20-video.md), run `cd tools/video-kit && python3 -m pytest -q tests` (expect 47 passed) and `./verify.sh` baseline.
+- [ ] 2. Create `docs/FACTS.md`: every "Must verify" item in 40-zcash-facts.md resolved with a primary-source URL and quote. Anything unresolved is marked UNVERIFIED and kept out of scripts.
+- [ ] 3. Add the `shield` palette to `tools/video-kit/theme.py`; render one check frame; confirm accent AA on the panel with `contrast.py`.
+- [ ] 4. Site skeleton: home + E1-E4 pages + checklist, light/dark, menu. Deploy to GitHub Pages (orphan `gh-pages` branch or Pages from `/site` via Actions). The URL must return 200 before any `web` scene is captured. NOTE: Pages on a private repo needs a paid plan; if Pages fails while private, tell the lead, who will flip the repo public at that point.
+- [ ] 5. Read `footage/SHOT-LIST.md` and `footage/clean/` to see what real footage exists. Map each script beat to a clip or to the labelled-diagram fallback.
+
+## P0: episodes 1 to 4 (target Oct 4 08:00 IST)
+
+- [ ] 6. E1 project file + BRIEF.md, preflight, frames looked at, build, upload package, gates recorded.
+- [ ] 7. E2 same.
+- [ ] 8. E3 same.
+- [ ] 9. E4 same (climax episode, spend the extra care here).
+- [ ] 10. Cross-episode check: same voice, palette, opening card, glossary words; each <= 140 s.
+
+## P0: submission (target Oct 4 15:00 IST)
+
+- [ ] 11. README per 30-web.md, with real site screenshots both themes.
+- [ ] 12. `LICENSE-MEDIA.md` (CC BY-ND 4.0 notice), `DATA-SOURCES.md` complete, `SECURITY.md` with Known limits.
+- [ ] 13. `docs/THREAD.md` (this one IS committed, no personal data): post 1 + one reply per episode + final reply; char counts; voice gate clean.
+- [ ] 14. `./verify.sh` ALL GREEN. Commit. Write `docs/HANDOFF.md`: what shipped, measured lengths, what is pending (music, footage gaps), exact upload order.
+
+## P1
+
+- [ ] 15. Address checker tool page + tests from ZIP vectors.
+- [ ] 16. "What the blockchain sees" page.
+- [ ] 17. Transcripts on episode pages from captions.srt; chapter seek buttons.
+- [ ] 18. E5 Stay private.
+- [ ] 19. 4:5 crops for X.
+
+## P2
+
+- [ ] 20. E0 trailer from the E1-E4 climaxes.
+- [ ] 21. Help page: glossary, common mistakes, official support links.
+
+## Human-only (the lead and zkasuran handle these, do not block on them)
+
+- Record phone footage per SHOT-LIST.md and drop into `footage/raw/`, then lead crops/blurs into `footage/clean/`.
+- Fund the wallet with a small amount (spending real money is the human's call).
+- Upload episodes to X / YouTube, flip repo public, post the thread tagging @zksnarks_.

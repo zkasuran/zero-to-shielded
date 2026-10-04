@@ -51,7 +51,7 @@ All six project files use the same voice (Kokoro `af_heart`, rate -20%) and the 
 
 1. **Captions on YouTube.** The SRT files are not attached to the YouTube videos yet; YouTube will make automatic English captions, which may mishear "Zodl". Upload each `EN/upload/captions.srt` (on `media-renders`) under Subtitles, "Upload file", "With timing".
 2. **Duplicate drafts.** Studio holds three leftover private drafts from upload retries (two of E1, one of E2: `yfXqyeDB4XM`, `1mbbKSlYkpI`, `iG5KeTrh0r0`). Delete them in Studio. They are private, so nobody else sees them.
-3. **Repo visibility.** Done: public, and the repo URL returns 200 signed out.
+3. **Repo visibility.** Done: public. The repo URL returns 200 signed out.
 4. **Footage gaps.** Footage slots named in the briefs (for example `F-swap.mp4`, `E-receive.mp4`, `G-arrive.mp4`) are still empty. Those scenes are diagrams labelled "Diagram, not the app". Real phone footage per `footage/SHOT-LIST.md` is a human task.
 5. **The "15 minutes" headline.** New ZEC needs 10 confirmations, about 12.5 minutes (F33), plus about 10 minutes of video. The start page says so; the headline still reads 15 minutes.
 6. **Not done:** E0 polish, the Google Drive copy.

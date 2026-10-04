@@ -128,7 +128,7 @@ test("capture hooks: sections, ids and data-step items exist where the kit expec
 test("media manifest: players only point at files that exist", () => {
   const media = mediaSet();
   for (const f of pages) {
-    for (const m of read(f).matchAll(/(?:src|poster|data-srt)="[^"]*media\/([^"]+)"/g)) assert.ok(media.has(m[1]), `${relative(SITE, f)}: ${m[1]}`);
+    for (const m of read(f).matchAll(/(?:src|poster|data-srt)="[^"]*media\/([^"?]+)(?:\?v=[0-9a-f]{10})?"/g)) assert.ok(media.has(m[1]), `${relative(SITE, f)}: ${m[1]}`);
   }
   if (existsSync(join(SITE, "media"))) {
     for (const name of readdirSync(join(SITE, "media"))) {

@@ -737,6 +737,21 @@ PALETTES.update({
             ((0.6, 0.9), 0.46, (183, 235, 232), 0.55),
         ],
     },
+    # Zero to Shielded series palette: Zcash gold on deep ink. Radial ink field (warm navy
+    # centre, near-black corners), light-ink panels so windows read as paper on the night
+    # field, an accent gold dark enough for AA text on the near-white panel and a pale gold
+    # marker. Shared by every episode of the series (preflight allows it through `series`).
+    # Text drawn straight on this field must use the light card ink set in the project.
+    'shield': {
+        "field": 'radial', "mode": 'light',
+        "top": (30, 38, 66), "bottom": (7, 9, 17),
+        "accent": (138, 92, 0), "mark": (255, 228, 150),
+        "blobs": [
+            ((0.16, 0.20), 0.50, (244, 183, 40), 0.10),
+            ((0.86, 0.18), 0.42, (70, 96, 170), 0.16),
+            ((0.62, 0.92), 0.46, (244, 183, 40), 0.07),
+        ],
+    },
     # Dark mode. Red-orange spotlight. The accent is close to the refusal red, so use it where nothing fails on screen.
     'forge': {
         "field": 'spotlight', "mode": 'dark',

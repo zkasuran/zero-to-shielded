@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parent
 PROJECT_KEYS = {
     "id", "header", "palette", "voice", "voices", "rate", "pitch", "volume", "cap",
     "segments", "upload", "note", "captions", "cadence", "style", "render", "renders",
-    "transitions", "audio", "timing",
+    "transitions", "audio", "timing", "series", "engine",
 }
 
 COMMON_SEGMENT_KEYS = {

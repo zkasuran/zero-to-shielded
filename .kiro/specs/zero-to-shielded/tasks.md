@@ -6,7 +6,8 @@ scenes).
 
 ## P0: foundations (target done Oct 4 02:00 IST)
 
-- [ ] 1. Install the toolchain (20-video.md), run `cd tools/video-kit && python3 -m pytest -q tests` (expect 47 passed) and `./verify.sh` baseline.
+- [x] 1. Install the toolchain (20-video.md), run `cd tools/video-kit && python3 -m pytest -q tests` (expect 47 passed) and `./verify.sh` baseline.
+  Done: Python 3.12.13, pins in `tools/video-kit/requirements.txt`, ffmpeg 7.0.2 static, Chromium 140 (Playwright 1.55.0), DejaVu 2.37. 47 passed. verify.sh ALL GREEN after fixing its outward-file `find` (it matched nothing before).
 - [ ] 2. Create `docs/FACTS.md`: every "Must verify" item in 40-zcash-facts.md resolved with a primary-source URL and quote. Anything unresolved is marked UNVERIFIED and kept out of scripts.
 - [ ] 3. Add the `shield` palette to `tools/video-kit/theme.py`; render one check frame; confirm accent AA on the panel with `contrast.py`.
 - [ ] 4. Site skeleton: home + E1-E4 pages + checklist, light/dark, menu. Deploy to GitHub Pages (orphan `gh-pages` branch or Pages from `/site` via Actions). The URL must return 200 before any `web` scene is captured. NOTE: Pages on a private repo needs a paid plan; if Pages fails while private, tell the lead, who will flip the repo public at that point.

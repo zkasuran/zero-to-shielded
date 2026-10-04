@@ -1,0 +1,297 @@
+{
+  "id": "zts-e2",
+  "series": "zero-to-shielded",
+  "palette": "shield",
+  "engine": "kokoro",
+  "voice": "af_heart",
+  "rate": "-20%",
+  "cap": 140,
+  "captions": false,
+  "style": {
+    "progress": {
+      "style": "none"
+    },
+    "ink": {
+      "card_ink": [
+        245,
+        241,
+        230
+      ],
+      "card_soft": [
+        185,
+        179,
+        163
+      ]
+    }
+  },
+  "render": {
+    "quality": "high",
+    "canvas_scale": 1.0,
+    "fps": 60,
+    "crf": 14,
+    "preset": "slow",
+    "colour": "bt709",
+    "workers": 1
+  },
+  "lexicon": {
+    "Zodl": "[Zodl](/zˈɑdᵊl/)",
+    "ZEC": "[ZEC](/zˈɛk/)",
+    "Zcash": "[Zcash](/zˈikæʃ/)",
+    "zero-to-shielded.vercel.app": "zero to shielded dot vercel dot app",
+    "support.zodl.com": "support dot [Zodl](/zˈɑdᵊl/) dot com",
+    "0.0001 ZEC": "zero point zero zero zero one [ZEC](/zˈɛk/)",
+    "ZIP 317": "zip three seventeen",
+    "u1": "[u1](/jˈu wˈʌn/)",
+    "t1": "[t1](/tˈi wˈʌn/)",
+    "tex1": "[tex1](/tˈɛks wˈʌn/)",
+    "Zashi": "[Zashi](/zˈɑʃi/)",
+    "F-Droid": "[F-Droid](/ˈɛf dɹˌɔɪd/)"
+  },
+  "segments": [
+    {
+      "type": "stage",
+      "name": "e2-open",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-open",
+      "params": {
+        "kind": "opening card",
+        "n": 2,
+        "kicker": "ZERO TO SHIELDED · EPISODE 2",
+        "title": "Swap in the app or buy on an exchange",
+        "line": "Zodl was called Zashi in older guides"
+      },
+      "narration": [
+        "By the end of this video, ZEC will be on its way to your wallet. There are two ways to get it."
+      ],
+      "min_seconds": 4.2,
+      "pad": 0.6
+    },
+    {
+      "type": "stage",
+      "name": "e2-routes",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-routes",
+      "params": {
+        "kind": "illustration",
+        "label": "Illustration",
+        "cast": [
+          "Maya"
+        ],
+        "routes": [
+          "1 · Swap in Zodl",
+          "2 · Buy on an exchange"
+        ]
+      },
+      "narration": [
+        "Route one: swap crypto you already have, right inside Zodl. Route two: buy ZEC on an exchange and send it to your wallet."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e2-swap",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-swap",
+      "params": {
+        "kind": "step diagram",
+        "label": "Diagram, not the app",
+        "footage_slot": "F-swap.mp4",
+        "tap": "Swap",
+        "flow": [
+          "Other crypto",
+          "NEAR Intents",
+          "Shielded ZEC"
+        ],
+        "definition": "Shielded: the amount, the sender and the receiver are encrypted on the blockchain"
+      },
+      "narration": [
+        "Route one. On the home screen, tap Swap. You can swap other crypto into shielded ZEC right inside Zodl.",
+        "Shielded means the amount, the sender and the receiver are encrypted on the blockchain.",
+        "The swap uses NEAR Intents, not a centralized exchange."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e2-exchange",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-exchange",
+      "params": {
+        "kind": "illustration",
+        "label": "Illustration",
+        "cast": [
+          "Maya"
+        ],
+        "pipe": "Transparent",
+        "definition": "Transparent: public on the blockchain, like Bitcoin. Addresses start with t",
+        "chip": "Zodl will offer to shield it"
+      },
+      "narration": [
+        "Route two. Buy ZEC on an exchange, then withdraw it to your wallet.",
+        "Most exchanges only send ZEC to a transparent address. Transparent means public on the blockchain, like Bitcoin.",
+        "That is fine. Zodl will offer to shield it when it arrives."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e2-receive",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-receive",
+      "params": {
+        "kind": "step diagram",
+        "label": "Diagram, not the app",
+        "footage_slot": "E-receive.mp4",
+        "tap": "Receive",
+        "addresses": [
+          {
+            "title": "Zcash Shielded Address",
+            "prefix": "u1",
+            "tail": "blurred",
+            "badge": "Private",
+            "tone": "shielded"
+          },
+          {
+            "title": "Zcash Transparent Address",
+            "prefix": "t1",
+            "tail": "blurred",
+            "badge": "Not Private",
+            "tone": "transparent"
+          }
+        ],
+        "rotate": "New each time, same wallet"
+      },
+      "narration": [
+        "To find your address, tap Receive. Your Zcash Shielded Address starts with u1. Zodl shows a new one each time. They all lead to the same wallet.",
+        "Below it is your Zcash Transparent Address. It starts with t1. If an exchange will not accept your u1 address, give it the t1 address."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e2-arrive",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-arrive",
+      "params": {
+        "kind": "illustration",
+        "label": "Illustration",
+        "footage_slot": "G-arrive.mp4",
+        "blocks": 10,
+        "timer": "about 12.5 minutes",
+        "banner": "Wallet Backup Required",
+        "check": "Done in episode 1"
+      },
+      "narration": [
+        "Now wait a little. New ZEC needs 10 confirmations, about 12 and a half minutes, before you can spend it.",
+        "When it lands, Zodl shows Wallet Backup Required. You already wrote your words down. Follow the steps from episode 1."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e2-site",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-site",
+      "params": {
+        "kind": "site recording",
+        "url_bar": "zero-to-shielded.vercel.app",
+        "path": "/#checklist",
+        "tick": [
+          "Getting ZEC"
+        ]
+      },
+      "narration": [
+        "Tick Getting ZEC on the site."
+      ],
+      "min_seconds": 6.5
+    },
+    {
+      "type": "stage",
+      "name": "e2-end",
+      "html": "episodes/stage/e2.html",
+      "scene": "e2-end",
+      "params": {
+        "kind": "end card",
+        "next": "Next: Episode 3 · Shielding and unshielding",
+        "url": "zero-to-shielded.vercel.app"
+      },
+      "narration": [
+        "Next, episode 3: shielding, so your ZEC goes private. See you at zero-to-shielded.vercel.app."
+      ],
+      "pad": 1.6
+    }
+  ],
+  "upload": {
+    "title": "Getting ZEC: swap in the app or buy on an exchange | Zero to Shielded 2",
+    "description": "Get your first ZEC on its way to your Zodl wallet. ZEC is the coin of Zcash. You can swap crypto you already have right inside Zodl or buy ZEC on an exchange. This is episode 2 of Zero to Shielded.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nIn this episode:\n- Route one: on the home screen, tap Swap. You can swap other crypto into shielded ZEC right inside Zodl. The swap uses NEAR Intents, not a centralized exchange.\n- Shielded means the amount, the sender and the receiver are encrypted on the blockchain.\n- Route two: buy ZEC on an exchange, then withdraw it to your wallet. Most exchanges only send ZEC to a transparent address. Transparent means public on the blockchain, like Bitcoin. Zodl will offer to shield it when it arrives.\n- Tap Receive to find your addresses. Your Zcash Shielded Address starts with u1. Your Zcash Transparent Address starts with t1.\n- New ZEC needs 10 confirmations, about 12 and a half minutes, before you can spend it.\n\nChapters:\n{chapters}\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+    "tags": [
+      "zcash",
+      "zec",
+      "zodl",
+      "shielded",
+      "privacy",
+      "crypto wallet",
+      "tutorial",
+      "beginner",
+      "zecathon"
+    ],
+    "category": "Education",
+    "language": "en",
+    "chapters": [
+      {
+        "at": 0,
+        "title": "Two ways"
+      },
+      {
+        "segment": "e2-swap",
+        "title": "Getting ZEC: swap in Zodl"
+      },
+      {
+        "segment": "e2-exchange",
+        "title": "Getting ZEC: buy on an exchange"
+      },
+      {
+        "segment": "e2-receive",
+        "title": "Receiving: your addresses"
+      },
+      {
+        "segment": "e2-arrive",
+        "title": "Getting ZEC: it arrives"
+      }
+    ],
+    "climaxes": [],
+    "thumbnail": {
+      "layout": "gate",
+      "badge": "EPISODE 2",
+      "name": "Zero to Shielded",
+      "claim": [
+        "Getting ZEC"
+      ],
+      "figure": [
+        "2",
+        "of 5"
+      ]
+    },
+    "platforms": {
+      "youtube": {
+        "title": "Getting ZEC: swap in the app or buy on an exchange | Zero to Shielded 2",
+        "description": "Get your first ZEC on its way to your Zodl wallet. ZEC is the coin of Zcash. You can swap crypto you already have right inside Zodl or buy ZEC on an exchange. This is episode 2 of Zero to Shielded.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nIn this episode:\n- Route one: on the home screen, tap Swap. You can swap other crypto into shielded ZEC right inside Zodl. The swap uses NEAR Intents, not a centralized exchange.\n- Shielded means the amount, the sender and the receiver are encrypted on the blockchain.\n- Route two: buy ZEC on an exchange, then withdraw it to your wallet. Most exchanges only send ZEC to a transparent address. Transparent means public on the blockchain, like Bitcoin. Zodl will offer to shield it when it arrives.\n- Tap Receive to find your addresses. Your Zcash Shielded Address starts with u1. Your Zcash Transparent Address starts with t1.\n- New ZEC needs 10 confirmations, about 12 and a half minutes, before you can spend it.\n\nChapters:\n{chapters}\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+        "tags": [
+          "zcash",
+          "zec",
+          "zodl",
+          "shielded",
+          "privacy",
+          "crypto wallet",
+          "tutorial",
+          "beginner",
+          "zecathon"
+        ]
+      },
+      "x": {
+        "post": "Episode 2: Getting ZEC. Swap crypto you already have into shielded ZEC right inside Zodl. Or buy ZEC on an exchange and withdraw it to your wallet. Zodl will offer to shield it when it arrives. https://zero-to-shielded.vercel.app"
+      }
+    },
+    "then": [
+      "Paste the YouTube id into site/js/episodes.js youtubeId",
+      "Copy the mp4, jpg poster and srt into site/media/"
+    ],
+    "note_ai_line": "TODO: .kiro/steering/10-house-rules.md asks every description for this line: Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice. App footage is real and recorded by the author. There is no app footage yet (footage/clean/INDEX.md), so this description uses the Kokoro and generated music line instead. Switch to the steering line once real footage replaces the diagrams. Update the honesty paragraph at the same time.",
+    "note_climaxes": "SCRIPTS.md marks no climax scene in this episode, so none is shaded."
+  }
+}

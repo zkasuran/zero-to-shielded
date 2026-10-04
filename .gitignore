@@ -12,3 +12,5 @@ tools/video-kit/artifacts/
 __pycache__/
 node_modules/
 .DS_Store
+# generated audio: regenerate with python3 tools/music/compose.py (hashes in music/levels.json)
+music/*.wav

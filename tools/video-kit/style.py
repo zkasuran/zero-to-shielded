@@ -439,7 +439,7 @@ def load_scene_modules() -> None:
 
     for name in (
         "cards", "chart", "code", "compose", "device", "diagram", "diff",
-        "doc", "grid", "panel", "receipt", "scene", "web",
+        "doc", "grid", "panel", "receipt", "scene", "stage", "web",
     ):
         if name in _SCENE_MODULES:
             continue

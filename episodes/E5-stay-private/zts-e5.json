@@ -1,0 +1,272 @@
+{
+  "id": "zts-e5",
+  "series": "zero-to-shielded",
+  "palette": "shield",
+  "engine": "kokoro",
+  "voice": "af_heart",
+  "rate": "-20%",
+  "cap": 140,
+  "captions": false,
+  "style": {
+    "progress": {
+      "style": "none"
+    },
+    "ink": {
+      "card_ink": [
+        245,
+        241,
+        230
+      ],
+      "card_soft": [
+        185,
+        179,
+        163
+      ]
+    }
+  },
+  "render": {
+    "quality": "high",
+    "canvas_scale": 1.0,
+    "fps": 60,
+    "crf": 14,
+    "preset": "slow",
+    "colour": "bt709",
+    "workers": 1
+  },
+  "lexicon": {
+    "Zodl": "[Zodl](/zˈɑdᵊl/)",
+    "ZEC": "[ZEC](/zˈɛk/)",
+    "Zcash": "[Zcash](/zˈikæʃ/)",
+    "zero-to-shielded.vercel.app": "zero to shielded dot vercel dot app",
+    "support.zodl.com": "support dot [Zodl](/zˈɑdᵊl/) dot com",
+    "0.0001 ZEC": "zero point zero zero zero one [ZEC](/zˈɛk/)",
+    "ZIP 317": "zip three seventeen",
+    "u1": "[u1](/jˈu wˈʌn/)",
+    "t1": "[t1](/tˈi wˈʌn/)",
+    "tex1": "[tex1](/tˈɛks wˈʌn/)",
+    "Zashi": "[Zashi](/zˈɑʃi/)",
+    "F-Droid": "[F-Droid](/ˈɛf dɹˌɔɪd/)"
+  },
+  "segments": [
+    {
+      "type": "stage",
+      "name": "e5-open",
+      "html": "episodes/stage/e5.html",
+      "scene": "e5-open",
+      "params": {
+        "kind": "opening card",
+        "n": 5,
+        "kicker": "ZERO TO SHIELDED · EPISODE 5",
+        "title": "Five habits",
+        "line": "Zodl was called Zashi in older guides"
+      },
+      "narration": [
+        "By the end of this video, you will know five habits that keep your payments private."
+      ],
+      "min_seconds": 4.2,
+      "pad": 0.6
+    },
+    {
+      "type": "stage",
+      "name": "e5-habits",
+      "html": "episodes/stage/e5.html",
+      "scene": "e5-habits",
+      "params": {
+        "kind": "illustration",
+        "label": "Illustration",
+        "habits": [
+          {
+            "card": "1 Keep your ZEC shielded",
+            "icon": "gold shield"
+          },
+          {
+            "card": "2 Avoid matching amounts",
+            "icon": "two equal coins split apart"
+          },
+          {
+            "card": "3 Turn on Tor",
+            "chips": [
+              "Advanced Settings",
+              "Tor Protection",
+              "Enable",
+              "Save changes"
+            ],
+            "footage_slot": "M-settings.mp4"
+          },
+          {
+            "card": "4 Guard your phrase",
+            "icon": "paper + lock"
+          },
+          {
+            "card": "5 Check the address",
+            "icon": "magnifier",
+            "chip": "u1…"
+          }
+        ],
+        "show": [
+          0,
+          1
+        ]
+      },
+      "narration": [
+        "One. Keep your ZEC shielded. If ZEC lands at your t1 address, shield it.",
+        "Two. Do not shield an amount and then send the same amount to a transparent address soon after. That pattern is easy to spot."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e5-habits-more",
+      "html": "episodes/stage/e5.html",
+      "scene": "e5-habits",
+      "params": {
+        "kind": "illustration",
+        "label": "Illustration",
+        "habits": [
+          {
+            "card": "1 Keep your ZEC shielded",
+            "icon": "gold shield"
+          },
+          {
+            "card": "2 Avoid matching amounts",
+            "icon": "two equal coins split apart"
+          },
+          {
+            "card": "3 Turn on Tor",
+            "chips": [
+              "Advanced Settings",
+              "Tor Protection",
+              "Enable",
+              "Save changes"
+            ],
+            "footage_slot": "M-settings.mp4"
+          },
+          {
+            "card": "4 Guard your phrase",
+            "icon": "paper + lock"
+          },
+          {
+            "card": "5 Check the address",
+            "icon": "magnifier",
+            "chip": "u1…"
+          }
+        ],
+        "show": [
+          2,
+          3,
+          4
+        ],
+        "already": [
+          0,
+          1
+        ]
+      },
+      "narration": [
+        "Three. Turn on Tor Protection. It sends your connection through the Tor network for extra privacy. Open Advanced Settings, tap Tor Protection, choose Enable, then tap Save changes.",
+        "Four. Guard your recovery phrase. Keep it on paper. Anyone who asks for it is trying to scam you.",
+        "Five. Check the address before you send. A t1 address is public. If you are not sure, use the address checker on the site."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e5-guard",
+      "html": "episodes/stage/e5.html",
+      "scene": "e5-guard",
+      "params": {
+        "kind": "site recording",
+        "url_bar": "zero-to-shielded.vercel.app",
+        "path": "/learn/phrase-guard/",
+        "fallback_path": "/tools/address/"
+      },
+      "narration": [
+        "Test yourself with Phrase Guard on the site. Six quick questions, safe or scam."
+      ],
+      "min_seconds": 7.5
+    },
+    {
+      "type": "stage",
+      "name": "e5-end",
+      "html": "episodes/stage/e5.html",
+      "scene": "e5-end",
+      "params": {
+        "kind": "end card",
+        "support": "support.zodl.com",
+        "url": "zero-to-shielded.vercel.app",
+        "line": "Zodl will never ask for your recovery phrase"
+      },
+      "narration": [
+        "Need help? Go to support.zodl.com. Zodl will never ask for your recovery phrase. That is the whole path, zero to shielded."
+      ],
+      "pad": 1.6
+    }
+  ],
+  "upload": {
+    "title": "Stay private: five habits | Zero to Shielded 5",
+    "description": "Five habits that keep your Zcash payments private. This is episode 5 of Zero to Shielded, the last step on the path.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nShielded means the amount, the sender and the receiver are encrypted on the blockchain. Transparent means public on the blockchain, like Bitcoin.\n\nThe five habits:\n1. Keep your ZEC shielded. If ZEC lands at your t1 address, shield it.\n2. Do not shield an amount and then send the same amount to a transparent address soon after. That pattern is easy to spot.\n3. Turn on Tor Protection. Open Advanced Settings, tap Tor Protection, choose Enable, then tap Save changes.\n4. Guard your recovery phrase, the 24 words that bring your wallet back. Keep it on paper. Anyone who asks for it is trying to scam you.\n5. Check the address before you send. A t1 address is public. If you are not sure, use the address checker on the site.\n\nThen test yourself with Phrase Guard on the site: six quick questions, safe or scam.\n\nChapters:\n{chapters}\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl will never ask for your recovery phrase.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+    "tags": [
+      "zcash",
+      "zec",
+      "zodl",
+      "shielded",
+      "privacy",
+      "crypto wallet",
+      "tutorial",
+      "beginner",
+      "zecathon"
+    ],
+    "category": "Education",
+    "language": "en",
+    "chapters": [
+      {
+        "at": 0,
+        "title": "Five habits: keep it shielded"
+      },
+      {
+        "segment": "e5-habits-more",
+        "title": "Tor, your phrase and the address"
+      },
+      {
+        "segment": "e5-guard",
+        "title": "Test yourself"
+      }
+    ],
+    "climaxes": [],
+    "thumbnail": {
+      "layout": "corner",
+      "badge": "EPISODE 5",
+      "name": "Zero to Shielded",
+      "claim": [
+        "Stay private"
+      ],
+      "figure": [
+        "5",
+        "of 5"
+      ]
+    },
+    "platforms": {
+      "youtube": {
+        "title": "Stay private: five habits | Zero to Shielded 5",
+        "description": "Five habits that keep your Zcash payments private. This is episode 5 of Zero to Shielded, the last step on the path.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nShielded means the amount, the sender and the receiver are encrypted on the blockchain. Transparent means public on the blockchain, like Bitcoin.\n\nThe five habits:\n1. Keep your ZEC shielded. If ZEC lands at your t1 address, shield it.\n2. Do not shield an amount and then send the same amount to a transparent address soon after. That pattern is easy to spot.\n3. Turn on Tor Protection. Open Advanced Settings, tap Tor Protection, choose Enable, then tap Save changes.\n4. Guard your recovery phrase, the 24 words that bring your wallet back. Keep it on paper. Anyone who asks for it is trying to scam you.\n5. Check the address before you send. A t1 address is public. If you are not sure, use the address checker on the site.\n\nThen test yourself with Phrase Guard on the site: six quick questions, safe or scam.\n\nChapters:\n{chapters}\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl will never ask for your recovery phrase.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+        "tags": [
+          "zcash",
+          "zec",
+          "zodl",
+          "shielded",
+          "privacy",
+          "crypto wallet",
+          "tutorial",
+          "beginner",
+          "zecathon"
+        ]
+      },
+      "x": {
+        "post": "Episode 5: Stay private. Five habits: keep your ZEC shielded, avoid matching amounts, turn on Tor Protection, guard your recovery phrase and check the address before you send. Zodl will never ask for your phrase. https://zero-to-shielded.vercel.app"
+      }
+    },
+    "then": [
+      "Paste the YouTube id into site/js/episodes.js youtubeId",
+      "Copy the mp4, jpg poster and srt into site/media/"
+    ],
+    "note_ai_line": "TODO: .kiro/steering/10-house-rules.md asks every description for this line: Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice. App footage is real and recorded by the author. There is no app footage yet (footage/clean/INDEX.md), so this description uses the Kokoro and generated music line instead. Switch to the steering line once real footage replaces the diagrams. Update the honesty paragraph at the same time.",
+    "note_climaxes": "SCRIPTS.md marks no climax scene in this episode, so none is shaded."
+  }
+}

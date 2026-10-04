@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zero to Shielded · stage demo</title>
+<link rel="stylesheet" href="./lib/series.css">
+</head>
+<body>
+<div id="stage"></div>
+<script type="module">
+// The reference page for every episode page (episodes/stage/e1.html and on): import the
+// engine and the series library, register scenes by name, nothing else. The engine boots
+// itself, reads window.STAGE_INPUT (or ?scene=&seconds=&cues= for a manual preview) and
+// exposes window.stageReady and window.stageSeek(t).
+//
+// Preview by hand: /__repo/episodes/stage/demo.html?scene=demo-site&t=3.2  (or &play=1)
+
+import * as Z from "./lib/series.js";
+
+const { ease } = Z;
+
+// ------------------------------------------------------------------ 1. opening card
+Z.scene("demo-open", (S) => {
+  Z.openingCard(S, { n: 1, title: "Install Zodl and back up your phrase" });
+}, {
+  seconds: 6.6,
+  narration: ["By the end of this video, you will have a private Zcash wallet on your phone. Your recovery phrase will be safe on paper."],
+});
+
+// ------------------------------------------------------------------ 2. step diagram
+Z.scene("demo-steps", (S) => {
+  const c0 = S.cue(0), c1 = S.cue(1);
+  const tapAt = S.word(0, "Create") + 0.35;
+  const flow = Z.stepFlow(S, {
+    y: 440,
+    steps: [
+      "Open Zodl",
+      { label: "Create New Wallet", tap: tapAt, note: "On iPhone: Create new wallet" },
+      { group: ["Receive", "Send", "Pay", "Swap"], title: "Home screen" },
+    ],
+    times: [c0 + 0.25, tapAt - 0.25, S.word(1, "four") - 0.1],
+  });
+  const [open, create, home] = flow.chips;
+  const rOpen = S.rectOf(open), rCreate = S.rectOf(create), rHome = S.rectOf(flow.steps[2]);
+  const all = S.rectOf(flow.el);
+
+  // the four home chips pulse as the narration names them
+  ["Receive", "Send", "Pay", "Swap"].forEach((w, i) => Z.pulse(S, home[i], S.word(1, w)));
+
+  // camera: start close on the first two steps, follow the tap, pull back for the home row
+  S.camera([
+    { at: 0, x: (rOpen.cx + rCreate.cx) / 2, y: rCreate.cy + 20, zoom: 1.5 },
+    { at: tapAt - 0.9, dur: 1.0, x: rCreate.cx, y: rCreate.cy + 30, zoom: 1.75, ease: "inOutCubic" },
+    { at: S.word(1, "home") - 0.6, dur: 1.4, x: all.cx, y: all.cy + 40, zoom: 1.04, ease: "inOutQuint" },
+    { at: S.word(1, "Receive") - 0.2, dur: 2.6, x: rHome.cx - 40, y: rHome.cy + 10, zoom: 1.32, ease: "inOutCubic" },
+  ]);
+
+  // cursor: arrives, taps Create New Wallet, then glides along the home buttons
+  const pts = [
+    { at: c0 + 0.6, x: rCreate.cx + 160, y: rCreate.cy + 190 },
+    { at: tapAt, x: rCreate.cx - 30, y: rCreate.cy + 8, click: true },
+  ];
+  ["Receive", "Send", "Pay", "Swap"].forEach((w, i) => {
+    const r = S.rectOf(home[i]);
+    pts.push({ at: S.word(1, w) + 0.05, x: r.cx - 10, y: r.cy + 14, dur: 0.5 });
+  });
+  S.cursor(pts, { hide: S.cueEnd(1) + 0.2 });
+}, {
+  label: "Diagram, not the app",
+  seconds: 10,
+  narration: [
+    "Open Zodl and tap Create New Wallet.",
+    "That is it. Your home screen has four buttons: Receive, Send, Pay and Swap.",
+  ],
+});
+
+// ------------------------------------------------------------------ 3. the real site
+Z.scene("demo-site", async (S) => {
+  const win = Z.browserWindow(S, { url: "zero-to-shielded.vercel.app", src: "/?capture=1&theme=dark", at: 0, y: 476 });
+  await win.ready;
+  const tickAt = S.word(1, "Tick") + 0.25;
+  win.site.scroll([
+    { at: 0, y: 0 },
+    { at: 0.6, dur: 1.5, to: "#checklist", offset: -24, ease: "inOutCubic" },
+  ]);
+  win.site.reveal([{ at: 0, k: 0 }, { at: tickAt, k: 1 }], "#checklist");
+
+  // a real element inside the real page, mapped to scene px at the scroll of t = 3
+  const target = win.rect('#checklist [data-step-id="wallet"] .cl-label', { at: 3 });
+
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1 },
+    { at: tickAt - 1.3, dur: 1.2, x: target.x + 120, y: target.cy + 30, zoom: 1.6, ease: "inOutCubic" },
+    { at: tickAt + 1.5, dur: 1.3, x: 960, y: 520, zoom: 1, ease: "inOutCubic" },
+  ]);
+  S.cursor([
+    { at: 1.7, x: target.x + 520, y: target.cy + 230 },
+    { at: tickAt, x: target.x + 40, y: target.cy + 2, click: true, dur: 1.0 },
+    { at: tickAt + 1.7, x: target.x + 300, y: target.cy + 120, dur: 1.0 },
+  ], { hide: S.seconds - 0.3 });
+  // nothing is drawn over the real site except the cursor: the tick itself is the payoff
+}, {
+  seconds: 8,
+  narration: ["Your wallet is set up.", "Tick Wallet setup on the site to track your progress."],
+});
+
+// ------------------------------------------------------------------ 4. what the chain sees
+Z.scene("demo-sees", (S) => {
+  const c0 = S.cue(0), c1 = S.cue(1);
+  const L = { x: 560, y: 540 }, R = { x: 1360, y: 540 };
+  Z.chip(S, "Transparent", { kind: "blue", size: "sm", x: L.x, y: 196, at: c0 + 0.1 });
+  Z.chip(S, "Shielded", { kind: "gold", size: "sm", x: R.x, y: 196, at: c1 + 0.1 });
+  const lines = ["From Maya", "To Sam", "0.5 ZEC"];
+  const card = Z.postcard(S, { lines, x: L.x, y: L.y, at: c0 + 0.2 });
+  const openAt = S.word(1, "Only") - 0.1;
+  const env = Z.envelope(S, { x: R.x, y: R.y, at: c1 + 0.25, open: openAt, lines });
+  Z.castFigure(S, "watcher", { x: 960, y: 560, size: 180, at: c0 + 0.5 });
+
+  // what the lens sees: the postcard magnified (readable), the envelope as glyphs only
+  const pr = S.rectOf(card), er = S.rectOf(env);
+  const view1 = Z.postcard(S, { lines, tag: "Postcard" });
+  Z.place(view1, pr.x, pr.y, "topleft");
+  const view2 = S.el("div", { style: `position:absolute;width:${er.w}px;height:${er.h}px;border-radius:22px;background:rgba(9,11,20,.94);display:flex;flex-direction:column;justify-content:center;gap:26px;padding:0 60px` });
+  Z.place(view2, er.x, er.y, "topleft");
+  lines.forEach((ln, i) => {
+    const row = S.el("div", { class: "zts-post-line zts-scramble", style: "color:#F4B728;border-color:rgba(244,183,40,.22);font-size:34px" }, view2);
+    S.scramble(row, { text: ln + "  ", mode: "noise", seed: 40 + i, rate: 14 });
+  });
+
+  const lx = pr.x + 200, ly = pr.y + 200;
+  Z.lens(S, {
+    r: 132, zoom: 1.32, layers: [view1, view2], at: c0 + 1.0, until: openAt - 0.2,
+    keys: [
+      { at: 0, x: lx, y: ly + 40 },
+      { at: S.word(0, "who") - 0.2, dur: 0.9, x: pr.x + 190, y: pr.y + 150 },
+      { at: S.word(0, "got") - 0.1, dur: 0.8, x: pr.x + 170, y: pr.y + 225 },
+      { at: S.word(0, "much") - 0.3, dur: 0.8, x: pr.x + 190, y: pr.y + 300 },
+      { at: c1 + 0.6, dur: 1.4, x: er.x + 220, y: er.y + 160, ease: "inOutQuint" },
+      { at: S.word(1, "encrypted") - 0.3, dur: 1.6, x: er.x + 330, y: er.y + 230 },
+    ],
+  });
+  // subtle camera: drift to whichever side is being explained
+  S.camera([
+    { at: 0, x: 960, y: 500, zoom: 1.0 },
+    { at: c0 + 0.6, dur: 2.2, x: 820, y: 500, zoom: 1.08, ease: "inOutCubic" },
+    { at: c1 + 0.2, dur: 2.0, x: 1100, y: 500, zoom: 1.08, ease: "inOutCubic" },
+    { at: openAt - 0.2, dur: 1.4, x: R.x - 60, y: 440, zoom: 1.22, ease: "inOutCubic" },
+  ]);
+}, {
+  label: "Diagram",
+  seconds: 15,
+  narration: [
+    "A transparent payment is like a postcard. Anyone can read who sent it, who got it and how much.",
+    "A shielded payment is like a sealed letter. The amount, the sender and the receiver are encrypted. Only the people in the payment can read it.",
+  ],
+});
+
+// ------------------------------------------------------------------ 5. end card
+Z.scene("demo-end", (S) => {
+  Z.endCard(S, { next: "Next: Episode 2 · Getting ZEC", url: "zero-to-shielded.vercel.app" });
+}, {
+  seconds: 6.5,
+  narration: ["Next, episode 2: getting your first ZEC. Every step is at zero-to-shielded.vercel.app."],
+});
+</script>
+</body>
+</html>

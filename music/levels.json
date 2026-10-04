@@ -1,0 +1,70 @@
+{
+  "bed": {
+    "I": -14.0,
+    "LRA": 1.7,
+    "TP": -2.3,
+    "SP": -2.3,
+    "gain_db": 3.5,
+    "max_gain_reduction_db": 1.377,
+    "ep_notes": 154,
+    "kick_hits": 85,
+    "hat_hits": 160,
+    "shaker_hits": 576,
+    "bell_figures": 6,
+    "stems_lufs": {
+      "pad": -20.0,
+      "ep": -22.5,
+      "bell": -28.0,
+      "bass": -24.5,
+      "kick": -27.0,
+      "hats": -33.0
+    },
+    "dip_db": -4.0,
+    "frames": 6010435,
+    "seconds": 125.2174,
+    "bars": 48,
+    "bpm": 92.0
+  },
+  "sha256": {
+    "preview-ducked.wav": "0077c42c371a8f9e030d9400956d39a2f4e5ed895ef093fcbea706115bf3cec4",
+    "zts-bed.wav": "5bddc98b5b074b019e389ebb6074e765f7eaa75ed04599df2af72729e6b4e9d4",
+    "zts-trailer.wav": "098da031b9f03f686a1ca710ec6ee0365472027d4cf6eba4f388780fa72b1f65"
+  },
+  "trailer": {
+    "I": -14.0,
+    "LRA": 9.6,
+    "TP": -2.3,
+    "SP": -2.3,
+    "gain_db": 2.9,
+    "max_gain_reduction_db": 1.309,
+    "ep_notes": 41,
+    "kick_hits": 16,
+    "hat_hits": 38,
+    "shaker_hits": 144,
+    "bell_figures": 3,
+    "stems_lufs": {
+      "pad": -19.8,
+      "ep": -21.8,
+      "bell": -26.3,
+      "bass": -24.6,
+      "kick": -27.0,
+      "hats": -32.8
+    },
+    "dip_db": -4.0,
+    "frames": 1632000,
+    "seconds": 34.0
+  },
+  "preview": {
+    "bed_excerpt_start_s": 41.739,
+    "speech_lufs": -15.9,
+    "music_ducked_lufs": -41.6,
+    "music_unducked_lufs": -30.7,
+    "speech_to_music_lu": 25.7,
+    "speech_to_music_unducked_lu": 14.8,
+    "max_duck_db": 15.4,
+    "I": -16.0,
+    "LRA": 1.4,
+    "TP": -2.2,
+    "SP": -2.2
+  }
+}

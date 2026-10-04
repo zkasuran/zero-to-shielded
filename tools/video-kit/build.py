@@ -308,7 +308,8 @@ def scene_painter(page_for, count, resolve, beats, seconds, offset, total_video,
         streamed = count if t >= reveal or count == 0 else round(count * (t / max(reveal, 0.01)))
         visible = max(streamed, max(indexes) + 1 if indexes else 0)
         current = page(visible)
-        image = current.image.copy()
+        # a page that moves on its own (a captured stage scene) hands back its own frame
+        image = current.frame(t) if hasattr(current, "frame") else current.image.copy()
         boxes = current.boxes
         indexes = [index for index in indexes if index < len(boxes)]
 
@@ -431,11 +432,14 @@ def layout(project: dict, work: Path) -> tuple[list[dict], list[voice.Cue], floa
                 cue = voice.silence(float(raw["pause"]), work / f"cue-{index:02d}-{position:02d}.mp3")
             else:
                 settings = voice.speaker_settings(project, raw)
+                # the engine reads the line after the project lexicon; the cue keeps the
+                # written line, so captions, the SRT and timing.json never show the respelling
                 cue = voice.synth(
                     text,
                     work / f"cue-{index:02d}-{position:02d}.mp3",
                     settings["voice"], settings["rate"],
                     settings["pitch"], settings["volume"], settings["engine"],
+                    say=voice.spoken(text, project.get("lexicon")),
                 )
             beats.append((at, at + cue.seconds + GAP, focus,
                           caption_pieces(text, at, cue.seconds)))

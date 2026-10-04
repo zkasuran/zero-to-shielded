@@ -1,0 +1,341 @@
+{
+  "id": "zts-e4",
+  "series": "zero-to-shielded",
+  "palette": "shield",
+  "engine": "kokoro",
+  "voice": "af_heart",
+  "rate": "-20%",
+  "cap": 140,
+  "captions": false,
+  "style": {
+    "progress": {
+      "style": "none"
+    },
+    "ink": {
+      "card_ink": [
+        245,
+        241,
+        230
+      ],
+      "card_soft": [
+        185,
+        179,
+        163
+      ]
+    }
+  },
+  "render": {
+    "quality": "high",
+    "canvas_scale": 1.0,
+    "fps": 60,
+    "crf": 14,
+    "preset": "slow",
+    "colour": "bt709",
+    "workers": 1
+  },
+  "lexicon": {
+    "Zodl": "[Zodl](/zˈɑdᵊl/)",
+    "ZEC": "[ZEC](/zˈɛk/)",
+    "Zcash": "[Zcash](/zˈikæʃ/)",
+    "zero-to-shielded.vercel.app": "zero to shielded dot vercel dot app",
+    "support.zodl.com": "support dot [Zodl](/zˈɑdᵊl/) dot com",
+    "0.0001 ZEC": "zero point zero zero zero one [ZEC](/zˈɛk/)",
+    "ZIP 317": "zip three seventeen",
+    "u1": "[u1](/jˈu wˈʌn/)",
+    "t1": "[t1](/tˈi wˈʌn/)",
+    "tex1": "[tex1](/tˈɛks wˈʌn/)",
+    "Zashi": "[Zashi](/zˈɑʃi/)",
+    "F-Droid": "[F-Droid](/ˈɛf dɹˌɔɪd/)"
+  },
+  "segments": [
+    {
+      "type": "stage",
+      "name": "e4-open",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-open",
+      "params": {
+        "kind": "opening card",
+        "n": 4,
+        "kicker": "ZERO TO SHIELDED · EPISODE 4",
+        "title": "Your first shielded transaction",
+        "line": "Zodl was called Zashi in older guides"
+      },
+      "narration": [
+        "By the end of this video, you will have sent and received your first shielded payment, with a private note."
+      ],
+      "min_seconds": 4.2,
+      "pad": 0.6
+    },
+    {
+      "type": "stage",
+      "name": "e4-receive",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-receive",
+      "params": {
+        "kind": "step diagram",
+        "label": "Diagram, not the app",
+        "footage_slot": "E-receive.mp4",
+        "cast": [
+          "Sam",
+          "Maya"
+        ],
+        "tap": "Receive",
+        "address": {
+          "title": "Zcash Shielded Address",
+          "prefix": "u1",
+          "tail": "blurred"
+        },
+        "chips": [
+          "Copy",
+          "QR Code"
+        ]
+      },
+      "narration": [
+        "Every payment has two sides. Let's start with receiving.",
+        "To get paid, tap Receive. Copy your Zcash Shielded Address. It starts with u1.",
+        "Send it to the person paying you. They can also scan it if you tap QR Code."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e4-send",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-send",
+      "params": {
+        "kind": "step diagram",
+        "label": "Diagram, not the app",
+        "footage_slot": "I-send.mp4",
+        "cast": [
+          "Maya"
+        ],
+        "fields": [
+          {
+            "label": "Send to",
+            "prefix": "u1",
+            "tail": "blurred"
+          },
+          {
+            "label": "Amount",
+            "value": "0.05 ZEC"
+          },
+          {
+            "label": "Message",
+            "value": "Thanks for lunch!"
+          }
+        ],
+        "tap": "Review",
+        "definition": "Note: a private message that travels with a shielded payment"
+      },
+      "narration": [
+        "Now sending. Tap Send. Paste the address into Send to, then type the amount.",
+        "In Message, you can add a note. A note is a private message that travels with the payment. Only you and the person you pay can read it.",
+        "Then tap Review."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e4-confirm",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-confirm",
+      "params": {
+        "kind": "step diagram",
+        "label": "Diagram, not the app",
+        "footage_slot": "I-send.mp4",
+        "title": "Confirmation",
+        "rows": [
+          "Total Amount",
+          "Send to",
+          "Amount",
+          "Fee",
+          "Message"
+        ],
+        "card": "ZIP 317 · smallest fee 0.0001 ZEC",
+        "tap": "Send",
+        "done": "Sent!"
+      },
+      "narration": [
+        "Before anything is sent, Zodl shows the Confirmation screen. Check the address and the fee.",
+        "Zcash fees follow a public rule called ZIP 317. The smallest fee is 0.0001 ZEC.",
+        "Tap Send. When Zodl shows Sent!, your first shielded payment is on its way."
+      ],
+      "pad": 1.2
+    },
+    {
+      "type": "stage",
+      "name": "e4-arrive",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-arrive",
+      "params": {
+        "kind": "illustration",
+        "label": "Illustration",
+        "footage_slot": "J-received.mp4",
+        "cast": [
+          "Sam",
+          "Maya"
+        ],
+        "note": "Thanks for lunch!"
+      },
+      "narration": [
+        "On your friend's phone, the payment arrives with your note. Only the two of you can read it.",
+        "Ask them to send a little back to your u1 address. Now you have received a shielded payment too."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e4-chain",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-chain",
+      "params": {
+        "kind": "diagram",
+        "label": "Diagram",
+        "cast": [
+          "the Watcher"
+        ],
+        "title": "What the blockchain sees",
+        "rows": [
+          "Sender",
+          "Receiver",
+          "Amount",
+          "Note"
+        ]
+      },
+      "narration": [
+        "And what does the blockchain show? Only scrambled data. Not who paid. Not who got paid. Not how much. Not the note."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e4-done",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-done",
+      "params": {
+        "kind": "celebration",
+        "label": "Illustration",
+        "cast": [
+          "Maya",
+          "Sam"
+        ],
+        "headline": "You're shielded."
+      },
+      "narration": [
+        "You did it. You're shielded."
+      ],
+      "min_seconds": 5.5
+    },
+    {
+      "type": "stage",
+      "name": "e4-site",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-site",
+      "params": {
+        "kind": "site recording",
+        "url_bar": "zero-to-shielded.vercel.app",
+        "path": "/#checklist",
+        "tick": [
+          "Sending",
+          "Receiving"
+        ],
+        "state": "You're shielded"
+      },
+      "narration": [
+        "Tick Sending and Receiving on the site to finish your checklist."
+      ],
+      "min_seconds": 7.0
+    },
+    {
+      "type": "stage",
+      "name": "e4-end",
+      "html": "episodes/stage/e4.html",
+      "scene": "e4-end",
+      "params": {
+        "kind": "end card",
+        "next": "Next: Episode 5 · Stay private",
+        "url": "zero-to-shielded.vercel.app"
+      },
+      "narration": [
+        "Episode 5 shows five habits that keep it private. Find it at zero-to-shielded.vercel.app."
+      ],
+      "pad": 1.6
+    }
+  ],
+  "upload": {
+    "title": "Sending and receiving: your first shielded transaction | Zero to Shielded 4",
+    "description": "Send and receive your first shielded payment in Zodl, with a private note. Shielded means the amount, the sender and the receiver are encrypted on the blockchain. This is episode 4 of Zero to Shielded.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nIn this episode:\n- Receiving: tap Receive and copy your Zcash Shielded Address. It starts with u1. The person paying you can also scan it if you tap QR Code.\n- Sending: tap Send. Paste the address into Send to, then type the amount.\n- In Message you can add a note. A note is a private message that travels with the payment. Only you and the person you pay can read it.\n- Tap Review. Zodl shows the Confirmation screen with the fee before anything is sent. Zcash fees follow a public rule called ZIP 317. The smallest fee is 0.0001 ZEC.\n- Tap Send. When Zodl shows Sent!, your first shielded payment is on its way.\n- What the blockchain shows: only scrambled data. Not who paid. Not who got paid. Not how much. Not the note.\n\nChapters:\n{chapters}\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+    "tags": [
+      "zcash",
+      "zec",
+      "zodl",
+      "shielded",
+      "privacy",
+      "crypto wallet",
+      "tutorial",
+      "beginner",
+      "zecathon"
+    ],
+    "category": "Education",
+    "language": "en",
+    "chapters": [
+      {
+        "at": 0,
+        "title": "Receiving: share your address"
+      },
+      {
+        "segment": "e4-send",
+        "title": "Sending: your first shielded transaction"
+      },
+      {
+        "segment": "e4-confirm",
+        "title": "Confirm and send"
+      },
+      {
+        "segment": "e4-arrive",
+        "title": "Receiving: the note arrives"
+      },
+      {
+        "segment": "e4-done",
+        "title": "You're shielded"
+      }
+    ],
+    "climaxes": [
+      "e4-confirm"
+    ],
+    "thumbnail": {
+      "layout": "rule",
+      "badge": "EPISODE 4",
+      "name": "Zero to Shielded",
+      "claim": [
+        "Your first",
+        "shielded payment"
+      ],
+      "figure": [
+        "4",
+        "of 5"
+      ]
+    },
+    "platforms": {
+      "youtube": {
+        "title": "Sending and receiving: your first shielded transaction | Zero to Shielded 4",
+        "description": "Send and receive your first shielded payment in Zodl, with a private note. Shielded means the amount, the sender and the receiver are encrypted on the blockchain. This is episode 4 of Zero to Shielded.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nIn this episode:\n- Receiving: tap Receive and copy your Zcash Shielded Address. It starts with u1. The person paying you can also scan it if you tap QR Code.\n- Sending: tap Send. Paste the address into Send to, then type the amount.\n- In Message you can add a note. A note is a private message that travels with the payment. Only you and the person you pay can read it.\n- Tap Review. Zodl shows the Confirmation screen with the fee before anything is sent. Zcash fees follow a public rule called ZIP 317. The smallest fee is 0.0001 ZEC.\n- Tap Send. When Zodl shows Sent!, your first shielded payment is on its way.\n- What the blockchain shows: only scrambled data. Not who paid. Not who got paid. Not how much. Not the note.\n\nChapters:\n{chapters}\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+        "tags": [
+          "zcash",
+          "zec",
+          "zodl",
+          "shielded",
+          "privacy",
+          "crypto wallet",
+          "tutorial",
+          "beginner",
+          "zecathon"
+        ]
+      },
+      "x": {
+        "post": "Episode 4: Sending and receiving. Copy your u1 address to get paid. To pay, tap Send, add a private note in Message, check the fee on the Confirmation screen and tap Send. The blockchain shows only scrambled data. https://zero-to-shielded.vercel.app"
+      }
+    },
+    "then": [
+      "Paste the YouTube id into site/js/episodes.js youtubeId",
+      "Copy the mp4, jpg poster and srt into site/media/"
+    ],
+    "note_ai_line": "TODO: .kiro/steering/10-house-rules.md asks every description for this line: Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice. App footage is real and recorded by the author. There is no app footage yet (footage/clean/INDEX.md), so this description uses the Kokoro and generated music line instead. Switch to the steering line once real footage replaces the diagrams. Update the honesty paragraph at the same time."
+  }
+}

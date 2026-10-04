@@ -14,13 +14,22 @@ The Fish token is read from FISH_TOKEN or ~/.cache/calle-video/fish.token, never
 from a project file, and never printed. Cue files carry a digest of the engine, the
 voice and the words, so an edited line is always re-read and an unchanged line is
 never paid for twice.
+
+`kokoro` runs Kokoro-82M locally on the CPU (no account, no network once the model is
+cached). A project picks it with `"engine": "kokoro"` and a Kokoro voice such as
+`"af_heart"`; it writes 24 kHz mono WAV cues and real per-word timings. A project
+`lexicon` ({"written": "spoken"}) rewrites only the words sent to the engine, so a name
+can be read with inline phonemes (`"Zodl": "[Zodl](/zˈɑdᵊl/)"`) while captions, the SRT
+and timing.json keep the written line.
 """
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import json
 import os
+import re
 import subprocess
 import time
 import urllib.error
@@ -53,6 +62,23 @@ MINIMAX_ENV_FILE = Path(os.environ.get("MINIMAX_ENV_FILE", ".minimax.env"))
 MINIMAX_TTS_MODEL = os.environ.get("MINIMAX_TTS_MODEL", "speech-02-hd")
 MINIMAX_VOICE = os.environ.get("MINIMAX_VOICE", "English_expressive_narrator")
 
+# Kokoro-82M, local. One pipeline per language per process, loaded on first use, because
+# loading the model costs seconds and a build of cached cues should never pay for it.
+KOKORO_REPO = os.environ.get("KOKORO_REPO", "hexgrad/Kokoro-82M")
+KOKORO_MODEL = KOKORO_REPO.rsplit("/", 1)[-1]
+KOKORO_VOICE = os.environ.get("KOKORO_VOICE", "af_heart")
+KOKORO_SAMPLE_RATE = 24000
+KOKORO_GAP = 0.12
+"""Seconds of silence between the chunks Kokoro splits a long line into."""
+KOKORO_FLOOR_DB = -50.0
+KOKORO_KEEP = 0.05
+"""Silence under the floor is trimmed from both ends of the read, keeping this much."""
+_KOKORO_PIPELINES: dict[str, object] = {}
+
+# Inline phoneme markup, `[word](/phonemes/)`. Only Kokoro reads it; every other engine is
+# handed the bare word so a lexicon written for Kokoro cannot be read out as punctuation.
+_PHONEME_LINK = re.compile(r"\[([^\]]+)\]\(/[^)]*/\)")
+
 
 @dataclass
 class Cue:
@@ -82,7 +108,8 @@ def speaker_settings(project: dict, entry) -> dict:
         "rate": project.get("rate", RATE),
         "pitch": project.get("pitch", "+0Hz"),
         "volume": project.get("volume", "+0%"),
-        "engine": ENGINE,
+        # the project names its engine; VOICE_ENGINE (or edge) is only the default
+        "engine": project.get("engine") or ENGINE,
     }
     if isinstance(entry, dict):
         named = entry.get("speaker")
@@ -95,6 +122,163 @@ def speaker_settings(project: dict, entry) -> dict:
             if key in entry:
                 settings[key] = entry[key]
     return settings
+
+
+@functools.lru_cache(maxsize=32)
+def _lexicon_pattern(keys: tuple[str, ...]) -> re.Pattern:
+    # Longest first, so a phrase entry wins over a single word inside it. The lookarounds
+    # make it whole-word without \b, which would refuse a key that starts or ends with
+    # punctuation. One pass, so a replacement is never itself rewritten.
+    ordered = sorted(keys, key=len, reverse=True)
+    return re.compile(r"(?<!\w)(?:" + "|".join(re.escape(key) for key in ordered) + r")(?!\w)")
+
+
+def spoken(text: str, lexicon: dict | None) -> str:
+    """The words the engine reads: the written line with the project lexicon applied.
+
+    Whole word or phrase, case sensitive, longest entry first. Only the engine sees the
+    result. Captions, the SRT and timing.json keep the written line, so a pronunciation
+    fix can never leak phoneme markup on screen.
+    """
+    if not lexicon:
+        return text
+    keys = tuple(key for key in lexicon if key)
+    if not keys:
+        return text
+    return _lexicon_pattern(keys).sub(lambda match: str(lexicon[match.group(0)]), text)
+
+
+def _percent(value, what: str) -> float:
+    """An edge-style percentage ("-5%", "+3%") as a number, or a bare number as given."""
+    if isinstance(value, (int, float)):
+        return float(value)
+    text = str(value or "+0%").strip()
+    match = re.fullmatch(r"([+-]?\d+(?:\.\d+)?)%", text)
+    if not match:
+        raise RuntimeError(f"kokoro: cannot read {what} {value!r}, want a percentage like -5%")
+    return float(match.group(1))
+
+
+def kokoro_speed(rate) -> float:
+    """The kit's rate string as a Kokoro speed: "-5%" is 0.95, "+3%" is 1.03.
+
+    A bare number is taken as the speed itself, for a project written for Kokoro.
+    """
+    if isinstance(rate, (int, float)):
+        return float(rate)
+    return max(0.5, min(2.0, 1.0 + _percent(rate, "rate") / 100.0))
+
+
+def _kokoro_pipeline(lang: str):
+    pipeline = _KOKORO_PIPELINES.get(lang)
+    if pipeline is None:
+        import warnings
+
+        with warnings.catch_warnings():
+            # torch warns about dropout and weight_norm on every load; neither is ours
+            warnings.simplefilter("ignore")
+            try:
+                from huggingface_hub.utils import logging as hf_logging
+
+                hf_logging.set_verbosity_error()
+            except Exception:  # noqa: BLE001 - a quieter log is a nicety, not a requirement
+                pass
+            from kokoro import KPipeline
+
+            pipeline = KPipeline(lang_code=lang, repo_id=KOKORO_REPO)
+        _KOKORO_PIPELINES[lang] = pipeline
+    return pipeline
+
+
+def _voiced_span(samples, keep: int) -> tuple[int, int]:
+    """First and last sample above the floor, widened by `keep` samples each side."""
+    import numpy as np
+
+    loud = np.flatnonzero(np.abs(samples) > 10 ** (KOKORO_FLOOR_DB / 20))
+    if not loud.size:
+        return 0, 0
+    return max(0, int(loud[0]) - keep), min(samples.size, int(loud[-1]) + 1 + keep)
+
+
+def _kokoro_words(tokens) -> list[tuple[float, float, str]]:
+    """Tokens joined back into written words, with chunk-relative times.
+
+    Kokoro splits punctuation into its own tokens and marks the space after each one, so
+    tokens are glued until a token carries whitespace: "Zodl" + "," reads "Zodl,". A word
+    with no timed token is skipped, and so is a group that is only punctuation.
+    """
+    words: list[tuple[float, float, str]] = []
+    label, start, end = "", None, None
+    for token in tokens:
+        label += token.text or ""
+        if token.start_ts is not None and token.end_ts is not None:
+            start = float(token.start_ts) if start is None else start
+            end = float(token.end_ts)
+        if token.whitespace:
+            if start is not None and any(ch.isalnum() for ch in label):
+                words.append((start, max(start, end), label.strip()))
+            label, start, end = "", None, None
+    if start is not None and any(ch.isalnum() for ch in label):
+        words.append((start, max(start, end), label.strip()))
+    return words
+
+
+def _synth_kokoro(text: str, out: Path, voice: str, rate: str,
+                  pitch: str = "+0Hz", volume: str = "+0%") -> list:
+    """Synthesise with Kokoro-82M on this machine and return per-word timings.
+
+    Kokoro yields one result per chunk of a long line. Each chunk is trimmed to its voiced
+    span (keeping 0.05 s) and the chunks are joined with a 0.12 s breath, so the read has a
+    natural pause where the model split it and no dead air at either end. Word times are
+    moved by the same offsets, so they stay on the audio that is actually written. Kokoro
+    has no pitch control: pitch is still part of the cue digest but does not change the read.
+    """
+    import numpy as np
+    import soundfile
+
+    if not voice or voice.endswith("Neural"):
+        # an edge voice left as the project default is not a Kokoro voice
+        voice = KOKORO_VOICE
+    lang = voice[0] if len(voice) > 2 and voice[2] == "_" else "a"
+    pipeline = _kokoro_pipeline(lang)
+    gain = max(0.0, 1.0 + _percent(volume, "volume") / 100.0)
+    rate_hz = KOKORO_SAMPLE_RATE
+    keep = round(KOKORO_KEEP * rate_hz)
+    gap = np.zeros(round(KOKORO_GAP * rate_hz), dtype=np.float32)
+
+    pieces: list = []
+    words: list[tuple[float, float, str]] = []
+    written = 0
+    for result in pipeline(text, voice=voice, speed=kokoro_speed(rate)):
+        audio = getattr(result, "audio", None)
+        if audio is None:
+            continue
+        samples = np.asarray(audio.detach().cpu().numpy() if hasattr(audio, "detach") else audio,
+                             dtype=np.float32).reshape(-1)
+        low, high = _voiced_span(samples, keep)
+        if high <= low:
+            continue
+        if pieces:
+            pieces.append(gap)
+            written += gap.size
+        # chunk time zero lands here in the written file, after the trim and the gaps
+        origin = (written - low) / rate_hz
+        chunk_end = (written + high - low) / rate_hz
+        for start, end, word in _kokoro_words(getattr(result, "tokens", None) or []):
+            start = min(max(origin + start, written / rate_hz), chunk_end)
+            end = min(max(origin + end, start), chunk_end)
+            words.append((round(start, 3), round(end, 3), word))
+        pieces.append(samples[low:high])
+        written += high - low
+    if not pieces:
+        raise RuntimeError(f"kokoro returned no audio for {text[:48]!r}")
+    signal = np.concatenate(pieces) * gain
+    np.clip(signal, -1.0, 1.0, out=signal)
+    # written aside then moved, so an interrupted read never leaves a cue the cache trusts
+    partial = out.with_name(out.name + ".partial.wav")
+    soundfile.write(str(partial), signal, rate_hz, subtype="PCM_16")
+    os.replace(partial, out)
+    return words
 
 
 def probe_seconds(path: Path) -> float:
@@ -328,7 +512,7 @@ def _synth_edge_api(text: str, out: Path, voice: str, rate: str, pitch: str, vol
 
 def synth(text: str, out: Path, voice: str = VOICE, rate: str = RATE,
           pitch: str = "+0Hz", volume: str = "+0%", engine: str | None = None,
-          retries: int = 3) -> Cue:
+          retries: int = 3, say: str | None = None) -> Cue:
     """Synthesise once per distinct line.
 
     The file name carries a digest of the engine, the voice, the rate, the pitch, the
@@ -337,22 +521,34 @@ def synth(text: str, out: Path, voice: str = VOICE, rate: str = RATE,
     happily hand back yesterday's audio for today's script, and leaving pitch or volume
     out of the digest would do the same for a re-voiced line.
 
+    `text` is the written line and is what the Cue carries into captions, the SRT and
+    timing.json. `say` is what the engine reads (the line after the project lexicon), and
+    it is what the digest covers, because it is what the audio is made of. With no `say`
+    the two are the same line and the digest is unchanged from before `say` existed.
+
     A network engine is retried with backoff, because a single 5xx part way through a
     build would otherwise throw away every cue already paid for.
     """
     active = engine or ENGINE
+    words_out = text if say is None else say
+    if active != "kokoro":
+        words_out = _PHONEME_LINK.sub(r"\1", words_out)
     if active == "minimax":
         engine_key = f"minimax:{MINIMAX_TTS_MODEL}:{MINIMAX_VOICE}"
     elif active == "gmi":
         engine_key = f"gmi:{GMI_MODEL}:{GMI_VOICE}"
     elif active == "fish":
         engine_key = f"fish:{FISH_MODEL}"
+    elif active == "kokoro":
+        engine_key = f"kokoro:{KOKORO_MODEL}"
     else:
         engine_key = active
     stamp = hashlib.sha256(
-        f"{engine_key}|{voice}|{rate}|{pitch}|{volume}|{text}".encode("utf-8")
+        f"{engine_key}|{voice}|{rate}|{pitch}|{volume}|{words_out}".encode("utf-8")
     ).hexdigest()[:10]
-    target = out.with_name(f"{out.stem}-{active}-{stamp}{out.suffix}")
+    # Kokoro hands back raw samples, so its cues are written as WAV rather than re-encoded
+    suffix = ".wav" if active == "kokoro" else out.suffix
+    target = out.with_name(f"{out.stem}-{active}-{stamp}{suffix}")
     target.parent.mkdir(parents=True, exist_ok=True)
     marks_file = target.with_suffix(".words.json")
 
@@ -362,13 +558,15 @@ def synth(text: str, out: Path, voice: str = VOICE, rate: str = RATE,
         for attempt in range(retries):
             try:
                 if active == "minimax":
-                    _synth_minimax(text, target, voice)
+                    _synth_minimax(words_out, target, voice)
                 elif active == "fish":
-                    _synth_fish(text, target, voice)
+                    _synth_fish(words_out, target, voice)
                 elif active == "gmi":
-                    _synth_gmi(text, target, voice)
+                    _synth_gmi(words_out, target, voice)
+                elif active == "kokoro":
+                    words = _synth_kokoro(words_out, target, voice, rate, pitch, volume)
                 else:
-                    words = _synth_edge(text, target, voice, rate, pitch, volume)
+                    words = _synth_edge(words_out, target, voice, rate, pitch, volume)
                 break
             except Exception as error:  # noqa: BLE001 - retried below, re-raised on the last
                 last = error

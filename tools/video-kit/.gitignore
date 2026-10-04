@@ -12,3 +12,6 @@ __pycache__/
 # Golden reference frames are stored as a digest manifest (tests/golden.json), never as
 # PNGs, so if an older PNG directory is ever regenerated it stays out of the tree.
 tests/golden/
+
+# Zero to Shielded episode projects are symlinks to episodes/E*/ (the source of truth).
+projects/zts-*.json

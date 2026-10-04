@@ -19,30 +19,30 @@ scenes).
 
 ## P0: episodes 1 to 4 (target Oct 4 08:00 IST)
 
-- [ ] 6. E1 project file + BRIEF.md, preflight, frames looked at, build, upload package, gates recorded.
-- [ ] 7. E2 same.
-- [ ] 8. E3 same.
-- [ ] 9. E4 same (climax episode, spend the extra care here).
-- [ ] 10. Cross-episode check: same voice, palette, opening card, glossary words; each <= 140 s.
+- [x] 6. E1 project file + BRIEF.md, preflight, frames looked at, build, upload package, gates recorded.
+- [x] 7. E2 same.
+- [x] 8. E3 same.
+- [x] 9. E4 same (climax episode, spend the extra care here).
+- [x] 10. Cross-episode check: same voice, palette, opening card, glossary words; each <= 140 s.
 
 ## P0: submission (target Oct 4 15:00 IST)
 
-- [ ] 11. README per 30-web.md, with real site screenshots both themes.
-- [ ] 12. `LICENSE-MEDIA.md` (CC BY-ND 4.0 notice), `DATA-SOURCES.md` complete, `SECURITY.md` with Known limits.
-- [ ] 13. `docs/THREAD.md` (this one IS committed, no personal data): post 1 + one reply per episode + final reply; char counts; voice gate clean.
-- [ ] 14. `./verify.sh` ALL GREEN. Commit. Write `docs/HANDOFF.md`: what shipped, measured lengths, what is pending (music, footage gaps), exact upload order.
+- [x] 11. README per 30-web.md, with real site screenshots both themes.
+- [x] 12. `LICENSE-MEDIA.md` (CC BY-ND 4.0 notice), `DATA-SOURCES.md` complete, `SECURITY.md` with Known limits.
+- [x] 13. `docs/THREAD.md` (this one IS committed, no personal data): post 1 + one reply per episode + final reply; char counts; voice gate clean.
+- [x] 14. `./verify.sh` ALL GREEN. Commit. Write `docs/HANDOFF.md`: what shipped, measured lengths, what is pending (music, footage gaps), exact upload order.
 
 ## P1
 
 - [x] 15. Address checker tool page + tests from ZIP vectors. (60 unified, 15 ZIP 320 pairs, 26 transparent, BIP 173/350 vectors; tampered copies fail.)
 - [x] 16. "What the blockchain sees" page.
 - [ ] 17. Transcripts on episode pages from captions.srt; chapter seek buttons.
-- [ ] 18. E5 Stay private.
+- [x] 18. E5 Stay private.
 - [ ] 19. 4:5 crops for X.
 
 ## P2
 
-- [ ] 20. E0 trailer from the E1-E4 climaxes.
+- [x] 20. E0 trailer from the E1-E4 climaxes.
 - [x] 21. Help page: glossary, common mistakes, official support links. (Plus Phrase Guard at /learn/phrase-guard/.)
 
 ## Human-only (the lead and zkasuran handle these, do not block on them)

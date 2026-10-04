@@ -44,13 +44,14 @@ All six project files use the same voice (Kokoro `af_heart`, rate -20%) and the 
 
 - The site player embeds those ids from youtube-nocookie.com after a press on play; chapter buttons and transcript times restart the embed at their second (task 17, checked on all six live pages).
 - Thumbnails redone: `tools/thumbs/render.py` draws all six in the site's look (Inter, gold on ink, one shield per episode) at 3840x2160 and under 2 MB. They are live on YouTube (the public `hqdefault` images match) and as the site posters. The `thumbnail.jpg` files on `media-renders` are the old design.
+- Thread: `docs/THREAD.md` now carries each episode's YouTube link. `python3 tools/thread-page.py` builds `THREAD.html`, a click-to-copy page, beside the 4:5 files (default `~/Videos/zero-to-shielded-x/`).
 - 4:5 copies for X (task 19): 1080x1350, built locally, not committed (mp4 is gitignored).
 
 ## Pending
 
 1. **Captions on YouTube.** The SRT files are not attached to the YouTube videos yet; YouTube will make automatic English captions, which may mishear "Zodl". Upload each `EN/upload/captions.srt` (on `media-renders`) under Subtitles, "Upload file", "With timing".
 2. **Duplicate drafts.** Studio holds three leftover private drafts from upload retries (two of E1, one of E2: `yfXqyeDB4XM`, `1mbbKSlYkpI`, `iG5KeTrh0r0`). Delete them in Studio. They are private, so nobody else sees them.
-3. **Repo visibility.** Private until the lead flips it; the repo links in the README and the last thread reply 404 until then.
+3. **Repo visibility.** Done: public, and the repo URL returns 200 signed out.
 4. **Footage gaps.** Footage slots named in the briefs (for example `F-swap.mp4`, `E-receive.mp4`, `G-arrive.mp4`) are still empty. Those scenes are diagrams labelled "Diagram, not the app". Real phone footage per `footage/SHOT-LIST.md` is a human task.
 5. **The "15 minutes" headline.** New ZEC needs 10 confirmations, about 12.5 minutes (F33), plus about 10 minutes of video. The start page says so; the headline still reads 15 minutes.
 6. **Not done:** E0 polish, the Google Drive copy.

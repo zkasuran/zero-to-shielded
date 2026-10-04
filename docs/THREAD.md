@@ -99,3 +99,18 @@ Scripts, narration and editing were produced with AI assistance (Kiro). Narratio
 Literal: 273. X: 252.
 
 No video. Flip the repo to public before you post this.
+
+## Reply under the @zksnarks_ bounty post
+
+```text
+Our ZECATHON Wildcard entry: Zero to Shielded.
+
+Five short videos plus a companion site, built on Zodl (the new name for Zashi). Wallet setup, getting ZEC, shielding, unshielding, sending, receiving. Each one ends with the step done.
+
+Thread: https://x.com/zkasuran/status/2106760516865847460
+```
+
+Literal: 292. X: 266.
+
+Post it as a reply to the ZECATHON Wildcard announcement from @zksnarks_ (Sep 29 2026). The link is Post 1 of our thread, so the judge lands on the whole series.
+

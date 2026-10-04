@@ -8,8 +8,10 @@ step "video kit tests"
 ( cd tools/video-kit && python3 -m pytest -q tests )
 
 step "voice gate on outward words"
-mapfile -t OUT < <(find . -path ./tools -prune -o -path ./node_modules -prune -o -path ./.kiro -prune \
-  \( -name 'BRIEF.md' -o -name 'THREAD.md' -o -name 'README.md' -o -name '*.srt' -o -name '*.html' \) -print | grep -v '^./tools' || true)
+# Prunes are grouped: without the parentheses the name tests bind to the last -prune
+# branch only and the gate silently matched nothing.
+mapfile -t OUT < <(find . \( -path ./tools -o -path ./.git -o -path ./.kiro -o -path '*/node_modules' \) -prune -o \
+  \( -name 'BRIEF.md' -o -name 'THREAD.md' -o -name 'README.md' -o -name '*.srt' -o -name '*.html' \) -type f -print || true)
 if [ "${#OUT[@]}" -gt 0 ]; then node tools/voice-gate.mjs "${OUT[@]}"; else echo "no outward files yet"; fi
 
 step "narration in project files"

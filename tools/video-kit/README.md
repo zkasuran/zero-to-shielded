@@ -57,6 +57,7 @@ a cursor walks over and clicks, all timed to the voice.
 | `device` | a page inside a phone, tablet, laptop or browser frame | a capture or a still |
 | `compose` | two or more scenes in one frame | its panes, each a full scene |
 | `overlay` | lower thirds, callouts, badges and stat blocks | a base scene or the field |
+| `stage` | an animated HTML scene timed to the cues | a real page captured frame by frame (`stage/API.md`) |
 | `panel` `grid` `report` `bubbles` `chips` `receipts` | step lists, matrices, reports, transcripts | a real ledger or report file |
 
 Every scene returns its image, its window box and the pixel box of each row, so one painter

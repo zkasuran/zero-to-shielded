@@ -16,6 +16,7 @@ from pathlib import Path
 
 import bg
 import build
+import style as style_module
 import theme
 
 ROOT = Path(__file__).resolve().parent
@@ -30,11 +31,14 @@ timestamp and throws those frames away.
 
 def main(project_path: Path, times: list[float]) -> None:
     project = json.loads(project_path.read_text(encoding="utf-8"))
+    # the project's own canvas and fps, as build and preflight resolve them, so a frame here
+    # is drawn (and a stage scene is captured) at the size the build uses
+    resolved = theme.configure(style_module.resolve(project))
     work = ROOT / "artifacts" / project["id"]
     shots = work / "frames"
     shots.mkdir(parents=True, exist_ok=True)
     name = project.get("palette", "citrus")
-    base = bg.background(name, work / f"background-{name}.png")
+    base = bg.background(name, work / f"background-{name}-{resolved.canvas[0]}x{resolved.canvas[1]}.png")
     accent, mark = theme.palette(name)["accent"], theme.palette(name)["mark"]
 
     plans, _, total = build.layout(project, work)

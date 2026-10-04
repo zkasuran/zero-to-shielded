@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zero to Shielded · Episode 1 · Wallet setup</title>
+<link rel="stylesheet" href="./lib/series.css">
+<style>
+  /* local fix: the shared opening card sets this note at 28px, under the 30px body minimum */
+  #stage .zts-open-aka { font-size: 30px; }
+  /* local fix: the shared paper card header and slot numbers sit under 30px */
+  #stage .zts-paper-title, #stage .zts-paper-count { font-size: 30px; }
+  #stage .zts-slot b { font-size: 30px; width: 44px; }
+  #stage .fig { position: absolute; left: 0; top: 0; }
+  #stage .fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .fx-canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; z-index: 22; }
+  .halo { position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 214, 110, .55) 0%, rgba(244, 183, 40, .18) 34%, rgba(244, 183, 40, 0) 68%); }
+  .halo.is-soft { background: radial-gradient(circle, rgba(244, 183, 40, .28) 0%, rgba(244, 183, 40, .08) 40%, rgba(244, 183, 40, 0) 70%); }
+  .key { position: absolute; left: 0; top: 0; width: 210px; height: 84px; filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .55)) drop-shadow(0 0 18px rgba(244, 183, 40, .45)); }
+  .key svg { width: 100%; height: 100%; display: block; transform: scaleX(-1); }
+  .morph-row { white-space: nowrap; font: 800 230px/1 "Inter", sans-serif; letter-spacing: -0.045em; }
+  .morph-row .ml { display: inline-block; }
+  .morph-row.is-a .ml { color: #CFC8B6; }
+  .morph-row.is-b .ml { color: #F4B728; text-shadow: 0 0 60px rgba(244, 183, 40, .35); }
+  .morph-row .ml.is-z { color: color-mix(in oklab, #CFC8B6, #F4B728 calc(var(--g, 0) * 100%)); }
+  .chiprow { display: flex; gap: 30px; align-items: center; }
+  .pen { position: absolute; left: 0; top: 0; width: 190px; height: 44px; margin-top: -22px; transform-origin: 0 22px; z-index: 6; filter: drop-shadow(0 12px 14px rgba(0, 0, 0, .45)); }
+  .pen svg { width: 100%; height: 100%; display: block; }
+  .scan { position: absolute; left: 0; right: 0; top: 0; height: 90px; pointer-events: none; border-radius: 26px;
+    background: linear-gradient(180deg, rgba(244, 183, 40, 0), rgba(244, 183, 40, .38) 50%, rgba(244, 183, 40, 0)); mix-blend-mode: multiply; }
+  .okbadge { position: absolute; right: -34px; top: -34px; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; color: #2A1B00;
+    background: radial-gradient(circle at 34% 28%, #FFF0BE, #F4B728 55%, #C98A00); box-shadow: 0 0 0 6px rgba(255, 226, 140, .35), 0 18px 34px -10px rgba(0, 0, 0, .6), 0 0 50px rgba(244, 183, 40, .5); }
+  .okbadge svg { width: 54px; height: 54px; }
+  .rules { width: 900px; padding: 48px 54px; display: flex; flex-direction: column; gap: 30px; }
+  .rule { display: flex; align-items: center; gap: 30px; }
+  .rule-ico { width: 92px; height: 92px; flex: none; border-radius: 28px; display: grid; place-items: center; color: #2A1B00;
+    background: linear-gradient(180deg, #FFD978, #F4B728 60%, #DB9C0C); box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 18px 36px -14px rgba(244, 183, 40, .6); }
+  .rule-ico svg { width: 52px; height: 52px; }
+  .rule-text { font: 750 44px/1.12 "Inter", sans-serif; letter-spacing: -0.025em; color: #F5F1E6; text-wrap: balance; }
+  .rule-num { font: 800 30px/1 "Inter", sans-serif; color: #F4B728; letter-spacing: .1em; width: 40px; flex: none; }
+  .floor { position: absolute; width: 260px; height: 40px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0) 70%); }
+  .flash { position: absolute; width: 520px; height: 520px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 250, 230, .95) 0%, rgba(255, 220, 140, .45) 22%, rgba(244, 183, 40, 0) 62%); }
+  .sweep { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden; }
+  .sweep::before { content: ""; position: absolute; top: -20%; bottom: -20%; width: 34%; left: calc(var(--sx, -0.5) * 100%);
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 246, 214, .28), rgba(255, 255, 255, 0)); transform: skewX(-14deg); }
+  .paperglow { position: absolute; border-radius: 60px; pointer-events: none;
+    box-shadow: 0 0 120px 30px rgba(244, 183, 40, .55), 0 0 0 4px rgba(255, 214, 110, .8); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script type="module">
+// Episode 1 · Wallet setup. One scene per segment of tools/video-kit/projects/zts-e1.json
+// (scene id == segment name). On-screen strings come from S.params (verbatim from
+// episodes/SCRIPTS.md). Pure in t: seeded randomness only, every motion keyed to t.
+import * as Z from "./lib/series.js";
+import { maya } from "/js/cast.js";
+
+const { ease, clamp, hash, rng, lerp } = Z;
+const setTf = (n, tf) => { if (n._tf !== tf) { n.style.transform = tf; n._tf = tf; } };
+const setOp = (n, o) => { const s = o.toFixed(3); if (n._o !== s) { n.style.opacity = s; n._o = s; } };
+
+// ---------------------------------------------------------------- shared helpers
+
+// a cast figure as live SVG, bottom centre at (x, y), with breathing, blinks and a head sway
+function figure(S, fn, opts, { x, y, seed = 1, parent } = {}) {
+  const el = S.el("div", { class: "fig", style: { width: `${opts.size}px` } }, parent);
+  el.innerHTML = fn({ theme: "dark", label: false, ...opts });
+  Z.place(el, x, y, "bottom");
+  el._parts = rig(S, el, seed);
+  return el;
+}
+
+function pivot(g) {
+  if (!g) return null;
+  const [ox, oy] = (g.getAttribute("data-origin") || "100 300").split(/\s+/).map(Number);
+  g.style.transformBox = "view-box";
+  g.style.transformOrigin = `${ox}px ${oy}px`;
+  return g;
+}
+
+function rig(S, el, seed) {
+  const q = (c) => pivot(el.querySelector(`.${c}`));
+  const parts = { body: q("cast-body"), head: q("cast-head"), eyes: q("cast-eyes"), armL: q("cast-arm-l"), armR: q("cast-arm-r") };
+  const blinks = Array.from({ length: 40 }, (_, k) => 0.9 + k * 3.5 + hash(seed, k) * 1.5);
+  S.on((t) => {
+    if (parts.body) setTf(parts.body, `scale(1,${(1 + 0.012 * (0.5 + 0.5 * Math.sin(t * 2.2 + seed))).toFixed(4)})`);
+    if (parts.head) setTf(parts.head, `rotate(${(Math.sin(t * 0.8 + seed * 1.7) * 1.8).toFixed(2)}deg)`);
+    if (parts.eyes) {
+      let v = 1;
+      for (const b of blinks) { const d = (t - b) / 0.16; if (d > 0 && d < 1) v = 1 - 0.9 * Math.sin(Math.PI * d); }
+      setTf(parts.eyes, `scale(1,${v.toFixed(3)})`);
+    }
+  });
+  return parts;
+}
+
+// a soft gold light (radial) centred at x, y
+function halo(S, { x, y, r = 300, soft = false, parent } = {}) {
+  const el = S.el("div", { class: `halo${soft ? " is-soft" : ""}`, style: { width: `${2 * r}px`, height: `${2 * r}px` } }, parent);
+  Z.place(el, x, y);
+  S.set(el, { opacity: 0 });
+  return el;
+}
+
+// a light sweep across an element (needs position and border-radius on the host)
+function sweep(S, host, at, dur = 1.1) {
+  const s = host._sweep || (host._sweep = S.el("div", { class: "sweep" }, host));
+  S.tween(s, { at, dur, ease: "inOutCubic", from: { "--sx": -0.5 }, to: { "--sx": 1.3 } });
+}
+
+// a gentle idle float (pure in t) on a wrapper element
+function floaty(S, el, { amp = 8, speed = 1, seed = 0, rot = 0 } = {}) {
+  S.on((t) => {
+    const y = Math.sin(t * 1.3 * speed + seed) * amp, r = Math.sin(t * 0.9 * speed + seed * 2) * rot;
+    setTf(el, `translate(0px,${y.toFixed(2)}px) rotate(${r.toFixed(2)}deg)`);
+  });
+}
+
+const ICON = {
+  doc: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h7.5l4 4v14h-11.5z"/><path d="M14 3v4h4"/><path d="M9.5 11.5h5.5M9.5 15h5.5M9.5 18.5h3.5"/></svg>`,
+  noweb: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.2 2.4 3.3 5.2 3.3 8.4s-1.1 6-3.3 8.4c-2.2-2.4-3.3-5.2-3.3-8.4s1.1-6 3.3-8.4z"/><path d="M4 4l16 16" stroke-width="2.8"/></svg>`,
+  noask: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5.5h15v10h-8.5l-4.5 4v-4h-2z"/><path d="M4 3.5l16 17" stroke-width="2.8"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg>`,
+};
+
+const KEY_SVG = `<svg viewBox="0 0 200 80"><defs><linearGradient id="kg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF0BE"/><stop offset=".42" stop-color="#F7C23E"/><stop offset=".7" stop-color="#F4B728"/><stop offset="1" stop-color="#A86F00"/></linearGradient></defs>
+<circle cx="40" cy="40" r="31" fill="url(#kg)"/><circle cx="40" cy="40" r="12.5" fill="#1B2135"/><path d="M22 22a26 26 0 0 1 26-8" fill="none" stroke="#FFF6D8" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+<path d="M68 33H190a7 7 0 0 1 0 14H178v15h-12V47h-11v11h-12V47H68z" fill="url(#kg)"/><path d="M70 35.5H186" stroke="#FFF6D8" stroke-width="2.5" stroke-linecap="round" opacity=".55"/></svg>`;
+
+const PEN_SVG = `<svg viewBox="0 0 190 44"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE39A"/><stop offset=".5" stop-color="#F4B728"/><stop offset="1" stop-color="#9A6800"/></linearGradient></defs>
+<path d="M0 22L26 12H176a10 10 0 0 1 0 20H26z" fill="url(#pg)"/><path d="M0 22L26 12V32z" fill="#F5F1E6"/><path d="M0 22L9 18.6V25.4z" fill="#2A2414"/><rect x="138" y="12" width="12" height="20" fill="#8A5C00"/><path d="M30 16H170" stroke="#FFF6D8" stroke-width="2.4" stroke-linecap="round" opacity=".6"/></svg>`;
+
+// ------------------------------------------------------------------ 1. opening card
+Z.scene("e1-open", (S) => {
+  const P = S.params;
+  const card = Z.openingCard(S, { n: P.n ?? 1, title: P.title });
+  const nr = S.rectOf(card.num);
+  // a burst as the numeral lands, then light sweeps on "private" and "paper"
+  Z.burst(S, { at: 0.95, x: nr.cx - 10, y: nr.cy + 10, seed: 3, count: 70, power: 0.95 });
+  S.tween(card.num, { at: S.word(0, "private") - 0.2, dur: 1.4, ease: "inOutCubic", from: { "--sweep": -0.3 }, to: { "--sweep": 1.35 } });
+  S.tween(card.num, { at: S.word(0, "paper") - 0.4, dur: 1.4, ease: "inOutCubic", from: { "--sweep": -0.3 }, to: { "--sweep": 1.35 } });
+  card.words.forEach((w, i) => Z.pulse(S, w, S.word(0, "Your") + i * 0.04));
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.0 },
+    { at: 0.2, dur: S.seconds, x: 975, y: 505, zoom: 1.07, ease: "inOutSine" },
+  ]);
+});
+
+// ------------------------------------------------------------------ 2. what is a wallet
+Z.scene("e1-wallet", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1);
+  const k = 500 / 200;
+  const FX = 640, FY = 905;
+  const ph = { x: FX + 62 * k, y: FY - 209 * k }; // the cast phone in the "phone" pose
+  const back = halo(S, { x: ph.x, y: ph.y, r: 260 });
+  const fig = figure(S, maya, { size: 500, pose: "phone" }, { x: FX, y: FY, seed: 2 });
+  const figHappy = figure(S, maya, { size: 500, pose: "phone", mood: "happy" }, { x: FX, y: FY, seed: 2 });
+  S.set(figHappy, { opacity: 0 });
+  Z.appear(S, fig, { at: 0.2, until: null, from: { opacity: 0, y: 40, blur: 10 }, dur: 1.0 });
+  const onlyAt = S.word(1, "Only");
+  S.tween(figHappy, { at: onlyAt - 0.1, dur: 0.4, to: { opacity: 1 } });
+  S.tween(fig, { at: onlyAt + 0.2, dur: 0.3, to: { opacity: 0 } });
+
+  // the gold key: floats in, then slides into the phone on "keys"
+  const keysAt = S.word(0, "keys");
+  const keyWrap = S.el("div", { class: "key", html: KEY_SVG });
+  Z.place(keyWrap, ph.x + 380, ph.y - 70);
+  S.enter(keyWrap, { at: S.word(0, "app") - 0.2, dur: 0.9, ease: "outExpo", from: { opacity: 0, x: 120, blur: 12, rotate: 14 } });
+  S.tween(keyWrap, { at: keysAt - 0.35, dur: 0.75, ease: "inOutCubic", to: { x: -380, y: 70, rotate: -8, scale: 0.42 } });
+  S.tween(keyWrap, { at: keysAt + 0.3, dur: 0.2, to: { opacity: 0, blur: 4 } });
+  const hit = keysAt + 0.4;
+  S.tween(back, { at: hit - 0.05, dur: 0.35, ease: "outCubic", to: { opacity: 1, scale: 1.15 } });
+  S.tween(back, { at: hit + 0.4, dur: 1.6, ease: "inOutSine", to: { opacity: 0.55, scale: 1 } });
+  Z.burst(S, { at: hit, x: ph.x, y: ph.y, seed: 5, count: 50, power: 0.55 });
+
+  // the coin of Zcash rises from the phone on "spend your ZEC"
+  const coinAt = S.word(0, "ZEC") - 0.15;
+  const coinWrap = S.el("div", { style: "position:absolute;left:0;top:0" });
+  const coin = Z.coin(S, "gold", { size: 150, parent: coinWrap });
+  Z.place(coinWrap, ph.x + 250, ph.y - 40);
+  S.set(coinWrap, { opacity: 0 });
+  S.tween(coinWrap, { at: coinAt, dur: 0.9, ease: "outBack", from: { opacity: 0, x: -250, y: 40, scale: 0.3 }, to: { opacity: 1, x: 0, y: 0, scale: 1 } });
+  floaty(S, coin, { amp: 7, seed: 1 });
+  Z.pulse(S, coinWrap, S.word(0, "coin"));
+  S.tween(coinWrap, { at: c1 - 0.1, dur: 0.5, ease: "inCubic", to: { opacity: 0, y: -30, blur: 8 } });
+
+  // no email, no phone number, no account: chips drop in and get struck
+  const names = P.struck || ["Email", "Phone number", "Account"];
+  const when = [S.word(1, "email") - 0.15, S.word(1, "phone") - 0.15, S.word(1, "number") + 0.35];
+  const chips = names.map((n, i) => {
+    const c = Z.chip(S, n, { kind: "ghost", size: "lg", x: 1380, y: 300 + i * 150 });
+    S.enter(c, { at: when[i], dur: 0.8, ease: "outBack", from: { opacity: 0, y: -70, scale: 0.85, blur: 8 } });
+    Z.strike(S, c, when[i] + 0.55);
+    S.tween(c, { at: onlyAt + 0.1 + i * 0.06, dur: 0.6, ease: "inOutCubic", to: { opacity: 0.38, scale: 0.94 } });
+    return c;
+  });
+  // "Only you control this wallet": a gold light around Maya's phone
+  S.tween(back, { at: onlyAt, dur: 0.6, ease: "outCubic", to: { opacity: 1, scale: 1.35 } });
+  Z.burst(S, { at: S.word(1, "you") + 0.05, x: ph.x, y: ph.y, seed: 8, count: 90, power: 1.0 });
+
+  S.camera([
+    { at: 0, x: 900, y: 520, zoom: 1.04 },
+    { at: S.word(0, "app") - 0.3, dur: 1.6, x: ph.x + 170, y: ph.y + 30, zoom: 1.55, ease: "inOutCubic" },
+    { at: coinAt - 0.3, dur: 1.2, x: ph.x + 210, y: ph.y + 10, zoom: 1.6, ease: "inOutCubic" },
+    { at: c1 - 0.5, dur: 1.5, x: 1010, y: 500, zoom: 1.02, ease: "inOutQuint" },
+    { at: onlyAt - 0.2, dur: 2.2, x: 860, y: 470, zoom: 1.14, ease: "inOutCubic" },
+  ]);
+  void chips;
+}, { label: "Illustration" });
+
+// ------------------------------------------------------------------ 3. install: Zashi -> Zodl
+Z.scene("e1-install", async (S) => {
+  const P = S.params;
+  const [oldName, newName] = P.morph || ["Zashi", "Zodl"];
+  const c1 = S.cue(1);
+  try { await document.fonts.load('800 230px "Inter"'); } catch (e) { /* measured with whatever is there */ }
+  const WX = 960, WY = 400;
+  const mkRow = (word, cls) => {
+    const row = S.el("div", { class: `morph-row ${cls}` });
+    Z.place(row, WX, WY);
+    const sp = [...word].map((ch, i) => S.el("span", { class: `ml${i === 0 ? " is-z" : ""}`, text: ch }, row));
+    return { row, sp, rs: sp.map((s) => S.rectOf(s)) };
+  };
+  const A = mkRow(oldName, "is-a"), B = mkRow(newName, "is-b");
+  const shareZ = oldName[0] === newName[0];
+  const zA = A.sp[0];
+  const dx = B.rs[0].x - A.rs[0].x;
+  // everything starts hidden; B's own Z is never shown when the two share it
+  [...A.sp, ...B.sp].forEach((s) => S.set(s, { opacity: 0 }));
+  const word = S.el("div", { style: `position:absolute;left:0;top:0;transform-origin:${WX}px ${WY}px` });
+  [A.row, B.row].forEach((r) => word.appendChild(r));
+  const keys = [
+    { at: S.word(0, "Zodl") - 0.15, to: "b" },
+    { at: S.word(0, "Zashi") - 0.25, to: "a" },
+    { at: S.cueEnd(0) - 0.15, to: "b" },
+  ];
+  keys.forEach((k, n) => {
+    const toB = k.to === "b";
+    const outs = n === 0 ? [] : (toB ? A.sp : B.sp).slice(shareZ ? 1 : 0);
+    const ins = (toB ? B.sp : A.sp).slice(shareZ ? 1 : 0);
+    outs.forEach((s, i) => S.tween(s, { at: k.at + i * 0.045, dur: 0.38, ease: "inCubic", to: { opacity: 0, y: 80, blur: 12, rotate: 12 } }));
+    ins.forEach((s, i) => S.tween(s, { at: k.at + 0.16 + i * 0.075, dur: 0.8, ease: "outExpo", from: { opacity: 0, y: -90, blur: 14, rotate: -12 }, to: { opacity: 1, y: 0, blur: 0, rotate: 0 } }));
+    if (shareZ) {
+      if (n === 0) {
+        S.set(zA, { x: toB ? dx : 0, "--g": toB ? 1 : 0 });
+        S.tween(zA, { at: k.at, dur: 0.9, ease: "outExpo", from: { opacity: 0, y: 70, blur: 14 }, to: { opacity: 1, y: 0, blur: 0 } });
+      } else {
+        S.tween(zA, { at: k.at + 0.08, dur: 0.75, ease: "inOutCubic", to: { x: toB ? dx : 0 } });
+        S.tween(zA, { at: k.at + 0.08, dur: 0.6, to: { "--g": toB ? 1 : 0 } });
+      }
+    }
+  });
+  const finalAt = keys[2].at;
+  Z.burst(S, { at: finalAt + 0.45, x: WX, y: WY, seed: 12, count: 90, power: 1.1 });
+  const glow = halo(S, { x: WX, y: WY, r: 420, soft: true });
+  S.tween(glow, { at: keys[0].at, dur: 1.2, to: { opacity: 0.8 } });
+  S.tween(glow, { at: keys[1].at, dur: 0.5, to: { opacity: 0.15 } });
+  S.tween(glow, { at: finalAt + 0.2, dur: 0.6, to: { opacity: 1, scale: 1.1 } });
+  // "a Zcash wallet for your phone": a plain phone outline joins the word
+  Z.phone(S, { at: S.word(0, "phone") - 0.5, until: c1 - 0.1, x: 1560, y: 420, scale: 0.46, glow: 0.9 });
+
+  // then the word lifts and the four places to get it arrive in a row
+  S.tween(word, { at: c1 - 0.2, dur: 1.0, ease: "inOutCubic", to: { y: -150, scale: 0.62 } });
+  S.tween(glow, { at: c1 - 0.2, dur: 1.0, ease: "inOutCubic", to: { y: -150, scale: 0.7, opacity: 0.6 } });
+  const row = S.el("div", { class: "chiprow" });
+  Z.place(row, 960, 570);
+  const names = P.chips || ["App Store", "Play Store", "F-Droid", "GitHub"];
+  const said = [S.word(1, "App"), S.word(1, "Play"), S.word(1, "F-Droid"), S.word(1, "GitHub")];
+  const chips = names.map((n, i) => {
+    const c = Z.chip(S, n, { kind: i < 2 ? "gold" : "ghost", size: "lg", parent: row });
+    S.enter(c, { at: said[i] - 0.25, dur: 0.85, ease: "outBack", from: { opacity: 0, y: 46, scale: 0.8, blur: 10 } });
+    Z.pulse(S, c, said[i] + 0.35);
+    return c;
+  });
+  // keep all four lit for the last beat
+  S.tween(chips[0], { at: S.word(1, "Android") - 0.2, dur: 0.5, to: { opacity: 0.85 } });
+  S.tween(chips[1], { at: S.word(1, "Android") - 0.2, dur: 0.5, to: { scale: 1.04 } });
+  S.camera([
+    { at: 0, x: 960, y: 450, zoom: 1.18 },
+    { at: 0.4, dur: 6.0, x: 990, y: 440, zoom: 1.26, ease: "inOutSine" },
+    { at: c1 - 0.3, dur: 1.4, x: 960, y: 430, zoom: 1.08, ease: "inOutQuint" },
+    { at: S.word(1, "Android"), dur: 3.2, x: 1040, y: 470, zoom: 1.16, ease: "inOutCubic" },
+  ]);
+}, { label: "Diagram, not the app" });
+
+// ------------------------------------------------------------------ 4. create the wallet
+Z.scene("e1-create", (S) => {
+  const P = S.params;
+  const c0 = S.cue(0);
+  const tapAt = S.word(0, "Create") + 0.3;
+  const home = P.home || ["Receive", "Send", "Pay", "Swap"];
+  const flow = Z.stepFlow(S, {
+    y: 440,
+    steps: [
+      P.flow?.[0] || "Open Zodl",
+      { label: P.tap || P.flow?.[1] || "Create New Wallet", tap: tapAt, note: P.note },
+      { group: home, title: "Home screen" },
+    ],
+    times: [c0 + 0.15, tapAt - 0.25, S.word(1, "four") - 0.1],
+  });
+  const [open, create, homeChips] = flow.chips;
+  const rOpen = S.rectOf(open), rCreate = S.rectOf(create), rHome = S.rectOf(flow.steps[2]);
+  const all = S.rectOf(flow.el);
+  home.forEach((w, i) => Z.pulse(S, homeChips[i], S.word(1, w)));
+  Z.burst(S, { at: tapAt + 0.05, x: rCreate.cx, y: rCreate.cy, seed: 4, count: 60, power: 0.7 });
+  sweep(S, create, S.word(1, "That") + 0.1, 1.0);
+  S.camera([
+    { at: 0, x: (rOpen.cx + rCreate.cx) / 2, y: rCreate.cy + 20, zoom: 1.5 },
+    { at: tapAt - 0.9, dur: 1.0, x: rCreate.cx, y: rCreate.cy + 30, zoom: 1.75, ease: "inOutCubic" },
+    { at: S.word(1, "home") - 0.6, dur: 1.4, x: all.cx, y: all.cy + 40, zoom: 1.04, ease: "inOutQuint" },
+    { at: S.word(1, "Receive") - 0.3, dur: 2.6, x: rHome.cx - 40, y: rHome.cy + 10, zoom: 1.32, ease: "inOutCubic" },
+  ]);
+  const pts = [
+    { at: c0 + 0.5, x: rCreate.cx + 160, y: rCreate.cy + 190 },
+    { at: tapAt, x: rCreate.cx - 30, y: rCreate.cy + 8, click: true },
+  ];
+  home.forEach((w, i) => {
+    const r = S.rectOf(homeChips[i]);
+    pts.push({ at: S.word(1, w) + 0.05, x: r.cx - 10, y: r.cy + 14, dur: 0.5 });
+  });
+  S.cursor(pts, { hide: S.cueEnd(1) + 0.2 });
+}, { label: "Diagram, not the app" });
+
+// ------------------------------------------------------------------ 5. the recovery phrase
+Z.scene("e1-phrase", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1);
+  const slots = P.slots || 24;
+  const PX = 960, PY = 470;
+  const pglow = S.el("div", { class: "paperglow" });
+  const paper = Z.phraseCard(S, { at: 0.45, x: PX, y: PY, slots, write: { at: S.word(0, "recovery") - 0.2, dur: 1.8 }, until: null });
+  const pr = S.rectOf(paper);
+  Object.assign(pglow.style, { left: `${pr.x}px`, top: `${pr.y}px`, width: `${pr.w}px`, height: `${pr.h}px`, borderRadius: "26px" });
+  pglow.style.transformOrigin = `${PX - pr.x}px ${PY - pr.y}px`;
+  S.set(pglow, { opacity: 0 });
+  // "24 words": the count pulses; "in a set order": the numbers light up 1 to 24
+  const count = paper.querySelector(".zts-paper-count");
+  S.tween(count, { at: S.word(0, "24") - 0.05, dur: 0.25, ease: "outCubic", to: { scale: 1.35 } });
+  S.tween(count, { at: S.word(0, "24") + 0.3, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+  const nums = [...paper.querySelectorAll(".zts-slot b")];
+  const orderAt = S.word(0, "set") - 0.1;
+  nums.forEach((b, i) => {
+    S.tween(b, { at: orderAt + i * 0.035, dur: 0.18, ease: "outCubic", to: { scale: 1.45 } });
+    S.tween(b, { at: orderAt + i * 0.035 + 0.18, dur: 0.4, ease: "outBack", to: { scale: 1 } });
+  });
+  // the card makes room for the phone
+  const shiftAt = S.cueEnd(0) - 0.4;
+  const sc = 0.76, dxp = -330;
+  [paper, pglow].forEach((e) => S.tween(e, { at: shiftAt, dur: 1.0, ease: "inOutCubic", to: { x: dxp, scale: sc } }));
+  const paperNow = { x: PX + dxp - (pr.w * sc) / 2, y: PY - (pr.h * sc) / 2, w: pr.w * sc, h: pr.h * sc };
+
+  // Maya's phone: in, drops on "lose", shatters, comes back from the same particles
+  const HX = 1400, HY = 470, HS = 0.72;
+  const phone = Z.phone(S, { x: HX, y: HY, scale: HS });
+  S.set(phone, { opacity: 0 });
+  S.tween(phone, { at: shiftAt + 0.2, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 70, blur: 10, scale: HS }, to: { opacity: 1, y: 0, blur: 0, scale: HS } });
+  const dropAt = S.word(1, "lose") + 0.05;
+  const impact = dropAt + 0.5;
+  S.tween(phone, { at: dropAt, dur: 0.5, ease: "inQuad", to: { y: 170, rotate: 22 } });
+  S.set(phone, { opacity: 0 }, impact);
+  const flash = S.el("div", { class: "flash" });
+  Z.place(flash, HX, HY + 210);
+  S.set(flash, { opacity: 0 });
+  S.tween(flash, { at: impact, dur: 0.6, ease: "outCubic", from: { opacity: 1, scale: 0.3 }, to: { opacity: 0, scale: 1.3 } });
+  const gatherAt = S.word(1, "those") - 0.1;
+  const buildAt = S.word(1, "bring") + 0.05;
+  const doneAt = S.word(1, "back") + 0.2;
+  S.tween(pglow, { at: gatherAt, dur: 0.6, ease: "outCubic", to: { opacity: 1 } });
+  S.tween(pglow, { at: doneAt + 0.4, dur: 1.2, ease: "inOutSine", to: { opacity: 0.35 } });
+  S.set(phone, { y: 0, rotate: 0 }, doneAt - 0.3);
+  S.tween(phone, { at: doneAt - 0.25, dur: 0.6, ease: "outCubic", from: { opacity: 0, scale: HS * 0.94 }, to: { opacity: 1, scale: HS } });
+  S.tween(phone._screen, { at: doneAt - 0.25, dur: 1.0, ease: "outCubic", from: { "--glow": 2.2 }, to: { "--glow": 1 } });
+  Z.burst(S, { at: doneAt + 0.15, x: HX, y: HY, seed: 21, count: 90, power: 1.0 });
+
+  // the particle canvas
+  const cv = S.el("canvas", { class: "fx-canvas" });
+  const kk = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = 1920 * kk; cv.height = 1080 * kk;
+  const ctx = cv.getContext("2d");
+  const spr = (() => { const c = document.createElement("canvas"); c.width = c.height = 48; const g = c.getContext("2d"); const gr = g.createRadialGradient(24, 24, 0, 24, 24, 24); gr.addColorStop(0, "rgba(255,226,140,1)"); gr.addColorStop(0.25, "rgba(244,183,40,.7)"); gr.addColorStop(1, "rgba(244,183,40,0)"); g.fillStyle = gr; g.fillRect(0, 0, 48, 48); return c; })();
+  const R = rng(77);
+  const pw = 330 * HS, phh = 680 * HS;
+  const imp = { x: HX, y: HY + 170 };
+  const N = 190;
+  const parts = [];
+  for (let i = 0; i < N; i++) {
+    const sx = imp.x + (R() - 0.5) * pw, sy = imp.y + (R() - 0.5) * phh * 0.9;
+    const a = Math.atan2(sy - imp.y - 60, sx - imp.x) + (R() - 0.5) * 1.2;
+    const edge = R() < 0.62;
+    let tx, ty;
+    if (edge) {
+      const u = R() * 2 * (pw + phh);
+      if (u < pw) { tx = HX - pw / 2 + u; ty = HY - phh / 2; }
+      else if (u < pw + phh) { tx = HX + pw / 2; ty = HY - phh / 2 + (u - pw); }
+      else if (u < 2 * pw + phh) { tx = HX + pw / 2 - (u - pw - phh); ty = HY + phh / 2; }
+      else { tx = HX - pw / 2; ty = HY + phh / 2 - (u - 2 * pw - phh); }
+    } else { tx = HX + (R() - 0.5) * pw * 0.7; ty = HY + (R() - 0.5) * phh * 0.6; }
+    parts.push({
+      sx, sy, a, v: 260 + R() * 900, dk: 2.2 + R() * 2.4, spin: (R() - 0.5) * 9, rot0: R() * 6.28,
+      px: paperNow.x + 40 + R() * (paperNow.w - 80), py: paperNow.y + 60 + R() * (paperNow.h - 100),
+      tx, ty, d1: R() * 0.4, d2: R() * 0.45, s: 3 + R() * 7, shard: R() < 0.55, ph: R() * 6.28,
+    });
+  }
+  const scatterAt = (p, tau) => {
+    const dist = (p.v * (1 - Math.exp(-p.dk * tau))) / p.dk;
+    return { x: p.sx + Math.cos(p.a) * dist + Math.sin(tau * 1.7 + p.ph) * 10, y: p.sy + Math.sin(p.a) * dist * 0.75 + 30 * tau + Math.cos(tau * 1.3 + p.ph) * 8 };
+  };
+  let dirty = true;
+  S.on((t) => {
+    const live = t >= impact && t <= doneAt + 0.6;
+    if (!live && !dirty) return;
+    ctx.setTransform(kk, 0, 0, kk, 0, 0);
+    ctx.clearRect(0, 0, 1920, 1080);
+    dirty = live;
+    if (!live) return;
+    for (const p of parts) {
+      const t1 = gatherAt + p.d1, t2 = buildAt + p.d2, t3 = t2 + 0.7;
+      let x, y, glow = 0.6;
+      if (t < t1) { const q = scatterAt(p, t - impact); x = q.x; y = q.y; }
+      else if (t < t2) {
+        const q = scatterAt(p, t1 - impact); const e = ease.inOutCubic(clamp((t - t1) / 0.6));
+        x = lerp(q.x, p.px, e); y = lerp(q.y, p.py, e); glow = 0.6 + 0.4 * e;
+      } else {
+        const e = ease.inOutCubic(clamp((t - t2) / (t3 - t2)));
+        const cx = (p.px + p.tx) / 2, cy = Math.min(p.py, p.ty) - 160;
+        const u = 1 - e;
+        x = u * u * p.px + 2 * u * e * cx + e * e * p.tx; y = u * u * p.py + 2 * u * e * cy + e * e * p.ty; glow = 1;
+      }
+      const fade = 1 - clamp((t - (doneAt + 0.05)) / 0.5);
+      const tau = t - impact;
+      ctx.globalAlpha = clamp(fade * Math.min(1, tau / 0.05));
+      if (p.shard && t < t1 + 0.3) {
+        ctx.save(); ctx.translate(x, y); ctx.rotate(p.rot0 + p.spin * Math.min(tau, 3));
+        ctx.fillStyle = "#2E3654"; ctx.fillRect(-p.s, -p.s * 0.6, p.s * 2, p.s * 1.2);
+        ctx.strokeStyle = "rgba(255,226,150,.85)"; ctx.lineWidth = 1.4; ctx.strokeRect(-p.s, -p.s * 0.6, p.s * 2, p.s * 1.2);
+        ctx.restore();
+      } else {
+        ctx.globalCompositeOperation = "lighter";
+        const r = p.s * (1.05 + 0.6 * glow);
+        ctx.drawImage(spr, x - r, y - r, 2 * r, 2 * r);
+        ctx.globalCompositeOperation = "source-over";
+      }
+    }
+    ctx.globalAlpha = 1;
+  });
+  S.camera([
+    { at: 0, x: 960, y: 470, zoom: 1.1 },
+    { at: 0.4, dur: shiftAt - 0.6, x: 960, y: 460, zoom: 1.2, ease: "inOutSine" },
+    { at: shiftAt - 0.1, dur: 1.2, x: 1000, y: 480, zoom: 1.0, ease: "inOutCubic" },
+    { at: dropAt - 0.2, dur: 0.8, x: 1060, y: 520, zoom: 1.06, ease: "inOutCubic" },
+    { at: gatherAt - 0.1, dur: 1.0, x: 900, y: 480, zoom: 1.04, ease: "inOutCubic" },
+    { at: buildAt + 0.1, dur: 1.4, x: 1040, y: 470, zoom: 1.07, ease: "inOutCubic" },
+  ]);
+}, { label: "Illustration" });
+
+// ------------------------------------------------------------------ 6. back it up (climax)
+Z.scene("e1-backup", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1), c2 = S.cue(2);
+  const [p1, p2] = P.path || ["Advanced Settings", "Zodl Recovery Phrase"];
+  const tA = S.word(0, "Advanced") + 0.1, tB = S.word(0, "Zodl") + 0.15;
+  const flow = Z.stepFlow(S, { y: 450, mode: "light", at: 0.45, size: "lg", until: c1 - 0.15, steps: [{ label: p1, tap: tA }, { label: p2, tap: tB }], times: [tA - 0.1, tB - 0.1] });
+  const [ch1, ch2] = flow.chips;
+  const r1 = S.rectOf(ch1), r2 = S.rectOf(ch2), rf = S.rectOf(flow.el);
+  Z.burst(S, { at: tB + 0.05, x: r2.cx, y: r2.cy, seed: 31, count: 60, power: 0.7 });
+  S.cursor([
+    { at: 1.3, x: r1.cx + 120, y: r1.cy + 200 },
+    { at: tA, x: r1.cx - 20, y: r1.cy + 10, click: true },
+    { at: tB, x: r2.cx - 40, y: r2.cy + 10, click: true, dur: 0.8 },
+  ], { hide: c1 - 0.5 });
+
+  // the paper: a pen writes 24 blurred lines, then two checking passes
+  const PX = 960, PY = 480;
+  const paper = Z.phraseCard(S, { at: c1 - 0.05, x: PX, y: PY, slots: P.lines || 24, write: { at: S.word(1, "Write") + 0.2, dur: 2.9 }, until: null });
+  const pr = S.rectOf(paper);
+  const bars = paper._bars.map((b) => S.rectOf(b));
+  const W0 = S.word(1, "Write") + 0.2, per = 2.9 / bars.length;
+  const pen = S.el("div", { class: "pen", html: PEN_SVG });
+  S.set(pen, { opacity: 0 });
+  S.tween(pen, { at: W0 - 0.35, dur: 0.4, to: { opacity: 1 } });
+  S.tween(pen, { at: W0 + 2.9 + 0.3, dur: 0.4, to: { opacity: 0 } });
+  S.on((t) => {
+    const u = t - W0;
+    let x, y;
+    if (u < 0) { x = bars[0].x - 30 + u * 60; y = bars[0].cy - 40 + u * 80; }
+    else if (u >= per * bars.length) { const b = bars[bars.length - 1]; const v = u - per * bars.length; x = b.x + b.w + v * 120; y = b.cy - v * 140; }
+    else {
+      const i = Math.min(bars.length - 1, Math.floor(u / per));
+      const b = bars[i];
+      const p = clamp((u - i * per) / per);
+      x = b.x + b.w * ease.inOutSine(p); y = b.cy + Math.sin(p * Math.PI * 4) * 3 - 2;
+    }
+    setTf(pen, `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(-38deg)`);
+  });
+  const scan = S.el("div", { class: "scan" }, paper);
+  S.set(scan, { opacity: 0 });
+  const chk = S.word(1, "Check");
+  [chk - 0.05, chk + 0.6].forEach((at) => {
+    S.tween(scan, { at, dur: 0.6, ease: "inOutSine", from: { y: 60, opacity: 1 }, to: { y: pr.h - 110 } });
+  });
+  S.tween(scan, { at: chk + 1.2, dur: 0.2, to: { opacity: 0 } });
+  const ok = S.el("div", { class: "okbadge", html: ICON.check }, paper);
+  const okAt = S.word(1, "twice") + 0.1;
+  S.set(ok, { opacity: 0 });
+  S.tween(ok, { at: okAt, dur: 0.7, ease: "outBack", from: { opacity: 0, scale: 0.3, rotate: -30 }, to: { opacity: 1, scale: 1, rotate: 0 } });
+  Z.burst(S, { at: okAt + 0.1, x: pr.x + pr.w, y: pr.y + 14, seed: 33, count: 60, power: 0.8 });
+  // the paper steps aside for the rules
+  S.tween(paper, { at: c2 - 0.3, dur: 1.1, ease: "inOutCubic", to: { x: -480, y: 10, scale: 0.55, rotate: -3 } });
+
+  // three rules, one by one, with icons
+  const card = S.el("div", { class: "zts-card rules" });
+  Z.place(card, 1270, 470);
+  Z.appear(S, card, { at: c2 + 0.1, until: null, from: { opacity: 0, x: 60, scale: 0.97, blur: 12 }, dur: 1.0 });
+  const rules = P.rules || ["Keep it on paper", "Never type it into a website", "Nobody legitimate will ever ask for it"];
+  const icons = [ICON.doc, ICON.noweb, ICON.noask];
+  const ruleAt = [S.word(2, "Keep") - 0.15, S.word(2, "Never") - 0.15, S.word(2, "Nobody") - 0.15];
+  const rows = rules.map((txt, i) => {
+    const row = S.el("div", { class: "rule" }, card);
+    S.el("div", { class: "rule-num", text: String(i + 1) }, row);
+    const ic = S.el("div", { class: "rule-ico", html: icons[i] }, row);
+    S.el("div", { class: "rule-text", text: txt }, row);
+    S.enter(row, { at: ruleAt[i], dur: 0.9, ease: "outExpo", from: { opacity: 0, x: 40, blur: 10 } });
+    S.enter(ic, { at: ruleAt[i] + 0.1, dur: 0.9, ease: "outBack", from: { opacity: 0, scale: 0.4, rotate: -20 } });
+    return { row, ic };
+  });
+  const evenAt = S.word(2, "even");
+  Z.pulse(S, rows[2].ic, evenAt);
+  S.tween(rows[2].row, { at: evenAt - 0.05, dur: 0.25, ease: "outCubic", to: { scale: 1.04 } });
+  S.tween(rows[2].row, { at: evenAt + 0.25, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+  const cr = S.rectOf(card);
+  const ir = S.rectOf(rows[2].ic);
+  Z.burst(S, { at: evenAt + 0.05, x: ir.cx, y: ir.cy, seed: 37, count: 80, power: 0.9 });
+  sweep(S, card, S.cueEnd(2) - 0.2, 1.2);
+  S.camera([
+    { at: 0, x: rf.cx, y: rf.cy + 10, zoom: 1.2 },
+    { at: 0.3, dur: 2.0, x: r1.cx + 60, y: r1.cy + 20, zoom: 1.45, ease: "inOutCubic" },
+    { at: tB - 0.9, dur: 1.0, x: r2.cx - 40, y: r2.cy + 20, zoom: 1.5, ease: "inOutCubic" },
+    { at: c1 - 0.4, dur: 1.2, x: PX, y: PY, zoom: 1.12, ease: "inOutQuint" },
+    { at: W0 + 0.4, dur: 3.0, x: PX + 30, y: PY + 20, zoom: 1.22, ease: "inOutSine" },
+    { at: c2 - 0.3, dur: 1.4, x: 990, y: 470, zoom: 1.0, ease: "inOutQuint" },
+    { at: ruleAt[0], dur: 2.5, x: 1000, y: cr.y + 170, zoom: 1.05, ease: "inOutCubic" },
+    { at: ruleAt[2] - 0.2, dur: 2.0, x: 1040, y: cr.y + cr.h - 190, zoom: 1.09, ease: "inOutCubic" },
+    { at: S.cueEnd(2) - 0.4, dur: 1.4, x: 990, y: 470, zoom: 1.03, ease: "inOutCubic" },
+  ]);
+}, { label: "Diagram, not the app" });
+
+// ------------------------------------------------------------------ 7. the backup reminder later
+Z.scene("e1-later", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1);
+  // a coin lands
+  const landAt = S.word(0, "arrives") + 0.05;
+  const CX = 960, CY = 270;
+  const floor = S.el("div", { class: "floor" });
+  Z.place(floor, CX, CY + 92);
+  const coinWrap = S.el("div", { style: "position:absolute;left:0;top:0" });
+  Z.coin(S, "gold", { size: 150, parent: coinWrap });
+  Z.place(coinWrap, CX, CY);
+  S.tween(coinWrap, { at: landAt - 0.7, dur: 0.7, ease: "inQuad", from: { y: -420, opacity: 1, rotate: -30 }, to: { y: 0, rotate: 0 } });
+  S.tween(coinWrap, { at: landAt, dur: 0.12, ease: "outQuad", to: { scaleY: 0.82, scaleX: 1.12 } });
+  S.tween(coinWrap, { at: landAt + 0.12, dur: 0.6, ease: "outBack", to: { scaleY: 1, scaleX: 1 } });
+  S.set(coinWrap, { opacity: 0 }, -1e9);
+  S.set(coinWrap, { opacity: 1 }, landAt - 0.7);
+  S.tween(floor, { at: landAt - 0.7, dur: 0.7, ease: "inQuad", from: { opacity: 0, scale: 0.3 }, to: { opacity: 1, scale: 1 } });
+  Z.burst(S, { at: landAt, x: CX, y: CY + 60, seed: 41, count: 60, power: 0.7 });
+  // the banner chip arrives; the coin slides beside it
+  const banAt = S.word(0, "Wallet") - 0.25;
+  S.tween(coinWrap, { at: banAt - 0.3, dur: 0.9, ease: "inOutCubic", to: { x: -390, scale: 0.72 } });
+  S.tween(floor, { at: banAt - 0.3, dur: 0.9, ease: "inOutCubic", to: { x: -390, scale: 0.7, opacity: 0.6 } });
+  S.tween([coinWrap, floor], { at: S.word(1, "Check") - 0.6, dur: 0.6, ease: "inCubic", to: { opacity: 0 } });
+  const banner = Z.chip(S, P.banner || "Wallet Backup Required", { kind: "banner", size: "lg", x: CX + 90, y: CY });
+  S.enter(banner, { at: banAt, dur: 0.9, ease: "outExpo", from: { opacity: 0, x: 60, scale: 0.92, blur: 10 } });
+  Z.pulse(S, banner, S.word(0, "Required") + 0.1);
+  sweep(S, banner, S.word(0, "Required") + 0.2, 1.0);
+
+  // Start -> Next -> Reveal security details -> I've saved it, lit one by one
+  const steps = P.flow || ["Start", "Next", "Reveal security details", "I've saved it"];
+  const said = [S.word(1, "Start"), S.word(1, "Next"), S.word(1, "Reveal"), S.word(1, "I've")];
+  const flow = Z.stepFlow(S, { y: 520, mode: "light", at: c1 - 0.35, steps: steps.map((s, i) => ({ label: s, tap: said[i] + 0.12 })), times: said.map((t) => t + 0.02) });
+  const rs = flow.chips.map((c) => S.rectOf(c));
+  const rFlow = S.rectOf(flow.el);
+  // "Check the words against your paper": the paper, a checking pass
+  const checkAt = S.word(1, "Check");
+  const mini = Z.phraseCard(S, { at: checkAt - 0.25, x: rs[2].cx, y: 790, until: S.word(1, "I've") + 0.2 });
+  S.set(mini, { scale: 0.36 });
+  S.tween(mini, { at: checkAt - 0.25, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 60, scale: 0.3, blur: 10 }, to: { opacity: 1, y: 0, scale: 0.36, blur: 0 } });
+  const scan = S.el("div", { class: "scan" }, mini);
+  S.set(scan, { opacity: 0 });
+  S.tween(scan, { at: checkAt + 0.25, dur: 1.2, ease: "inOutSine", from: { y: 40, opacity: 1 }, to: { y: 520 } });
+  S.tween(scan, { at: checkAt + 1.45, dur: 0.2, to: { opacity: 0 } });
+  const savedAt = said[3] + 0.12;
+  Z.burst(S, { at: savedAt + 0.05, x: rs[3].cx, y: rs[3].cy, seed: 45, count: 100, power: 1.1 });
+  sweep(S, flow.chips[3], savedAt + 0.4, 1.0);
+  S.cursor([
+    { at: c1 - 0.2, x: rs[0].cx + 80, y: rs[0].cy + 180 },
+    ...said.map((t, i) => ({ at: t + 0.12, x: rs[i].cx - 10, y: rs[i].cy + 10, click: true, dur: i === 3 ? 1.0 : 0.55 })),
+  ], { hide: S.seconds - 0.4 });
+  S.camera([
+    { at: 0, x: 960, y: 300, zoom: 1.35 },
+    { at: banAt - 0.4, dur: 1.2, x: 900, y: 290, zoom: 1.3, ease: "inOutCubic" },
+    { at: c1 - 0.6, dur: 1.3, x: rFlow.cx, y: 470, zoom: 1.0, ease: "inOutQuint" },
+    { at: said[1] + 0.2, dur: 1.2, x: rs[2].cx - 60, y: 520, zoom: 1.2, ease: "inOutCubic" },
+    { at: checkAt - 0.3, dur: 1.2, x: rs[2].cx, y: 610, zoom: 1.1, ease: "inOutCubic" },
+    { at: said[3] - 0.9, dur: 1.0, x: rs[3].cx - 80, y: 520, zoom: 1.3, ease: "inOutCubic" },
+  ]);
+}, { label: "Diagram, not the app" });
+
+// ------------------------------------------------------------------ 8. the real site: tick Wallet setup
+Z.scene("e1-site", async (S) => {
+  const P = S.params;
+  const win = Z.browserWindow(S, { url: P.url_bar || "zero-to-shielded.vercel.app", src: "/?capture=1&theme=dark", at: 0, y: 476 });
+  await win.ready;
+  // "wallet" is said twice in this cue: tick on the second ("Tick Wallet setup")
+  const tickAt = S.word(0, "Wallet", 1) + 0.05;
+  win.site.scroll([
+    { at: 0, y: 0 },
+    { at: 0.35, dur: 1.5, to: "#checklist", offset: -24, ease: "inOutCubic" },
+  ]);
+  win.site.reveal([{ at: 0, k: 0 }, { at: tickAt, k: 1 }], "#checklist");
+  const target = win.rect('#checklist [data-step-id="wallet"] .cl-label', { at: 3 });
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1 },
+    { at: tickAt - 1.2, dur: 1.1, x: target.x + 120, y: target.cy + 30, zoom: 1.7, ease: "inOutCubic" },
+    { at: tickAt + 2.0, dur: 1.5, x: 960, y: 520, zoom: 1.05, ease: "inOutCubic" },
+  ]);
+  S.cursor([
+    { at: 1.4, x: target.x + 520, y: target.cy + 230 },
+    { at: tickAt, x: target.x + 40, y: target.cy + 2, click: true, dur: 0.9 },
+    { at: tickAt + 1.7, x: target.x + 300, y: target.cy + 120, dur: 1.0 },
+  ], { hide: S.seconds - 0.3 });
+});
+
+// ------------------------------------------------------------------ 9. end card
+Z.scene("e1-end", (S) => {
+  const P = S.params;
+  const end = Z.endCard(S, { next: P.next || "Next: Episode 2 · Getting ZEC", url: P.url || "zero-to-shielded.vercel.app" });
+  const ur = S.rectOf(end.url);
+  const urlAt = S.word(0, "zero");
+  Z.pulse(S, end.url, urlAt);
+  sweep(S, end.url, urlAt + 0.1, 1.2);
+  const sr = S.rectOf(end.el.querySelector(".zts-shield"));
+  Z.burst(S, { at: 0.75, x: sr.cx, y: sr.cy, seed: 51, count: 60, power: 0.8 });
+  void ur;
+  S.camera([
+    { at: 0, x: 960, y: 470, zoom: 1.0 },
+    { at: 0.3, dur: S.seconds, x: 960, y: 480, zoom: 1.06, ease: "inOutSine" },
+  ]);
+});
+</script>
+</body>
+</html>

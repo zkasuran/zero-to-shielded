@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zero to Shielded · Episode 2 · Getting ZEC</title>
+<link rel="stylesheet" href="./lib/series.css">
+<style>
+  /* local fix: the shared opening card sets this note at 28px, under the 30px body minimum */
+  #stage .zts-open-aka { font-size: 30px; }
+  /* local fix: the shared address card text sits under 30px; widen the card so the larger text fits */
+  #stage .zts-addr { width: 860px; }
+  #stage .zts-addr-title { font-size: 34px; }
+  #stage .zts-badge { font-size: 30px; height: 52px; padding: 0 20px; }
+  #stage .zts-addr-note { font-size: 30px; }
+  #stage .fig { position: absolute; left: 0; top: 0; }
+  #stage .fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .halo { position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 214, 110, .5) 0%, rgba(244, 183, 40, .16) 34%, rgba(244, 183, 40, 0) 68%); }
+  .halo.is-blue { background: radial-gradient(circle, rgba(122, 162, 255, .42) 0%, rgba(122, 162, 255, .12) 36%, rgba(122, 162, 255, 0) 68%); }
+  .paths { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+  .paths path { fill: none; stroke-linecap: round; stroke-dasharray: 1 1; }
+  .route { stroke-width: 7; stroke-dashoffset: calc(1 - var(--draw, 0)); }
+  .route.is-gold { stroke: #F4B728; filter: drop-shadow(0 0 10px rgba(244, 183, 40, .55)); }
+  .route.is-blue { stroke: #7AA2FF; filter: drop-shadow(0 0 10px rgba(122, 162, 255, .5)); }
+  .route-under { stroke: rgba(245, 241, 230, .1); stroke-width: 7; stroke-dasharray: none !important; }
+  .line { stroke: rgba(245, 241, 230, .5); stroke-width: 4; stroke-dashoffset: calc(1 - var(--draw, 0)); }
+  .bigtext { font: 750 56px/1.1 "Inter", sans-serif; letter-spacing: -0.02em; color: #F5F1E6; white-space: nowrap; }
+  .bigtext.is-gold { color: #F4B728; }
+  .zts-coin.is-grey { color: #2E2C28; background: radial-gradient(circle at 34% 28%, #FAF8F2 0%, #D6D2C6 26%, #9C978B 64%, #6E6A61 100%);
+    box-shadow: 0 0 0 calc(var(--d, 132px) * .045) rgba(255, 255, 255, .35) inset, 0 20px 40px -16px rgba(0, 0, 0, .7); }
+  .mover { position: absolute; left: 0; top: 0; }
+  .glass path { fill: none; stroke-linecap: round; }
+  .building { position: absolute; left: 0; top: 0; width: 330px; height: 330px; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .55)); }
+  .building svg { width: 100%; height: 100%; display: block; }
+  .blk { position: absolute; left: 0; top: 0; width: 280px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    font: 750 32px/1 "Inter", sans-serif; color: #F5F1E6; letter-spacing: .02em;
+    background: linear-gradient(180deg, #2A3356, #1A2140); box-shadow: 0 0 0 2px rgba(245, 241, 230, .2) inset, 0 12px 24px -12px rgba(0, 0, 0, .8); }
+  .blk.is-top { box-shadow: 0 0 0 2px rgba(244, 183, 40, .8) inset, 0 0 40px -6px rgba(244, 183, 40, .5); }
+  .ring { position: absolute; left: 0; top: 0; width: 380px; height: 380px; }
+  .ring svg { width: 100%; height: 100%; display: block; transform: rotate(-90deg); overflow: visible; }
+  .ring circle { fill: none; stroke-width: 16; }
+  .ring .trk { stroke: rgba(245, 241, 230, .1); }
+  .ring .bar { stroke: #F4B728; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--p, 0)); filter: drop-shadow(0 0 12px rgba(244, 183, 40, .6)); }
+  .ring-num { position: absolute; inset: 0; display: grid; place-items: center; font: 800 150px/1 "Inter", sans-serif; letter-spacing: -0.05em; color: #F5F1E6; font-variant-numeric: tabular-nums; }
+  .ring-cap { font: 650 56px/1.1 "Inter", sans-serif; letter-spacing: -0.02em; color: #F5F1E6; white-space: nowrap; }
+  .sweep { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden; }
+  .sweep::before { content: ""; position: absolute; top: -20%; bottom: -20%; width: 34%; left: calc(var(--sx, -0.5) * 100%);
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 246, 214, .28), rgba(255, 255, 255, 0)); transform: skewX(-14deg); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script type="module">
+// Episode 2 · Getting ZEC. One scene per segment of tools/video-kit/projects/zts-e2.json
+// (scene id == segment name). On-screen strings come from S.params (verbatim from
+// episodes/SCRIPTS.md). Pure in t: seeded randomness only, every motion keyed to t.
+import * as Z from "./lib/series.js";
+import { maya } from "/js/cast.js";
+
+const { ease, clamp, hash, lerp } = Z;
+const setTf = (n, tf) => { if (n._tf !== tf) { n.style.transform = tf; n._tf = tf; } };
+const setOp = (n, o) => { const s = clamp(o).toFixed(3); if (n._o !== s) { n.style.opacity = s; n._o = s; } };
+
+// ---------------------------------------------------------------- shared helpers
+
+function pivot(g) {
+  if (!g) return null;
+  const [ox, oy] = (g.getAttribute("data-origin") || "100 300").split(/\s+/).map(Number);
+  g.style.transformBox = "view-box";
+  g.style.transformOrigin = `${ox}px ${oy}px`;
+  return g;
+}
+
+// a cast figure as live SVG, bottom centre at (x, y), with breathing, blinks and a head sway
+function figure(S, fn, opts, { x, y, seed = 1, parent } = {}) {
+  const el = S.el("div", { class: "fig", style: { width: `${opts.size}px` } }, parent);
+  el.innerHTML = fn({ theme: "dark", label: false, ...opts });
+  Z.place(el, x, y, "bottom");
+  const q = (c) => pivot(el.querySelector(`.${c}`));
+  const parts = { body: q("cast-body"), head: q("cast-head"), eyes: q("cast-eyes") };
+  const blinks = Array.from({ length: 40 }, (_, k) => 0.9 + k * 3.5 + hash(seed, k) * 1.5);
+  S.on((t) => {
+    if (parts.body) setTf(parts.body, `scale(1,${(1 + 0.012 * (0.5 + 0.5 * Math.sin(t * 2.2 + seed))).toFixed(4)})`);
+    if (parts.head) setTf(parts.head, `rotate(${(Math.sin(t * 0.8 + seed * 1.7) * 1.8).toFixed(2)}deg)`);
+    if (parts.eyes) {
+      let v = 1;
+      for (const b of blinks) { const d = (t - b) / 0.16; if (d > 0 && d < 1) v = 1 - 0.9 * Math.sin(Math.PI * d); }
+      setTf(parts.eyes, `scale(1,${v.toFixed(3)})`);
+    }
+  });
+  return el;
+}
+
+function halo(S, { x, y, r = 300, blue = false, parent } = {}) {
+  const el = S.el("div", { class: `halo${blue ? " is-blue" : ""}`, style: { width: `${2 * r}px`, height: `${2 * r}px` } }, parent);
+  Z.place(el, x, y);
+  S.set(el, { opacity: 0 });
+  return el;
+}
+
+function sweep(S, host, at, dur = 1.1) {
+  const s = host._sweep || (host._sweep = S.el("div", { class: "sweep" }, host));
+  S.tween(s, { at, dur, ease: "inOutCubic", from: { "--sx": -0.5 }, to: { "--sx": 1.3 } });
+}
+
+function svgLayer(S, inner, parent) {
+  const box = S.el("div", { html: `<svg class="paths" viewBox="0 0 1920 1080">${inner}</svg>`, style: "position:absolute;left:0;top:0" }, parent);
+  return box.firstChild;
+}
+
+// an element that rides along an SVG path from t0 to t1 (eased), pure in t
+function ride(S, el, path, { t0, t1, e = "inOutCubic", fadeIn = 0.15, fadeOut = 0.2, hold = false } = {}) {
+  const L = path.getTotalLength();
+  S.on((t) => {
+    const p = ease[e](clamp((t - t0) / (t1 - t0)));
+    const pt = path.getPointAtLength(L * p);
+    setTf(el, `translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px) translate(-50%,-50%)`);
+    const vis = t < t0 ? 0 : Math.min(1, (t - t0) / fadeIn) * (hold ? 1 : 1 - clamp((t - t1 + fadeOut) / fadeOut));
+    setOp(el, vis);
+  });
+}
+
+function coinEl(S, kind, size, parent, text = "ZEC") {
+  const el = S.el("div", { class: `zts-coin is-${kind}`, text, style: { "--d": `${size}px` } }, parent);
+  return el;
+}
+
+// ------------------------------------------------------------------ 1. opening card
+Z.scene("e2-open", (S) => {
+  const P = S.params;
+  const card = Z.openingCard(S, { n: P.n ?? 2, title: P.title });
+  const nr = S.rectOf(card.num);
+  Z.burst(S, { at: 0.95, x: nr.cx - 10, y: nr.cy + 10, seed: 6, count: 70, power: 0.95 });
+  S.tween(card.num, { at: S.word(0, "ZEC") - 0.2, dur: 1.4, ease: "inOutCubic", from: { "--sweep": -0.3 }, to: { "--sweep": 1.35 } });
+  card.words.forEach((w, i) => Z.pulse(S, w, S.word(0, "two") + i * 0.05));
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.0 },
+    { at: 0.2, dur: S.seconds, x: 975, y: 505, zoom: 1.07, ease: "inOutSine" },
+  ]);
+});
+
+// ------------------------------------------------------------------ 2. two routes
+Z.scene("e2-routes", (S) => {
+  const P = S.params;
+  const [r1, r2] = P.routes || ["1 · Swap in Zodl", "2 · Buy on an exchange"];
+  const A = { x: 560, y: 520 }, W = { x: 1530, y: 520 };
+  const up = `M${A.x} ${A.y} C700 ${A.y} 720 290 900 290 L1020 290 C1220 290 1260 ${W.y} ${W.x - 120} ${W.y}`;
+  const dn = `M${A.x} ${A.y} C700 ${A.y} 720 750 900 750 L1020 750 C1220 750 1260 ${W.y} ${W.x - 120} ${W.y}`;
+  const svg = svgLayer(S, `<path class="route-under" d="${up}"/><path class="route-under" d="${dn}"/><path class="route is-gold" pathLength="1" d="${up}"/><path class="route is-blue" pathLength="1" d="${dn}"/>`);
+  const [, , pUp, pDn] = svg.querySelectorAll("path");
+  const t1 = S.word(0, "Route"), t2 = S.word(0, "Route", 1);
+  S.tween(pUp, { at: t1 + 0.1, dur: 1.6, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+  S.tween(pDn, { at: t2 + 0.1, dur: 1.6, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+  Z.appear(S, svg.parentNode, { at: 0.1, until: null, from: { opacity: 0 }, dur: 0.6 });
+  const fig = figure(S, maya, { size: 360, pose: "point" }, { x: 330, y: 900, seed: 3 });
+  Z.appear(S, fig, { at: 0.15, until: null, dur: 1.0 });
+  const figHappy = figure(S, maya, { size: 360, pose: "phone", mood: "happy" }, { x: 330, y: 900, seed: 3 });
+  S.set(figHappy, { opacity: 0 });
+  const wAt = S.word(0, "wallet");
+  S.tween(figHappy, { at: wAt + 0.2, dur: 0.4, to: { opacity: 1 } });
+  S.tween(fig, { at: wAt + 0.45, dur: 0.3, to: { opacity: 0 } });
+  // her wallet, where both routes end
+  const glow = halo(S, { x: W.x, y: W.y, r: 260 });
+  Z.phone(S, { at: 0.5, until: null, x: W.x, y: W.y, scale: 0.5 });
+  const c1 = Z.chip(S, r1, { kind: "gold", size: "lg", x: 960, y: 290 });
+  S.enter(c1, { at: t1 + 0.3, dur: 0.9, ease: "outBack", from: { opacity: 0, y: 30, scale: 0.85, blur: 10 } });
+  const c2 = Z.chip(S, r2, { kind: "blue", size: "lg", x: 960, y: 750 });
+  S.enter(c2, { at: t2 + 0.3, dur: 0.9, ease: "outBack", from: { opacity: 0, y: 30, scale: 0.85, blur: 10 } });
+  c1.style.zIndex = "5"; c2.style.zIndex = "5"; // coins pass behind the route labels
+  Z.pulse(S, c1, S.word(0, "swap") + 0.05);
+  Z.pulse(S, c2, S.word(0, "buy") + 0.05);
+  // a coin rides each route into the wallet
+  const g1 = coinEl(S, "gold", 64, S.root);
+  g1.classList.add("mover");
+  ride(S, g1, pUp, { t0: S.word(0, "crypto"), t1: S.word(0, "Zodl") + 0.2 });
+  const g2 = coinEl(S, "blue", 64, S.root);
+  g2.classList.add("mover");
+  ride(S, g2, pDn, { t0: S.word(0, "exchange"), t1: wAt + 0.15 });
+  const in1 = S.word(0, "Zodl") + 0.2, in2 = wAt + 0.15;
+  [in1, in2].forEach((t, i) => {
+    S.tween(glow, { at: t - 0.1, dur: 0.3, to: { opacity: 1, scale: 1.1 } });
+    S.tween(glow, { at: t + 0.3, dur: 1.2, to: { opacity: 0.45, scale: 1 } });
+    Z.burst(S, { at: t, x: W.x, y: W.y, seed: 60 + i, count: 60, power: 0.7 });
+  });
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.04 },
+    { at: t1, dur: 2.6, x: 1000, y: 430, zoom: 1.12, ease: "inOutCubic" },
+    { at: t2 - 0.2, dur: 2.2, x: 1000, y: 610, zoom: 1.12, ease: "inOutCubic" },
+    { at: wAt - 0.6, dur: 1.4, x: 990, y: 520, zoom: 1.02, ease: "inOutCubic" },
+  ]);
+}, { label: "Illustration" });
+
+// ------------------------------------------------------------------ 3. route one: Swap
+Z.scene("e2-swap", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1), c2 = S.cue(2);
+  const tapAt = S.word(0, "Swap") + 0.1;
+  // the home diagram, Swap in gold
+  const group = S.el("div", { class: "zts-group" });
+  Z.place(group, 960, 440);
+  S.el("div", { class: "zts-group-title", text: "Home screen" }, group);
+  const names = ["Receive", "Send", "Pay", P.tap || "Swap"];
+  const chips = names.map((n, i) => Z.chip(S, n, { kind: i === 3 ? "gold" : "ghost", size: "lg", parent: group, at: S.word(0, "home") - 0.3 + i * 0.08, until: S.word(0, "You") - 0.1 }));
+  Z.appear(S, group, { at: S.word(0, "home") - 0.4, until: S.word(0, "You") - 0.1, from: { opacity: 0, scale: 0.96, blur: 8 }, dur: 0.8 });
+  const swap = chips[3];
+  Z.tap(S, swap, tapAt);
+  const rs = S.rectOf(swap), rg = S.rectOf(group);
+  Z.burst(S, { at: tapAt + 0.05, x: rs.cx, y: rs.cy, seed: 70, count: 50, power: 0.6 });
+  S.cursor([
+    { at: 1.2, x: rs.cx + 150, y: rs.cy + 200 },
+    { at: tapAt, x: rs.cx - 10, y: rs.cy + 10, click: true, dur: 0.9 },
+    { at: tapAt + 0.9, x: rs.cx + 120, y: rs.cy + 160, dur: 0.6 },
+  ], { hide: S.word(0, "You") - 0.3 });
+
+  // other crypto -> NEAR Intents -> Shielded ZEC
+  const [fOther, fNode, fOut] = P.flow || ["Other crypto", "NEAR Intents", "Shielded ZEC"];
+  const box = S.el("div", { style: "position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 420px" });
+  const Y = 420, XL = 400, XN = 960, XR = 1520;
+  const flowAt = S.word(0, "You") + 0.05;
+  const svg = svgLayer(S, `<path class="line" pathLength="1" d="M${XL + 110} ${Y} H${XN - 190}"/><path class="line" pathLength="1" d="M${XN + 190} ${Y} H${XR - 110}"/>`, box);
+  const [l1, l2] = svg.querySelectorAll("path");
+  const otherAt = S.word(0, "other") - 0.1, shAt = S.word(0, "shielded") - 0.1;
+  S.tween(l1, { at: otherAt + 0.3, dur: 0.7, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+  S.tween(l2, { at: shAt - 0.3, dur: 0.6, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+  const stack = S.el("div", { style: "position:absolute;left:0;top:0;width:150px;height:150px" }, box);
+  Z.place(stack, XL, Y);
+  [[-34, 22], [30, 18], [0, -22]].forEach(([dx, dy], i) => {
+    const c = coinEl(S, "grey", 104, stack, "");
+    Object.assign(c.style, { position: "absolute", left: `${23 + dx}px`, top: `${23 + dy}px` });
+    S.enter(c, { at: otherAt + i * 0.1, dur: 0.8, ease: "outBack", from: { opacity: 0, y: 30, scale: 0.6 } });
+  });
+  const tOther = S.el("div", { class: "bigtext", text: fOther }, box);
+  Z.place(tOther, XL, Y + 130);
+  S.enter(tOther, { at: otherAt + 0.2, dur: 0.8, from: { opacity: 0, y: 16, blur: 6 } });
+  const node = Z.chip(S, fNode, { kind: "ghost", size: "lg", icon: "cycle", parent: box, x: XN, y: Y });
+  S.enter(node, { at: flowAt + 0.2, dur: 0.9, ease: "outExpo", from: { opacity: 0, scale: 0.85, blur: 10 } });
+  const shWrap = S.el("div", { style: "position:absolute;left:0;top:0" }, box);
+  Z.shield(S, { size: 150, parent: shWrap });
+  Z.place(shWrap, XR, Y - 10);
+  S.enter(shWrap, { at: shAt, dur: 1.0, ease: "outBack", from: { opacity: 0, scale: 0.5, rotate: -12, blur: 8 } });
+  const tOut = S.el("div", { class: "bigtext is-gold", text: fOut }, box);
+  Z.place(tOut, XR, Y + 135);
+  S.enter(tOut, { at: shAt + 0.2, dur: 0.8, from: { opacity: 0, y: 16, blur: 6 } });
+  Z.burst(S, { at: shAt + 0.35, x: XR, y: Y - 10, seed: 72, count: 80, power: 0.9 });
+  Z.appear(S, box, { at: flowAt - 0.1, until: null, from: { opacity: 0 }, dur: 0.4 });
+  // coins keep flowing: grey into the node, gold out of it (pure: phase from t)
+  const movers = [0, 1, 2, 3].map(() => ({ g: coinEl(S, "grey", 54, box, ""), y: coinEl(S, "gold", 54, box, "") }));
+  movers.forEach((m) => { m.g.classList.add("mover"); m.y.classList.add("mover"); });
+  const T0 = shAt + 0.2, period = 2.0;
+  S.on((t) => {
+    movers.forEach((m, k) => {
+      const ph = t < T0 ? -1 : (((t - T0) / period + k / 4) % 1);
+      const first = t - ph * period >= T0 - 1e-6; // this lap started after T0: no pop-in mid path
+      let gx = XL, go = 0, yx = XN, yo = 0;
+      if (ph >= 0 && first) {
+        if (ph < 0.45) { const p = ease.inOutSine(ph / 0.45); gx = lerp(XL + 90, XN - 170, p); go = Math.min(1, ph / 0.06) * (1 - clamp((ph - 0.38) / 0.07)); }
+        if (ph > 0.55) { const p = ease.inOutSine((ph - 0.55) / 0.45); yx = lerp(XN + 170, XR - 80, p); yo = Math.min(1, (ph - 0.55) / 0.06) * (1 - clamp((ph - 0.92) / 0.08)); }
+      }
+      setTf(m.g, `translate(${gx.toFixed(1)}px,${Y}px) translate(-50%,-50%)`); setOp(m.g, go);
+      setTf(m.y, `translate(${yx.toFixed(1)}px,${Y}px) translate(-50%,-50%)`); setOp(m.y, yo);
+    });
+  });
+  // the definition, then back to the node for NEAR Intents
+  const def = (P.definition || "Shielded: the amount, the sender and the receiver are encrypted on the blockchain");
+  const [term, ...rest] = def.split(": ");
+  S.tween(box, { at: c1 - 0.2, dur: 1.0, ease: "inOutCubic", to: { y: -120, scale: 0.86 } });
+  Z.defCard(S, { term, text: rest.join(": "), at: c1 + 0.05, until: c2 - 0.1, x: 960, y: 690 });
+  S.tween(box, { at: c2 - 0.2, dur: 1.0, ease: "inOutCubic", to: { y: 0, scale: 1 } });
+  S.tween(shWrap, { at: S.word(1, "encrypted"), dur: 0.25, to: { scale: 1.12 } });
+  S.tween(shWrap, { at: S.word(1, "encrypted") + 0.25, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+  const nearAt = S.word(2, "NEAR");
+  Z.pulse(S, node, nearAt);
+  Z.pulse(S, node, S.word(2, "not"));
+  sweep(S, node, nearAt + 0.1, 1.0);
+  S.camera([
+    { at: 0, x: rg.cx, y: rg.cy + 20, zoom: 1.25 },
+    { at: tapAt - 1.0, dur: 1.0, x: rs.cx - 60, y: rs.cy + 20, zoom: 1.5, ease: "inOutCubic" },
+    { at: flowAt - 0.3, dur: 1.3, x: 960, y: 440, zoom: 1.04, ease: "inOutQuint" },
+    { at: c1 - 0.2, dur: 1.2, x: 960, y: 520, zoom: 1.0, ease: "inOutCubic" },
+    { at: c2 - 0.2, dur: 1.2, x: XN, y: Y + 20, zoom: 1.08, ease: "inOutCubic" },
+    { at: nearAt - 0.3, dur: 1.2, x: XN, y: Y + 10, zoom: 1.22, ease: "inOutCubic" },
+    { at: S.cueEnd(2) - 0.3, dur: 1.4, x: 960, y: 440, zoom: 1.08, ease: "inOutCubic" },
+  ]);
+}, { label: "Diagram, not the app" });
+
+// ------------------------------------------------------------------ 4. route two: an exchange
+const BUILDING = `<svg viewBox="0 0 300 300" fill="none" stroke-linejoin="round">
+<path d="M22 104L150 34L278 104Z" fill="rgba(122,162,255,.14)" stroke="#C9D8FF" stroke-width="6"/>
+<rect x="36" y="104" width="228" height="18" rx="3" fill="rgba(122,162,255,.2)" stroke="#C9D8FF" stroke-width="5"/>
+${[58, 112, 166, 220].map((x) => `<rect x="${x}" y="132" width="24" height="118" rx="4" fill="rgba(122,162,255,.12)" stroke="#C9D8FF" stroke-width="5"/>`).join("")}
+<rect x="24" y="252" width="252" height="20" rx="4" fill="rgba(122,162,255,.2)" stroke="#C9D8FF" stroke-width="5"/>
+<circle cx="150" cy="78" r="13" stroke="#C9D8FF" stroke-width="5"/></svg>`;
+
+Z.scene("e2-exchange", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1), c2 = S.cue(2);
+  const B = { x: 360, y: 400 };
+  const bld = S.el("div", { class: "building", html: BUILDING });
+  Z.place(bld, B.x, B.y);
+  S.enter(bld, { at: 0.3, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 50, blur: 12 } });
+  const bglow = halo(S, { x: B.x, y: B.y, r: 260, blue: true });
+  S.tween(bglow, { at: S.word(0, "exchange") - 0.2, dur: 0.8, to: { opacity: 0.9 } });
+  // Maya is mirrored so her phone faces the exchange: the pipe ends at the phone, clear of her face
+  const k = 380 / 200, FX = 1580, FY = 905;
+  const ph = { x: FX - 62 * k, y: FY - 209 * k };
+  const fig = figure(S, maya, { size: 380, pose: "phone" }, { x: FX, y: FY, seed: 4 });
+  fig.querySelector("svg").style.transform = "scaleX(-1)";
+  Z.appear(S, fig, { at: 0.4, until: null, dur: 1.0 });
+  // the glass pipe, marked Transparent
+  const end = { x: ph.x - 72, y: ph.y + 10 };
+  const d = `M${B.x + 150} ${B.y + 40} C${B.x + 520} ${B.y + 40} ${end.x - 480} ${end.y} ${end.x} ${end.y}`;
+  const svg = svgLayer(S, `<g class="glass"><path d="${d}" stroke="rgba(201,216,255,.5)" stroke-width="62" pathLength="1" class="g"/><path d="${d}" stroke="#0C1222" stroke-width="54" pathLength="1" class="g"/><path d="${d}" stroke="rgba(122,162,255,.16)" stroke-width="54" pathLength="1" class="g"/><path d="${d}" stroke="rgba(255,255,255,.22)" stroke-width="5" pathLength="1" class="g" transform="translate(0 -15)"/></g>`);
+  const glassAt = S.word(0, "withdraw") - 0.6;
+  svg.querySelectorAll(".g").forEach((p) => {
+    p.style.strokeDasharray = "1 1";
+    S.tween(p, { at: glassAt, dur: 1.0, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+    p.style.strokeDashoffset = "calc(1 - var(--draw, 0))";
+  });
+  const pipe = svg.querySelector(".g");
+  const tag = Z.chip(S, P.pipe || "Transparent", { kind: "blue", size: "lg", x: 1000, y: 365 });
+  S.enter(tag, { at: S.word(1, "transparent") - 0.3, dur: 0.9, ease: "outBack", from: { opacity: 0, y: 30, scale: 0.85, blur: 10 } });
+  Z.pulse(S, tag, S.word(1, "Transparent"));
+  // blue coins travel along the pipe; the last one parks at Maya's phone
+  const trips = [[S.word(0, "withdraw"), S.word(0, "wallet") + 0.2, false], [S.word(1, "send") - 0.1, S.word(1, "address") + 0.5, false], [S.word(1, "public") - 0.2, S.word(1, "Bitcoin") + 0.3, true]];
+  const coins = trips.map(([t0, t1, hold]) => {
+    const c = coinEl(S, "blue", 78, S.root);
+    c.classList.add("mover");
+    ride(S, c, pipe, { t0, t1, hold });
+    return c;
+  });
+  const parked = coins[2];
+  const pglow = halo(S, { x: end.x, y: end.y, r: 200, blue: true });
+  S.tween(pglow, { at: trips[0][1] - 0.1, dur: 0.4, to: { opacity: 0.9 } });
+  S.tween(pglow, { at: trips[0][1] + 0.4, dur: 1.0, to: { opacity: 0.3 } });
+  // the definition
+  const def = P.definition || "Transparent: public on the blockchain, like Bitcoin. Addresses start with t";
+  const [term, ...rest] = def.split(": ");
+  Z.defCard(S, { term, text: rest.join(": "), kind: "blue", at: S.word(1, "Transparent") - 0.1, until: c2 - 0.05, x: 760, y: 735, width: 1100 });
+  // "Zodl will offer to shield it": the parked coin turns gold
+  const offer = Z.chip(S, P.chip || "Zodl will offer to shield it", { kind: "gold", size: "lg", x: 980, y: 650 });
+  S.enter(offer, { at: S.word(2, "Zodl") - 0.2, dur: 0.9, ease: "outBack", from: { opacity: 0, y: 40, scale: 0.85, blur: 10 } });
+  const shieldAt = S.word(2, "shield") + 0.1;
+  Z.tap(S, offer, shieldAt);
+  const gold = coinEl(S, "gold", 78, S.root);
+  Z.place(gold, end.x, end.y);
+  S.set(gold, { opacity: 0 });
+  S.tween(gold, { at: shieldAt + 0.1, dur: 0.6, ease: "outBack", from: { opacity: 0, scale: 0.6 }, to: { opacity: 1, scale: 1.15 } });
+  S.tween(gold, { at: shieldAt + 0.7, dur: 0.5, ease: "outCubic", to: { scale: 1 } });
+  S.tween(parked, { at: shieldAt + 0.1, dur: 0.3, to: { opacity: 0 } });
+  const gglow = halo(S, { x: end.x, y: end.y, r: 240 });
+  S.tween(gglow, { at: shieldAt + 0.1, dur: 0.5, to: { opacity: 1 } });
+  S.tween(pglow, { at: shieldAt, dur: 0.4, to: { opacity: 0 } });
+  Z.burst(S, { at: shieldAt + 0.15, x: end.x, y: end.y, seed: 80, count: 90, power: 0.9 });
+  sweep(S, offer, shieldAt + 0.5, 1.0);
+  S.camera([
+    { at: 0, x: B.x + 160, y: B.y + 30, zoom: 1.3 },
+    { at: glassAt - 0.2, dur: 2.2, x: 1060, y: 470, zoom: 1.08, ease: "inOutCubic" },
+    { at: c1 - 0.2, dur: 1.4, x: 960, y: 520, zoom: 1.0, ease: "inOutCubic" },
+    { at: c2 - 0.3, dur: 1.4, x: 1278, y: 540, zoom: 1.28, ease: "inOutCubic" }, // building fully out of frame
+  ]);
+}, { label: "Illustration" });
+
+// ------------------------------------------------------------------ 5. Receive: two addresses
+Z.scene("e2-receive", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1);
+  const tapAt = S.word(0, "Receive") + 0.1;
+  const rcv = Z.chip(S, P.tap || "Receive", { kind: "gold", size: "lg", x: 960, y: 190, at: 0.3, until: null });
+  Z.tap(S, rcv, tapAt);
+  const rr = S.rectOf(rcv);
+  Z.burst(S, { at: tapAt + 0.05, x: rr.cx, y: rr.cy, seed: 90, count: 50, power: 0.6 });
+  const [a1, a2] = P.addresses || [];
+  const uAt = S.word(0, "Shielded") - 0.3;
+  const refresh = [S.word(0, "new") - 0.05, S.word(0, "each") + 0.25];
+  const u = Z.addressCard(S, { title: a1?.title || "Zcash Shielded Address", prefix: a1?.prefix || "u1", badge: a1?.badge || "Private", kind: "shielded", at: uAt, x: 960, y: 420, note: P.rotate || "New each time, same wallet", refresh, seed: 4 });
+  const tAt = S.word(1, "Below") + 0.05; // the card arrives on "Below", not after it
+  const tc = Z.addressCard(S, { title: a2?.title || "Zcash Transparent Address", prefix: a2?.prefix || "t1", badge: a2?.badge || "Not Private", kind: "transparent", at: tAt, x: 960, y: 700, seed: 8 });
+  const ru = S.rectOf(u), rt = S.rectOf(tc);
+  Z.pulse(S, u.querySelector(".zts-addr-prefix"), S.word(0, "u1"));
+  Z.pulse(S, tc.querySelector(".zts-addr-prefix"), S.word(1, "t1"));
+  // "They all lead to the same wallet": a soft gold glow on the card
+  const ug = halo(S, { x: ru.cx, y: ru.cy, r: 420 });
+  S.tween(ug, { at: S.word(0, "same") - 0.2, dur: 0.6, to: { opacity: 0.55 } });
+  S.tween(ug, { at: c1, dur: 0.8, to: { opacity: 0 } });
+  Z.pulse(S, u, S.word(1, "u1"));
+  Z.pulse(S, tc, S.word(1, "t1", 1));
+  sweep(S, tc, S.word(1, "t1", 1) + 0.1, 1.0);
+  S.cursor([
+    { at: 0.6, x: rr.cx + 160, y: rr.cy + 190 },
+    { at: tapAt, x: rr.cx - 10, y: rr.cy + 10, click: true, dur: 0.8 },
+    { at: tapAt + 0.9, x: rr.cx + 260, y: rr.cy + 120, dur: 0.6 },
+  ], { hide: tapAt + 1.4 });
+  S.camera([
+    { at: 0, x: 960, y: 260, zoom: 1.5 },
+    { at: uAt - 0.3, dur: 1.3, x: 960, y: ru.cy - 20, zoom: 1.32, ease: "inOutCubic" },
+    { at: S.word(0, "Zodl") - 0.2, dur: 1.4, x: 990, y: ru.cy + 20, zoom: 1.42, ease: "inOutCubic" },
+    { at: c1 - 0.3, dur: 1.4, x: 960, y: (ru.cy + rt.cy) / 2, zoom: 1.08, ease: "inOutCubic" },
+    { at: S.word(1, "starts") - 0.4, dur: 1.4, x: 900, y: rt.cy - 20, zoom: 1.32, ease: "inOutCubic" }, // x 900 keeps the card corner clear of the label
+    { at: S.word(1, "If") - 0.2, dur: 1.4, x: 960, y: (ru.cy + rt.cy) / 2 - 20, zoom: 1.1, ease: "inOutCubic" },
+    { at: S.word(1, "give") - 0.3, dur: 1.2, x: 920, y: rt.cy - 10, zoom: 1.25, ease: "inOutCubic" },
+  ]);
+}, { label: "Diagram, not the app" });
+
+// ------------------------------------------------------------------ 6. it arrives
+Z.scene("e2-arrive", (S) => {
+  const P = S.params;
+  const c1 = S.cue(1);
+  const N = P.blocks || 10;
+  const BX = 440, base = 800, h = 56;
+  const tStart = S.word(0, "New") - 0.2, tEnd = S.word(0, "minutes") + 0.4;
+  const step = (tEnd - tStart) / N;
+  const stackBox = S.el("div", { style: "position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:440px 600px" });
+  const blocks = [];
+  for (let i = 0; i < N; i++) {
+    const b = S.el("div", { class: "blk", text: String(i + 1) }, stackBox);
+    Z.place(b, BX, base - i * h);
+    const at = tStart + i * step;
+    S.set(b, { opacity: 0 });
+    S.tween(b, { at, dur: 0.5, ease: "outBack", from: { opacity: 0, y: -120, scale: 0.9 }, to: { opacity: 1, y: 0, scale: 1 } });
+    blocks.push({ b, at });
+  }
+  S.on((t) => blocks.forEach(({ b, at }, i) => {
+    const top = t >= at && (i === N - 1 || t < blocks[i + 1].at);
+    if (b._top !== top) { b.classList.toggle("is-top", top); b._top = top; }
+  }));
+  // the ring timer: fills with the blocks, counts confirmations
+  const RX = 1060, RY = 430;
+  const ring = S.el("div", { class: "ring", html: `<svg viewBox="0 0 380 380"><circle class="trk" cx="190" cy="190" r="160"/><circle class="bar" cx="190" cy="190" r="160" pathLength="1"/></svg><div class="ring-num">0</div>` }, stackBox);
+  Z.place(ring, RX, RY);
+  S.enter(ring, { at: 0.4, dur: 1.0, ease: "outExpo", from: { opacity: 0, scale: 0.85, blur: 10 } });
+  const bar = ring.querySelector(".bar"), num = ring.querySelector(".ring-num");
+  S.tween(bar, { at: tStart, dur: tEnd - tStart + 0.4, ease: "inOutSine", from: { "--p": 0 }, to: { "--p": 1 } });
+  S.on((t) => {
+    let n = 0;
+    for (const bl of blocks) if (t >= bl.at + 0.15) n++;
+    const s = String(n);
+    if (num.textContent !== s) num.textContent = s;
+  });
+  const cap = S.el("div", { class: "ring-cap", text: P.timer || "about 12.5 minutes" }, stackBox);
+  Z.place(cap, RX, RY + 250);
+  S.enter(cap, { at: S.word(0, "about") - 0.2, dur: 0.8, from: { opacity: 0, y: 20, blur: 8 } });
+  Z.burst(S, { at: tEnd + 0.1, x: RX, y: RY, seed: 95, count: 70, power: 0.9 });
+  // a coin travels from the newest block into the wallet
+  const WX = 1560, WY = 450;
+  const phone = Z.phone(S, { at: 0.6, until: null, x: WX, y: WY, scale: 0.5 });
+  const wglow = halo(S, { x: WX, y: WY, r: 240 });
+  const svg = svgLayer(S, `<path d="M${BX + 150} ${base - (N - 1) * h} C${BX + 500} ${base - N * h - 260} ${WX - 300} ${WY - 260} ${WX} ${WY}" stroke="none"/>`);
+  const coinPath = svg.querySelector("path");
+  const cc = coinEl(S, "gold", 76, S.root);
+  cc.classList.add("mover");
+  const spendAt = S.word(0, "spend");
+  ride(S, cc, coinPath, { t0: spendAt - 0.9, t1: spendAt + 0.25, e: "inOutCubic" });
+  S.tween(wglow, { at: spendAt + 0.15, dur: 0.4, to: { opacity: 1, scale: 1.1 } });
+  S.tween(wglow, { at: spendAt + 0.6, dur: 1.2, to: { opacity: 0.4, scale: 1 } });
+  Z.burst(S, { at: spendAt + 0.25, x: WX, y: WY, seed: 96, count: 60, power: 0.7 });
+  // then: Wallet Backup Required, already done in episode 1
+  S.tween(stackBox, { at: c1 - 0.3, dur: 1.0, ease: "inOutCubic", to: { opacity: 0, scale: 0.9 } });
+  S.tween([phone, wglow], { at: c1 - 0.2, dur: 1.2, ease: "inOutCubic", to: { x: -800 } });
+  const banner = Z.chip(S, P.banner || "Wallet Backup Required", { kind: "banner", size: "lg", x: 1180, y: 380 });
+  S.enter(banner, { at: S.word(1, "Wallet") - 0.25, dur: 0.9, ease: "outExpo", from: { opacity: 0, x: 60, blur: 10 } });
+  Z.pulse(S, banner, S.word(1, "Required"));
+  const done = Z.chip(S, P.check || "Done in episode 1", { kind: "ghost", size: "lg", icon: "check", x: 1180, y: 540 });
+  done.querySelector(".zts-chip-ico").style.color = "#F4B728";
+  S.enter(done, { at: S.word(1, "already") - 0.2, dur: 0.9, ease: "outBack", from: { opacity: 0, y: 40, scale: 0.85, blur: 10 } });
+  const dr = S.rectOf(done);
+  Z.pulse(S, done, S.word(1, "episode"));
+  Z.burst(S, { at: S.word(1, "already") + 0.4, x: dr.x + 50, y: dr.cy, seed: 98, count: 60, power: 0.7 });
+  sweep(S, done, S.word(1, "episode") + 0.1, 1.0);
+  S.camera([
+    { at: 0, x: 900, y: 500, zoom: 1.04 },
+    { at: tStart, dur: tEnd - tStart, x: 780, y: 470, zoom: 1.12, ease: "inOutSine" },
+    { at: spendAt - 1.0, dur: 1.4, x: 1180, y: 450, zoom: 1.08, ease: "inOutCubic" },
+    { at: c1 - 0.2, dur: 1.4, x: 1000, y: 460, zoom: 1.12, ease: "inOutCubic" },
+    { at: S.word(1, "already") - 0.2, dur: 2.5, x: 1060, y: 470, zoom: 1.2, ease: "inOutCubic" },
+  ]);
+}, { label: "Illustration" });
+
+// ------------------------------------------------------------------ 7. the real site: tick Getting ZEC
+Z.scene("e2-site", async (S) => {
+  const P = S.params;
+  const win = Z.browserWindow(S, { url: P.url_bar || "zero-to-shielded.vercel.app", src: "/?capture=1&theme=dark", at: 0, y: 476 });
+  await win.ready;
+  // the cue starts on "Tick", so the window opens already at the checklist
+  win.site.scroll([{ at: 0, y: 0 }, { at: 0, dur: 0.05, to: "#checklist", offset: -24, ease: "linear" }]);
+  const tickAt = S.word(0, "ZEC") + 0.05;
+  win.site.reveal([{ at: 0, k: 1 }, { at: tickAt, k: 2 }], "#checklist");
+  const target = win.rect('#checklist [data-step-id="zec"] .cl-label', { at: 2 });
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.04 },
+    { at: 0.15, dur: 1.0, x: target.x + 120, y: target.cy + 30, zoom: 1.7, ease: "inOutCubic" },
+    { at: tickAt + 2.2, dur: 1.5, x: 960, y: 520, zoom: 1.05, ease: "inOutCubic" },
+  ]);
+  S.cursor([
+    { at: 0.3, x: target.x + 420, y: target.cy + 200 },
+    { at: tickAt, x: target.x + 40, y: target.cy + 2, click: true, dur: 0.75 },
+    { at: tickAt + 1.7, x: target.x + 300, y: target.cy + 120, dur: 1.0 },
+  ], { hide: S.seconds - 0.3 });
+});
+
+// ------------------------------------------------------------------ 8. end card
+Z.scene("e2-end", (S) => {
+  const P = S.params;
+  const end = Z.endCard(S, { next: P.next || "Next: Episode 3 · Shielding and unshielding", url: P.url || "zero-to-shielded.vercel.app" });
+  const sr = S.rectOf(end.el.querySelector(".zts-shield"));
+  const urlAt = S.word(0, "zero");
+  Z.pulse(S, end.url, urlAt);
+  sweep(S, end.url, urlAt + 0.1, 1.2);
+  Z.burst(S, { at: 0.75, x: sr.cx, y: sr.cy, seed: 52, count: 60, power: 0.8 });
+  S.camera([
+    { at: 0, x: 960, y: 470, zoom: 1.0 },
+    { at: 0.3, dur: S.seconds, x: 960, y: 480, zoom: 1.06, ease: "inOutSine" },
+  ]);
+});
+</script>
+</body>
+</html>

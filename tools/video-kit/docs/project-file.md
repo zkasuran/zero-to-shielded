@@ -17,8 +17,11 @@ carries none).
 | `segments` | list | required | the scenes, in order. Each is an object with a `type`. See [Segments](#segments). |
 | `header` | string | `""` | the window chrome caption, shown on terminal, web, code and diff scenes. A segment can override it with its own `header`. |
 | `palette` | string | `"citrus"` | the theme name from `theme.PALETTES`. One theme per video: `preflight.py` fails two projects on the same one. |
-| `voice` | string | `"en-US-AndrewNeural"` | the narration voice, passed to the TTS engine. One voice per video. |
-| `rate` | string | `"+3%"` | the speech rate, an edge-tts style percentage. |
+| `voice` | string | `"en-US-AndrewNeural"` | the narration voice, passed to the TTS engine. One voice per video. A Kokoro voice is e.g. `"af_heart"`. |
+| `rate` | string | `"+3%"` | the speech rate, an edge-tts style percentage. Kokoro reads it as a speed: `"-5%"` is 0.95. |
+| `engine` | string | env `VOICE_ENGINE` or `"edge"` | the TTS engine: `edge`, `kokoro` (local Kokoro-82M, 24 kHz WAV cues with word timings), `fish`, `gmi`, `minimax`. A cue's own `engine` still wins. |
+| `lexicon` | object | `{}` | `{"written": "spoken"}`, applied whole word or phrase, case sensitive, longest first, to the words sent to the engine only. Captions, the SRT and timing.json keep the written line. Kokoro reads inline phonemes: `{"Zodl": "[Zodl](/zˈɑdᵊl/)"}`; other engines get the bare word. |
+| `series` | string | none | groups episodes that share one palette, so `preflight.py` checks one theme per series instead of per video. |
 | `captions` | bool | `true` | burned-in narration captions. `false` turns them off (sets the caption style to `none`). |
 | `cap` | number | `176` | the hard length ceiling in seconds. `build.py` refuses a cut that runs longer. |
 | `cadence` | number | `0.45` | seconds per row reveal, the default for every scene. A segment can override it. |
@@ -72,6 +75,7 @@ Registered scene types are looked up at build time. Confirm what is live with
 | `chips` | an errand file's disclosure | chip pairs | built in |
 | `report` | a report JSON | answer rows | built in |
 | `bubbles` | a transcript JSON | chat turns | built in |
+| `stage` | an animated HTML page, captured frame by frame | one full-frame row; no `focus` | registered |
 | `compose` | code beside output | pending, not registered yet | pending |
 | `device` | a screenshot in a phone frame | pending, not registered yet | pending |
 | `overlay` | pending | pending, not registered yet | pending |
@@ -103,6 +107,13 @@ Full per-type keys are in [docs/scenes.md](scenes.md). The short version:
 - `chips`: `errand` (required), `title`.
 - `report`: `report` (required).
 - `bubbles`: `report` (required), `max_turns` (6), `title`.
+- `stage`: `html` (required, relative to the repo root), `scene` (required), `params`
+  (object). The page contract is [stage/API.md](../stage/API.md). The scene draws its own
+  camera and marker, so a text `focus` fails preflight. Frames are cached in
+  `artifacts/<id>/stage-<name>-<key>/`; `name` must be unique. `STAGE_WORKERS` sets the
+  browsers per capture (default min(6, cpu-1)); `STAGE_SCREENSHOT=fast` captures the same
+  pixels about three times faster at about 1.8 times the disk. Quick look without a build:
+  `python3 stage_preview.py --project projects/x.json --segment NAME --times 1,4 --out look.png`.
 
 ## Narration and focus
 

@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zero to Shielded · E5 Stay private</title>
+<link rel="stylesheet" href="./lib/series.css">
+<style>
+/* E5: page-only pieces. Motion is driven by the stage engine (no transitions). */
+
+/* the habit stack: five cards that flip from a numbered back to the habit */
+.e5-card { position: absolute; left: 96px; width: 780px; height: 118px; perspective: 1500px; }
+.e5-card-in { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(calc(var(--flip, 0) * -180deg)); }
+.e5-face {
+  position: absolute; inset: 0; border-radius: 30px; display: flex; align-items: center; gap: 28px; padding: 0 36px 0 25px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.e5-front { background: linear-gradient(180deg, rgba(36, 44, 76, .94), rgba(18, 23, 42, .95)); box-shadow: 0 0 0 1.5px rgba(245, 241, 230, .12) inset, var(--lift); }
+.e5-back { transform: rotateX(180deg); background: rgba(245, 241, 230, .035); box-shadow: 0 0 0 2px rgba(245, 241, 230, .1) inset; }
+.e5-num { position: relative; width: 68px; height: 68px; border-radius: 50%; flex: none; display: grid; place-items: center; font: 800 34px/1 "Inter", sans-serif; font-variant-numeric: tabular-nums; }
+.e5-num > * { grid-area: 1 / 1; }
+.e5-front .e5-num { color: var(--on-gold); background: radial-gradient(circle at 34% 28%, #FFF2C4 0%, #FFD45E 30%, #F4B728 62%, #C98A00 100%); box-shadow: 0 0 0 1.5px rgba(255, 236, 170, .7) inset, 0 10px 24px -8px rgba(244, 183, 40, .6); }
+.e5-front .e5-num svg { width: 38px; height: 38px; opacity: var(--done, 0); }
+.e5-front .e5-num span { opacity: calc(1 - var(--done, 0)); }
+.e5-back .e5-num { color: rgba(245, 241, 230, .4); box-shadow: 0 0 0 2px rgba(245, 241, 230, .18) inset; }
+.e5-back .e5-bar { height: 16px; width: 360px; border-radius: 8px; background: rgba(245, 241, 230, .08); }
+.e5-title { font: 750 42px/1.1 "Inter", sans-serif; letter-spacing: -0.026em; white-space: nowrap; color: color-mix(in oklab, var(--cream), var(--soft) calc(var(--done, 0) * 55%)); }
+.e5-glow { position: absolute; inset: -3px; border-radius: 33px; pointer-events: none; opacity: var(--on, 0); box-shadow: 0 0 0 3px rgba(244, 183, 40, .9), 0 0 60px -8px rgba(244, 183, 40, .55); }
+
+/* illustrations */
+.e5-ill { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
+.e5-halo { position: absolute; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(circle, rgba(244, 183, 40, .24) 0%, rgba(244, 183, 40, .08) 34%, rgba(244, 183, 40, 0) 66%); }
+.e5-halo.is-blue { background: radial-gradient(circle, rgba(122, 162, 255, .2) 0%, rgba(122, 162, 255, .07) 34%, rgba(122, 162, 255, 0) 66%); }
+.e5-cap { font: 650 36px/1.15 "Inter", sans-serif; letter-spacing: -0.015em; color: var(--cream); white-space: nowrap; text-align: center; }
+.e5-cap small { display: block; margin-top: 8px; font: 550 30px/1.1 "Inter", sans-serif; color: var(--soft); }
+.e5-cap.is-gold { color: var(--gold); }
+.e5-cap.is-blue { color: var(--blue); }
+.e5-eq { font: 800 96px/1 "Inter", sans-serif; color: var(--cream); text-shadow: 0 0 30px rgba(245, 241, 230, .35); }
+.e5-link { position: absolute; height: 4px; border-radius: 2px; transform-origin: 50% 50%; background: repeating-linear-gradient(90deg, rgba(245, 241, 230, .7) 0 14px, rgba(245, 241, 230, 0) 14px 26px); }
+.e5-tchip { display: inline-flex; align-items: center; gap: 14px; height: 64px; padding: 0 24px; border-radius: 18px; background: rgba(5, 7, 14, .55); box-shadow: 0 0 0 2px rgba(122, 162, 255, .55) inset; }
+.e5-tchip b { font: 750 36px/1 "Inter", sans-serif; color: var(--blue); }
+.e5-tchip i { display: block; width: 64px; height: 16px; border-radius: 8px; background: rgba(245, 241, 230, .55); filter: blur(3px); }
+.e5-tchip i + i { width: 44px; }
+.e5-ring { position: absolute; width: 200px; height: 200px; border-radius: 50%; box-shadow: 0 0 0 4px rgba(244, 183, 40, .9), 0 0 40px rgba(244, 183, 40, .45); }
+.e5-ring.is-blue { box-shadow: 0 0 0 4px rgba(122, 162, 255, .9), 0 0 40px rgba(122, 162, 255, .45); }
+/* Tor: a connection hops through three relays */
+.e5-net { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+.e5-net path { fill: none; stroke: rgba(245, 241, 230, .45); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--draw, 0)); }
+.e5-node { position: absolute; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; background: rgba(12, 16, 30, .9); box-shadow: 0 0 0 3px rgba(245, 241, 230, .25) inset, 0 0 0 calc(var(--on, 0) * 4px) rgba(244, 183, 40, .9), 0 0 calc(var(--on, 0) * 50px) rgba(244, 183, 40, .5); }
+.e5-node::before, .e5-node::after { content: ""; position: absolute; border-radius: 50%; box-shadow: 0 0 0 2px rgba(245, 241, 230, .22) inset; }
+.e5-node::before { inset: 16px; }
+.e5-node::after { inset: 31px; background: color-mix(in oklab, rgba(245, 241, 230, .3), #F4B728 calc(var(--on, 0) * 100%)); }
+.e5-end-node { position: absolute; width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; color: var(--cream); background: rgba(12, 16, 30, .9); box-shadow: 0 0 0 3px rgba(245, 241, 230, .3) inset; }
+.e5-end-node svg { width: 64px; height: 64px; }
+.e5-packet { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: radial-gradient(circle at 36% 30%, #FFF2C4, #F4B728 60%, #C98A00); box-shadow: 0 0 24px rgba(244, 183, 40, .8); }
+.e5-lockbadge { position: absolute; width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; color: var(--on-gold); background: radial-gradient(circle at 34% 28%, #FFF2C4 0%, #FFD45E 30%, #F4B728 62%, #C98A00 100%); box-shadow: 0 0 0 2px rgba(255, 236, 170, .7) inset, 0 20px 50px -14px rgba(244, 183, 40, .7), 0 0 60px rgba(244, 183, 40, .35); }
+.e5-lockbadge svg { width: 60px; height: 60px; }
+.e5-lockbadge.is-lg { width: 170px; height: 170px; }
+.e5-lockbadge.is-lg svg { width: 88px; height: 88px; }
+.e5-kicker { font: 700 28px/1 "Inter", sans-serif; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.e5-mag { position: absolute; width: 168px; height: 168px; border-radius: 50%; box-shadow: 0 0 0 9px #2B2F3D, 0 0 0 11px rgba(245, 241, 230, .6), 0 0 0 12.5px rgba(0, 0, 0, .4), 0 30px 60px -10px rgba(0, 0, 0, .7); background: radial-gradient(circle at 34% 28%, rgba(255, 255, 255, .24) 0%, rgba(255, 255, 255, .05) 34%, rgba(255, 255, 255, 0) 60%); }
+.e5-mag::after { content: ""; position: absolute; left: 50%; top: 50%; width: 130px; height: 32px; border-radius: 16px; transform-origin: 0 50%; transform: rotate(45deg) translateX(92px) translateY(-16px); background: linear-gradient(180deg, #3A3F50, #20232E); box-shadow: 0 0 0 2px rgba(245, 241, 230, .35) inset, 0 16px 30px rgba(0, 0, 0, .55); }
+#stage .e5-panel .zts-addr-title { font-size: 31px; }
+#stage .e5-panel .zts-badge { font-size: 22px; height: 44px; }
+
+/* end card */
+.e5-pill {
+  display: inline-flex; align-items: center; gap: 18px; height: 96px; padding: 0 46px 0 34px; border-radius: 999px; overflow: hidden; isolation: isolate;
+  font: 650 44px/1 "Inter", sans-serif; letter-spacing: -0.015em; color: var(--cream); white-space: nowrap;
+  background: linear-gradient(180deg, rgba(36, 44, 76, .94), rgba(20, 25, 46, .94));
+  box-shadow: 0 0 0 1.5px rgba(244, 183, 40, .4) inset, 0 1px 0 rgba(255, 255, 255, .08) inset, 0 30px 60px -22px rgba(0, 0, 0, .8), 0 0 70px -10px rgba(244, 183, 40, .28);
+}
+.e5-pill svg { width: 40px; height: 40px; flex: none; color: var(--gold); }
+.e5-pill u { position: absolute; left: 92px; right: 46px; bottom: 19px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--gold), #FFD66E); transform-origin: 0 50%; transform: scaleX(var(--draw, 0)); }
+.e5-big { font: 800 84px/1.04 "Inter", sans-serif; letter-spacing: -0.04em; color: var(--cream); text-align: center; white-space: nowrap; }
+.e5-gold { background: linear-gradient(176deg, #FFF0C2 0%, #FFD05A 30%, #F4B728 60%, #C98A00 100%); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .05em; margin: 0 -.05em; }
+.e5-row { display: flex; align-items: center; }
+.e5-dot { position: relative; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; isolation: isolate; font: 750 32px/1 "Inter", sans-serif; color: color-mix(in oklab, var(--cream), var(--on-gold) calc(var(--lit, 0) * 100%)); }
+.e5-dot::before { content: ""; position: absolute; inset: 0; border-radius: 50%; z-index: -2; background: rgba(10, 13, 24, .7); box-shadow: 0 0 0 2px rgba(245, 241, 230, .26) inset; }
+.e5-dot > i { position: absolute; inset: 0; border-radius: 50%; z-index: -1; opacity: var(--lit, 0); background: radial-gradient(circle at 34% 28%, #FFF2C4 0%, #FFD45E 30%, #F4B728 62%, #C98A00 100%); box-shadow: 0 0 0 1.5px rgba(255, 236, 170, .7) inset, 0 0 36px rgba(244, 183, 40, .5); }
+.e5-rlink { width: 60px; height: 4px; margin: 0 12px; border-radius: 2px; background: rgba(245, 241, 230, .16); overflow: hidden; }
+.e5-rlink > i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, #F4B728, #FFD66E); transform-origin: 0 50%; transform: scaleX(var(--fill, 0)); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script type="module">
+// E5 · Stay private: five habits.
+//   e5-open    the series opening card
+//   e5-habits  ONE scene for two segments: a stack of five habit cards on the left, the
+//              illustration of the habit being explained on the right. params.show lists the
+//              habits this segment animates (one per cue, in order), params.already the ones
+//              shown as done from the first frame. Cards not yet reached show their numbered back.
+//              Footage slot for the Tor steps: footage/SHOT-LIST.md M-settings.mp4.
+//   e5-guard   the real site: /learn/phrase-guard/, scrolled only, cursor hovers, no clicks
+//   e5-end     support.zodl.com, "Zodl will never ask for your recovery phrase", the site URL
+import * as Z from "./lib/series.js";
+import { maya, sam, watcher } from "/js/cast.js";
+
+const { ease, clamp, lerp, smooth, place, C } = Z;
+const NUMS = ["One", "Two", "Three", "Four", "Five"];
+const CHECK = Z.icons.check;
+void maya; void sam; void watcher;
+
+// a group placed over the whole frame, visible from `at` to `until`
+function group(S, at, until, from = { opacity: 0, y: 30, blur: 10 }) {
+  const g = S.el("div", { class: "e5-ill e5-panel" });
+  Z.appear(S, g, { at, until, from, dur: 0.9, exitDur: 0.45 });
+  return g;
+}
+function cap(S, parent, html, { x, y, cls = "", at }) {
+  const el = S.el("div", { class: `e5-cap ${cls}`.trim(), html }, parent);
+  place(el, x, y);
+  if (at != null) S.enter(el, { at, dur: 0.8, ease: "outExpo", from: { opacity: 0, y: 18, blur: 8 } });
+  return el;
+}
+function ring(S, parent, x, y, at, { blue = false, to = 2.2, dur = 0.8 } = {}) {
+  const r = S.el("div", { class: `e5-ring${blue ? " is-blue" : ""}` }, parent);
+  place(r, x, y);
+  S.set(r, { opacity: 0 });
+  S.tween(r, { at, dur, ease: "outCubic", from: { opacity: 0.95, scale: 0.4 }, to: { opacity: 0, scale: to } });
+  return r;
+}
+function tChip(S, parent, x, y) {
+  const el = S.el("div", { class: "e5-tchip", html: "<b>t1</b><i></i><i></i>" }, parent);
+  place(el, x, y);
+  return el;
+}
+
+// ------------------------------------------------------------------ the five illustrations
+// Each takes (S, g, k): g is its group (already timed), k its cue index. Times come from the words.
+const PX = 1352; // centre of the illustration side
+
+const ILL = [
+  // 1 Keep your ZEC shielded: a blue coin lands at t1, goes through the shield, comes out gold
+  (S, g, k) => {
+    const W = (w, n = 0) => S.word(k, w, n);
+    const halo = S.el("div", { class: "e5-halo" }, g);
+    place(halo, PX, 430);
+    const sh = Z.shield(S, { size: 230, x: PX, y: 420, parent: g });
+    S.enter(sh, { at: W("Keep") - 0.1, dur: 1.0, ease: "outBack", from: { opacity: 0, scale: 0.5, rotate: -10 } });
+    S.tween(sh, { at: W("shielded") - 0.05, dur: 0.16, ease: "outQuad", to: { scale: 1.1 } });
+    S.tween(sh, { at: W("shielded") + 0.11, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+    const t1 = tChip(S, g, PX - 250, 760);
+    S.enter(t1, { at: W("If") - 0.1, dur: 0.8, ease: "outExpo", from: { opacity: 0, y: 24, blur: 8 } });
+    const land = W("lands") + 0.1;
+    const coinB = Z.coin(S, "blue", { size: 112, x: PX - 250, y: 660, parent: g });
+    S.tween(coinB, { at: land - 0.5, dur: 0.5, ease: "inCubic", from: { y: -420, opacity: 0, rotate: -120 }, to: { y: 0, opacity: 1, rotate: 0 } });
+    S.tween(coinB, { at: land, dur: 0.08, to: { scaleY: 0.82, scaleX: 1.12 } });
+    S.tween(coinB, { at: land + 0.08, dur: 0.5, ease: "outBack", to: { scaleY: 1, scaleX: 1 } });
+    ring(S, g, PX - 250, 680, land, { blue: true });
+    // "shield it": up into the shield, out the other side gold
+    const go = W("shield") - 0.15, mid = go + 0.42;
+    S.tween(coinB, { at: go, dur: 0.42, ease: "inCubic", to: { x: 250, y: -240 } });
+    S.set(coinB, { opacity: 0 }, mid);
+    const coinG = Z.coin(S, "gold", { size: 112, x: PX, y: 420, parent: g });
+    g.appendChild(sh); // the shield stays in front of both coins
+    S.set(coinG, { opacity: 0 });
+    S.set(coinG, { opacity: 1 }, mid);
+    S.tween(coinG, { at: mid, dur: 0.6, ease: "outCubic", from: { x: 0, y: 0 }, to: { x: 250, y: 240 } });
+    S.tween(coinG, { at: mid + 0.6, dur: 0.12, to: { scaleY: 0.84, scaleX: 1.1 } });
+    S.tween(coinG, { at: mid + 0.72, dur: 0.5, ease: "outBack", to: { scaleY: 1, scaleX: 1 } });
+    S.tween(sh, { at: mid - 0.04, dur: 0.12, ease: "outQuad", to: { scale: 1.12 } });
+    S.tween(sh, { at: mid + 0.08, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+    Z.burst(S, { at: mid, x: PX, y: 420, count: 60, power: 0.8, seed: 3, life: 1.1 });
+    const lbl = cap(S, g, "Shielded", { x: PX + 250, y: 760, cls: "is-gold", at: mid + 0.5 });
+    void lbl;
+  },
+  // 2 Avoid matching amounts: two equal coins, a link that is easy to spot, then they split apart
+  (S, g, k) => {
+    const W = (w, n = 0) => S.word(k, w, n);
+    const LX = PX - 230, RX = PX + 230, Y = 470;
+    const a = Z.coin(S, "gold", { size: 168, text: "0.5", x: LX, y: Y, parent: g });
+    const b = Z.coin(S, "blue", { size: 168, text: "0.5", x: RX, y: Y, parent: g });
+    const ta = W("shield") - 0.05, tb = W("same") - 0.05;
+    S.enter(a, { at: ta, dur: 0.8, ease: "outBack", from: { opacity: 0, scale: 0.5, y: 30 } });
+    S.enter(b, { at: tb, dur: 0.8, ease: "outBack", from: { opacity: 0, scale: 0.5, y: 30 } });
+    const ca = cap(S, g, "Shield 0.5 ZEC", { x: LX, y: Y + 150, at: ta + 0.15 });
+    const cb = cap(S, g, "Send 0.5 ZEC", { x: RX, y: Y + 150, at: tb + 0.15 });
+    const t1 = tChip(S, g, RX, Y + 240);
+    S.enter(t1, { at: W("transparent") - 0.05, dur: 0.8, ease: "outExpo", from: { opacity: 0, y: 20, blur: 8 } });
+    // the pattern: an equals sign and a dashed link light up between them
+    const tp = W("pattern") - 0.1;
+    const link = S.el("div", { class: "e5-link", style: { left: `${LX + 96}px`, top: `${Y - 2}px`, width: `${RX - LX - 192}px` } }, g);
+    S.tween(link, { at: tp, dur: 0.5, ease: "outCubic", from: { opacity: 0, scaleX: 0 }, to: { opacity: 1, scaleX: 1 } });
+    const eq = S.el("div", { class: "e5-eq", text: "=" }, g);
+    place(eq, PX, Y - 6);
+    S.enter(eq, { at: tp + 0.15, dur: 0.7, ease: "outBack", from: { opacity: 0, scale: 0.4 } });
+    ring(S, g, LX, Y, W("easy") - 0.05, { to: 1.5 });
+    ring(S, g, RX, Y, W("easy") + 0.05, { to: 1.5, blue: true });
+    // the habit: they split apart, the link breaks
+    const sp = W("spot") + 0.35;
+    [a, ca].forEach((el) => S.tween(el, { at: sp, dur: 0.9, ease: "inOutCubic", to: { x: -110 } }));
+    [b, cb, t1].forEach((el) => S.tween(el, { at: sp, dur: 0.9, ease: "inOutCubic", to: { x: 110 } }));
+    S.tween(link, { at: sp, dur: 0.5, ease: "inCubic", to: { opacity: 0, scaleX: 1.4 } });
+    S.tween(eq, { at: sp, dur: 0.45, ease: "inCubic", to: { opacity: 0, scale: 0.6, blur: 6 } });
+  },
+  // 3 Turn on Tor: the connection hops through the Tor network, then the four taps
+  (S, g, k) => {
+    const W = (w, n = 0) => S.word(k, w, n);
+    const tOpen = W("Open") - 0.25;
+    // part A: phone, three relays, the wider internet
+    const A = S.el("div", { class: "e5-ill" }, g);
+    Z.appear(S, A, { at: W("Turn") - 0.1, until: tOpen, from: { opacity: 0, y: 24, blur: 8 }, dur: 0.8 });
+    const pts = [[PX - 360, 560], [PX - 170, 380], [PX + 10, 610], [PX + 190, 380], [PX + 370, 560]];
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "e5-net");
+    svg.setAttribute("viewBox", "0 0 1920 1080");
+    const path = document.createElementNS(ns, "path");
+    path.setAttribute("d", `M${pts.map((p) => p.join(" ")).join(" L")}`);
+    path.setAttribute("pathLength", "1");
+    svg.appendChild(path);
+    A.appendChild(svg);
+    const tSend = W("sends") - 0.1, tNet = W("network") + 0.1;
+    S.tween(path, { at: tSend, dur: tNet - tSend + 0.6, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+    const ph = Z.phone(S, { x: pts[0][0], y: pts[0][1], glyph: null, glow: 0.7, scale: 0.36, parent: A });
+    void ph;
+    const nodes = [1, 2, 3].map((i) => {
+      const n = S.el("div", { class: "e5-node" }, A);
+      place(n, pts[i][0], pts[i][1]);
+      S.enter(n, { at: W("Tor", 0) + i * 0.12, dur: 0.8, ease: "outBack", from: { opacity: 0, scale: 0.4 } });
+      return n;
+    });
+    const web = S.el("div", { class: "e5-end-node", html: Z.icons.globe }, A);
+    place(web, pts[4][0], pts[4][1]);
+    S.enter(web, { at: W("Tor", 0) + 0.5, dur: 0.8, ease: "outBack", from: { opacity: 0, scale: 0.4 } });
+    const cTor = cap(S, A, "Tor network", { x: PX + 10, y: 760, cls: "is-gold", at: W("Tor", 1) - 0.1 });
+    void cTor;
+    // the packet hops along the path; each relay lights as it passes
+    const pk = S.el("div", { class: "e5-packet" }, A);
+    const segT = [tSend + 0.2];
+    for (let i = 1; i < pts.length; i++) segT.push(segT[0] + i * ((tNet + 0.5 - segT[0]) / (pts.length - 1)));
+    nodes.forEach((n, i) => S.tween(n, { at: segT[i + 1] - 0.05, dur: 0.35, ease: "outCubic", from: { "--on": 0 }, to: { "--on": 1 } }));
+    S.on((t) => {
+      let x = pts[0][0], y = pts[0][1];
+      for (let i = 1; i < pts.length; i++) {
+        if (t >= segT[i]) { x = pts[i][0]; y = pts[i][1]; continue; }
+        if (t > segT[i - 1]) {
+          const p = ease.inOutCubic((t - segT[i - 1]) / (segT[i] - segT[i - 1]));
+          x = lerp(pts[i - 1][0], pts[i][0], p);
+          y = lerp(pts[i - 1][1], pts[i][1], p);
+        }
+        break;
+      }
+      const o = (smooth(segT[0] - 0.15, segT[0], t) * (1 - smooth(segT[segT.length - 1], segT[segT.length - 1] + 0.3, t))).toFixed(3);
+      const tf = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+      if (pk._tf !== tf) { pk.style.transform = tf; pk._tf = tf; }
+      if (pk._o !== o) { pk.style.opacity = o; pk._o = o; }
+    });
+    const lock = S.el("div", { class: "e5-lockbadge", html: Z.icons.lock }, A);
+    place(lock, PX + 10, 230);
+    S.enter(lock, { at: W("privacy") - 0.15, dur: 0.9, ease: "outBack", from: { opacity: 0, scale: 0.3, y: 30 } });
+    ring(S, A, PX + 10, 230, W("privacy") - 0.05, { to: 1.8 });
+    // part B: the steps in Zodl (a diagram of the button names, not the app)
+    const B = S.el("div", { class: "e5-ill" }, g);
+    Z.appear(S, B, { at: tOpen, until: null, from: { opacity: 0, y: 24, blur: 8 }, dur: 0.8 });
+    const kick = S.el("div", { class: "e5-kicker", text: "In Zodl" }, B);
+    place(kick, PX, 200);
+    const tAdv = W("Advanced") - 0.05, tTor = W("Protection", 1) - 0.25, tEn = W("Enable") - 0.1, tSave = W("Save") - 0.05;
+    const flow = Z.stepFlow(S, {
+      x: PX, y: 548, dir: "col", until: null,
+      steps: ["Advanced Settings", { label: "Tor Protection", tap: tTor + 0.3 }, "Enable", { label: "Save changes", tap: tSave + 0.3 }],
+      times: [tAdv, tTor, tEn, tSave],
+    });
+    B.appendChild(flow.el);
+    // series tap(): the ring and ripple start from their `from` values, so keep them hidden until the tap
+    flow.chips.flat().forEach((c) => { S.set(c._ring, { opacity: 0 }); S.set(c._ripple, { opacity: 0 }); });
+  },
+  // 4 Guard your phrase: paper and a lock; whoever asks for it gets struck out
+  (S, g, k) => {
+    const W = (w, n = 0) => S.word(k, w, n);
+    const paper = Z.phraseCard(S, { x: PX, y: 470, at: null, until: null, write: { at: W("paper") - 0.3, dur: 1.6 }, parent: g });
+    S.set(paper, { scale: 0.64 });
+    S.enter(paper, { at: W("Guard") - 0.3, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 60, rotate: -3, blur: 10 } });
+    const lock = S.el("div", { class: "e5-lockbadge is-lg", html: Z.icons.lock }, g);
+    place(lock, PX + 300, 300);
+    S.enter(lock, { at: W("Guard") + 0.15, dur: 0.9, ease: "outBack", from: { opacity: 0, y: -120, scale: 0.6, rotate: -14 } });
+    ring(S, g, PX + 300, 300, W("Guard") + 0.5, { to: 1.6 });
+    const cp = cap(S, g, "Keep it on paper", { x: PX, y: 700, cls: "is-gold", at: W("Keep") - 0.05 });
+    const ask = Z.chip(S, "Asks for your phrase", { kind: "ghost", x: PX, y: 800, parent: g });
+    S.enter(ask, { at: W("Anyone") - 0.1, dur: 0.8, ease: "outExpo", from: { opacity: 0, x: 160, blur: 8 } });
+    Z.strike(S, ask, W("scam") - 0.05);
+    S.tween(lock, { at: W("scam") - 0.05, dur: 0.14, ease: "outQuad", to: { scale: 1.14 } });
+    S.tween(lock, { at: W("scam") + 0.09, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+    ring(S, g, PX + 300, 300, W("scam") - 0.05, { to: 1.7 });
+    void cp;
+  },
+  // 5 Check the address: a magnifier over u1, then over t1 (public), then the checker on the site
+  (S, g, k) => {
+    const W = (w, n = 0) => S.word(k, w, n);
+    const u = Z.addressCard(S, { x: PX, y: 360, at: W("Check") - 0.3, until: null, seed: 4, parent: g });
+    const tc = Z.addressCard(S, { title: "Zcash Transparent Address", prefix: "t1", badge: "Not Private", kind: "transparent", x: PX, y: 620, at: W("t1") - 0.35, until: null, seed: 8, parent: g });
+    const pu = S.rectOf(u.querySelector(".zts-addr-prefix"));
+    const pt = S.rectOf(tc.querySelector(".zts-addr-prefix"));
+    const badge = tc.querySelector(".zts-badge");
+    S.tween(badge, { at: W("public") - 0.05, dur: 0.16, ease: "outQuad", to: { scale: 1.18 } });
+    S.tween(badge, { at: W("public") + 0.11, dur: 0.6, ease: "outBack", to: { scale: 1 } });
+    const mag = S.el("div", { class: "e5-mag" }, g);
+    place(mag, 0, 0, "topleft");
+    S.enter(mag, { at: W("Check") + 0.1, dur: 0.5, ease: "outCubic", from: { opacity: 0 } });
+    const T = S.track([
+      { at: 0, x: pu.cx + 260, y: pu.cy + 120 },
+      { at: W("Check") + 0.1, dur: 0.9, x: pu.cx + 8, y: pu.cy + 4, ease: "outCubic" },
+      { at: W("before") , dur: 1.2, x: pu.cx + 150, y: pu.cy + 2, ease: "inOutCubic" },
+      { at: W("t1") - 0.1, dur: 0.9, x: pt.cx + 8, y: pt.cy + 4, ease: "inOutCubic" },
+      { at: W("checker") - 0.4, dur: 1.0, x: PX + 250, y: 820, ease: "inOutCubic" },
+    ], { x: 0, y: 0 });
+    S.on((t) => {
+      const p = T(t);
+      const tf = `translate(${(p.x - 84).toFixed(1)}px,${(p.y - 84).toFixed(1)}px)`;
+      if (mag._b !== tf) { mag._b = tf; mag.style.transform = tf; }
+    });
+    const chk = Z.chip(S, "Address checker", { kind: "ghost", icon: "globe", x: PX - 60, y: 820, parent: g });
+    S.enter(chk, { at: W("address", 2) - 0.1, dur: 0.8, ease: "outExpo", from: { opacity: 0, y: 24, blur: 8 } });
+    chk.querySelector(".zts-chip-ico").style.color = C.gold;
+  },
+];
+
+// ------------------------------------------------------------------ 1. opening card
+Z.scene("e5-open", (S) => {
+  Z.openingCard(S, { n: S.params.n || 5, title: S.params.title || "Five habits" });
+}, {
+  seconds: 6.46,
+  params: { n: 5, title: "Five habits" },
+  narration: ["By the end of this video, you will know five habits that keep your payments private."],
+});
+
+// ------------------------------------------------------------------ 2. the five habits (two segments)
+Z.scene("e5-habits", (S) => {
+  const P = S.params;
+  const habits = P.habits || [];
+  const show = P.show || [0, 1];
+  const already = P.already || [];
+  const first = already.length === 0;
+  const top = 166, H = 118, GAP = 22;
+
+  // when each shown habit starts and stops being the focus
+  const starts = show.map((_, k) => S.word(k, NUMS[show[k]] || "One") - 0.12);
+  const ends = show.map((_, k) => (k + 1 < show.length ? starts[k + 1] - 0.05 : Math.min(S.seconds - 0.25, S.cueEnd(k) + 0.55)));
+
+  const cards = habits.map((hb, i) => {
+    const m = /^(\d+)\s+(.*)$/.exec(hb.card || "") || [null, String(i + 1), hb.card || ""];
+    const card = S.el("div", { class: "e5-card", style: { top: `${top + i * (H + GAP)}px` } });
+    const inner = S.el("div", { class: "e5-card-in" }, card);
+    const front = S.el("div", { class: "e5-face e5-front" }, inner);
+    const num = S.el("div", { class: "e5-num", html: `<span></span>${CHECK}` }, front);
+    num.firstChild.textContent = m[1];
+    S.el("div", { class: "e5-title", text: m[2] }, front);
+    const back = S.el("div", { class: "e5-face e5-back" }, inner);
+    S.el("div", { class: "e5-num", text: m[1] }, back);
+    S.el("div", { class: "e5-bar" }, back);
+    const glow = S.el("div", { class: "e5-glow" }, card);
+    return { card, inner, glow, front };
+  });
+
+  cards.forEach((c, i) => {
+    if (first) S.enter(c.card, { at: 0.05 + i * 0.07, dur: 0.9, ease: "outExpo", from: { opacity: 0, x: -60, blur: 10 } });
+    const k = show.indexOf(i);
+    if (already.includes(i)) {
+      S.set(c.inner, { "--flip": 0 });
+      S.set(c.front, { "--done": 1 });
+    } else if (k >= 0) {
+      const at = starts[k], end = ends[k];
+      S.tween(c.inner, { at, dur: 0.9, ease: "inOutCubic", from: { "--flip": 1 }, to: { "--flip": 0 } });
+      S.tween(c.glow, { at: at + 0.3, dur: 0.5, ease: "outCubic", from: { "--on": 0 }, to: { "--on": 1 } });
+      S.tween(c.card, { at, dur: 0.8, ease: "outExpo", to: { x: 22 } });
+      S.tween(c.glow, { at: end, dur: 0.4, ease: "outCubic", to: { "--on": 0 } });
+      S.tween(c.card, { at: end, dur: 0.6, ease: "inOutCubic", to: { x: 0 } });
+      S.tween(c.front, { at: end, dur: 0.4, ease: "outCubic", from: { "--done": 0 }, to: { "--done": 1 } });
+      const g = group(S, at + 0.1, end + 0.3);
+      ILL[i](S, g, k);
+    } else {
+      S.set(c.inner, { "--flip": 1 });
+    }
+  });
+
+  // the last segment closes on all five done: a ripple down the stack
+  if (show.includes(habits.length - 1)) {
+    const fin = ends[ends.length - 1] + 0.25;
+    cards.forEach((c, i) => {
+      S.tween(c.glow, { at: fin + i * 0.09, dur: 0.25, ease: "outCubic", to: { "--on": 0.9 } });
+      S.tween(c.glow, { at: fin + i * 0.09 + 0.25, dur: 0.5, ease: "outCubic", to: { "--on": 0 } });
+      S.tween(c.card, { at: fin + i * 0.09, dur: 0.18, ease: "outCubic", to: { scale: 1.03 } });
+      S.tween(c.card, { at: fin + i * 0.09 + 0.18, dur: 0.5, ease: "outBack", to: { scale: 1 } });
+    });
+  }
+
+  S.camera([
+    { at: 0, x: 960, y: 506, zoom: 1.0 },
+    { at: 0.1, dur: S.seconds, x: 968, y: 506, zoom: 1.03, ease: "inOutSine" },
+  ]);
+}, {
+  label: "Illustration",
+  seconds: 16,
+  narration: ["One. Keep your ZEC shielded.", "Two. Do not shield an amount."],
+});
+
+// ------------------------------------------------------------------ 3. the real site: Phrase Guard
+Z.scene("e5-guard", async (S) => {
+  const W = (w, n = 0) => S.word(0, w, n);
+  const path = S.params.path || "/learn/phrase-guard/";
+  const win = Z.browserWindow(S, { url: `zero-to-shielded.vercel.app${path}`, src: `${path}?capture=1&theme=dark`, at: 0.05, y: 470 });
+  await win.ready;
+  const tScroll = W("Phrase") - 0.6;
+  win.site.scroll([
+    { at: 0, y: 0 },
+    { at: tScroll, dur: 1.7, to: "#guard", offset: -150, ease: "inOutCubic" },
+  ]);
+  const settle = tScroll + 1.8;
+  const q = win.rect(".guard-deck .gq", { at: settle });
+  const safe = win.rect('[data-g-pick="safe"]', { at: settle });
+  const scam = win.rect('[data-g-pick="scam"]', { at: settle });
+  const dots = win.rect(".guard-dots", { at: settle });
+  const fx = (q.x + q.right) / 2;
+  const fy = (q.y + safe.bottom) / 2;
+  const span = safe.bottom - q.y;
+  const zoom = clamp(760 / Math.max(300, span), 1.2, 1.7);
+  S.camera([
+    { at: 0, x: 960, y: 500, zoom: 1.0 },
+    { at: W("Six") - 0.9, dur: 1.5, x: fx, y: fy, zoom, ease: "inOutCubic" },
+    { at: W("safe") - 0.5, dur: 1.4, x: fx, y: fy + 30, zoom: zoom * 1.05, ease: "inOutCubic" },
+  ]);
+  S.cursor([
+    { at: tScroll + 0.4, x: 1480, y: 760 },
+    { at: W("Six") + 0.1, x: dots.x + dots.w * 0.3, y: dots.cy + 6, dur: 0.9 },
+    { at: W("questions") + 0.3, x: dots.x + dots.w * 0.95, y: dots.cy + 6, dur: 0.8 },
+    { at: W("safe") + 0.05, x: safe.cx - 20, y: safe.cy + 8, dur: 0.9 },
+    { at: W("scam") + 0.1, x: scam.cx - 20, y: scam.cy + 8, dur: 0.7 },
+  ], { hide: S.seconds - 0.3 });
+}, {
+  seconds: 7.63,
+  params: { path: "/learn/phrase-guard/" },
+  narration: ["Test yourself with Phrase Guard on the site. Six quick questions, safe or scam."],
+});
+
+// ------------------------------------------------------------------ 4. end card
+Z.scene("e5-end", (S) => {
+  const W = (w, n = 0) => S.word(0, w, n);
+  const P = S.params;
+  const support = P.support || "support.zodl.com";
+  const url = P.url || "zero-to-shielded.vercel.app";
+  const lineText = P.line || "Zodl will never ask for your recovery phrase";
+
+  // "Need help?" opens in the middle of the frame, then rises to make room for the line
+  const top = S.el("div", { class: "e5-ill" });
+  S.tween(top, { at: S.word(0, "zodl", 1) - 0.55, dur: 1.0, ease: "inOutCubic", from: { y: 220 }, to: { y: 0 } });
+  const kick = S.el("div", { class: "e5-kicker", text: "Need help?" }, top);
+  place(kick, 960, 182);
+  S.enter(kick, { at: W("Need") - 0.1, dur: 0.9, ease: "outExpo", from: { opacity: 0, y: 18, blur: 8 } });
+  const sp = S.el("div", { class: "e5-pill", html: `${Z.icons.info}<span></span><u></u>` }, top);
+  sp.children[1].textContent = support;
+  place(sp, 960, 278);
+  S.enter(sp, { at: W("support") - 0.15, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 34, scale: 0.95, blur: 10 } });
+  S.tween(sp.querySelector("u"), { at: W("support") + 0.6, dur: 1.0, ease: "outExpo", from: { "--draw": 0 }, to: { "--draw": 1 } });
+
+  // the line, word by word as it is said
+  const big = S.el("div", { class: "e5-big" });
+  place(big, 960, 476);
+  const ws = lineText.split(/\s+/);
+  const seen = {};
+  ws.forEach((w, i) => {
+    const s = S.el("span", { class: "zts-word", text: w }, big);
+    if (w === "never") s.classList.add("e5-gold");
+    if (i === 4) big.appendChild(document.createElement("br"));
+    else if (i < ws.length - 1) big.appendChild(document.createTextNode(" "));
+    const key = w.toLowerCase();
+    seen[key] = (seen[key] ?? -1) + 1;
+    S.enter(s, { at: S.word(0, key, key === "zodl" ? 1 : seen[key]) - 0.07, dur: 0.9, ease: "outExpo", from: { opacity: 0, y: 46, blur: 12 } });
+  });
+
+  // "That is the whole path": 1..5 light in a run, then the shield at the end of the row
+  const row = S.el("div", { class: "e5-row" });
+  place(row, 960, 680);
+  const tPath = W("whole") - 0.1;
+  const dots = [];
+  for (let i = 0; i < 5; i++) {
+    const d = S.el("div", { class: "e5-dot", html: `<i></i><span>${i + 1}</span>` }, row);
+    dots.push(d);
+    const l = S.el("div", { class: "e5-rlink", html: "<i></i>" }, row);
+    S.enter(d, { at: tPath - 0.5 + i * 0.05, dur: 0.7, ease: "outExpo", from: { opacity: 0, y: 24, blur: 8 } });
+    S.enter(l, { at: tPath - 0.45 + i * 0.05, dur: 0.7, ease: "outExpo", from: { opacity: 0, y: 24 } });
+    const at = tPath + i * 0.16;
+    S.tween(d, { at, dur: 0.3, ease: "outCubic", from: { "--lit": 0 }, to: { "--lit": 1 } });
+    S.tween(d, { at, dur: 0.16, ease: "outCubic", to: { scale: 1.2 } });
+    S.tween(d, { at: at + 0.16, dur: 0.5, ease: "outBack", to: { scale: 1 } });
+    S.tween(l.firstChild, { at: at + 0.1, dur: 0.2, ease: "inOutCubic", from: { "--fill": 0 }, to: { "--fill": 1 } });
+  }
+  const shWrap = S.el("div", { style: { width: "96px", height: "113px", position: "relative" } }, row);
+  const sh = Z.shield(S, { size: 96, parent: shWrap });
+  const tSh = W("shielded") - 0.05;
+  S.enter(sh, { at: W("zero") - 0.2, dur: 0.9, ease: "outBack", from: { opacity: 0, scale: 0.4, rotate: -12 } });
+  S.tween(sh, { at: tSh, dur: 0.14, ease: "outQuad", to: { scale: 1.3 } });
+  S.tween(sh, { at: tSh + 0.14, dur: 0.7, ease: "outBack", to: { scale: 1 } });
+  const rowR = S.rectOf(row);
+  Z.burst(S, { at: tSh + 0.04, x: rowR.right - 48, y: rowR.cy, count: 120, power: 1.25, seed: 51, life: 1.6 });
+
+  const site = S.el("div", { class: "e5-pill", html: `${Z.icons.globe}<span></span><u></u>` });
+  site.children[1].textContent = url;
+  place(site, 960, 812);
+  S.enter(site, { at: W("zero") - 0.15, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 34, scale: 0.95, blur: 10 } });
+  S.tween(site.querySelector("u"), { at: W("zero") + 0.6, dur: 1.0, ease: "outExpo", from: { "--draw": 0 }, to: { "--draw": 1 } });
+
+  S.camera([
+    { at: 0, x: 960, y: 500, zoom: 1.0 },
+    { at: 0.2, dur: S.seconds, x: 960, y: 504, zoom: 1.035, ease: "inOutSine" },
+  ]);
+}, {
+  seconds: 12.55,
+  params: { support: "support.zodl.com", url: "zero-to-shielded.vercel.app", line: "Zodl will never ask for your recovery phrase" },
+  narration: ["Need help? Go to support.zodl.com. Zodl will never ask for your recovery phrase. That is the whole path, zero to shielded."],
+});
+</script>
+</body>
+</html>

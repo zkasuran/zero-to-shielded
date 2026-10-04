@@ -27,8 +27,12 @@ ROOT = Path(__file__).resolve().parent
 PROJECT_KEYS = {
     "id", "header", "palette", "voice", "voices", "rate", "pitch", "volume", "cap",
     "segments", "upload", "note", "captions", "cadence", "style", "render", "renders",
-    "transitions", "audio", "timing",
+    "transitions", "audio", "timing", "series", "engine", "lexicon",
 }
+
+ENGINES = {"edge", "kokoro", "fish", "gmi", "minimax"}
+REPO = ROOT.parents[1]
+"""Stage pages are named relative to the repo root, because the capture serves the repo."""
 
 COMMON_SEGMENT_KEYS = {
     "type", "name", "title", "footer", "header", "pad", "narration", "hold", "cadence",
@@ -56,6 +60,7 @@ SEGMENT_SPECS = {
     "device": (set(), {"frame", "url", "file", "section", "items", "viewport", "wait_ms"}),
     "compose": ({"panes"}, {"layout", "gap", "inset"}),
     "overlay": ({"elements"}, {"under"}),
+    "stage": ({"html", "scene"}, {"params"}),
 }
 
 
@@ -85,6 +90,18 @@ def check(path: Path) -> tuple[list[str], list[str]]:
     palette = project.get("palette", "citrus")
     if palette not in theme.PALETTES:
         errors.append(f"unknown palette {palette!r}{_suggest(palette, theme.PALETTES)}")
+
+    engine = project.get("engine")
+    if engine is not None and engine not in ENGINES:
+        errors.append(f"unknown engine {engine!r}{_suggest(str(engine), ENGINES)}")
+    lexicon = project.get("lexicon")
+    if lexicon is not None and not (
+        isinstance(lexicon, dict) and all(isinstance(k, str) and isinstance(v, str) for k, v in lexicon.items())
+    ):
+        errors.append('lexicon must be an object of {"written": "spoken"} strings')
+    stage_names = [s.get("name") or "stage" for s in project.get("segments") or [] if s.get("type") == "stage"]
+    for name in sorted({n for n in stage_names if stage_names.count(n) > 1}):
+        errors.append(f"stage segment name {name!r} is used {stage_names.count(name)} times; names key the frame cache")
 
     try:
         resolved = style_module.resolve(project)
@@ -135,6 +152,16 @@ def check(path: Path) -> tuple[list[str], list[str]]:
         url = segment.get("url")
         if isinstance(url, str) and not url.startswith(("http://", "https://", "file://")):
             errors.append(f"{where} ({kind}): url has no scheme: {url}")
+        if kind == "stage":
+            html_path = segment.get("html")
+            if isinstance(html_path, str) and not (REPO / html_path).is_file():
+                errors.append(f"{where} (stage): html not found under the repo root: {html_path}")
+            if "params" in segment and not isinstance(segment["params"], dict):
+                errors.append(f"{where} (stage): params must be an object")
+            if any(isinstance(e, dict) and isinstance(e.get("focus"), (str, list)) and e.get("focus")
+                   for e in segment.get("narration", [])):
+                warnings.append(f"{where} (stage): a stage scene does its own camera and marker, "
+                                "so a text focus matches nothing")
 
         for entry in segment.get("narration", []):
             if isinstance(entry, str):

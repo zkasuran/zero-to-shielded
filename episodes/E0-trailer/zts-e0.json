@@ -1,0 +1,202 @@
+{
+  "id": "zts-e0",
+  "series": "zero-to-shielded",
+  "palette": "shield",
+  "engine": "kokoro",
+  "voice": "af_heart",
+  "rate": "-20%",
+  "cap": 35,
+  "captions": false,
+  "style": {
+    "progress": {
+      "style": "none"
+    },
+    "ink": {
+      "card_ink": [
+        245,
+        241,
+        230
+      ],
+      "card_soft": [
+        185,
+        179,
+        163
+      ]
+    }
+  },
+  "render": {
+    "quality": "high",
+    "canvas_scale": 1.0,
+    "fps": 60,
+    "crf": 14,
+    "preset": "slow",
+    "colour": "bt709",
+    "workers": 3
+  },
+  "lexicon": {
+    "Zodl": "[Zodl](/zˈɑdᵊl/)",
+    "ZEC": "[ZEC](/zˈɛk/)",
+    "Zcash": "[Zcash](/zˈikæʃ/)",
+    "zero-to-shielded.vercel.app": "zero to shielded dot vercel dot app",
+    "support.zodl.com": "support dot [Zodl](/zˈɑdᵊl/) dot com",
+    "0.0001 ZEC": "zero point zero zero zero one [ZEC](/zˈɛk/)",
+    "ZIP 317": "zip three seventeen",
+    "u1": "[u1](/jˈu wˈʌn/)",
+    "t1": "[t1](/tˈi wˈʌn/)",
+    "tex1": "[tex1](/tˈɛks wˈʌn/)",
+    "Zashi": "[Zashi](/zˈɑʃi/)",
+    "F-Droid": "[F-Droid](/ˈɛf dɹˌɔɪd/)"
+  },
+  "segments": [
+    {
+      "type": "stage",
+      "name": "e0-hook",
+      "html": "episodes/stage/e0.html",
+      "scene": "e0-hook",
+      "params": {
+        "kind": "trailer cut",
+        "cuts": [
+          {
+            "beat": "opening shield"
+          }
+        ]
+      },
+      "narration": [
+        "Your first private Zcash payment starts here."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e0-path",
+      "html": "episodes/stage/e0.html",
+      "scene": "e0-path",
+      "params": {
+        "kind": "trailer cut",
+        "cuts": [
+          {
+            "beat": "phrase rules",
+            "from": "zts-e1",
+            "scene": "e1-backup",
+            "label": "Diagram, not the app"
+          },
+          {
+            "beat": "Shield tap",
+            "from": "zts-e3",
+            "scene": "e3-shield",
+            "label": "Diagram, not the app"
+          }
+        ]
+      },
+      "narration": [
+        "Five short videos. Set up Zodl. Get your first ZEC. Shield it. Send a private note."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e0-why",
+      "html": "episodes/stage/e0.html",
+      "scene": "e0-why",
+      "params": {
+        "kind": "trailer cut",
+        "cuts": [
+          {
+            "beat": "envelope vs postcard",
+            "from": "zts-e3",
+            "scene": "e3-sees",
+            "label": "Diagram"
+          }
+        ]
+      },
+      "narration": [
+        "A shielded payment hides who paid, who got paid and how much."
+      ]
+    },
+    {
+      "type": "stage",
+      "name": "e0-end",
+      "html": "episodes/stage/e0.html",
+      "scene": "e0-end",
+      "params": {
+        "kind": "end card",
+        "cuts": [
+          {
+            "beat": "You're shielded",
+            "from": "zts-e4",
+            "scene": "e4-done",
+            "label": "Illustration"
+          }
+        ],
+        "next": "Next: Episode 1 · Wallet setup",
+        "url": "zero-to-shielded.vercel.app"
+      },
+      "narration": [
+        "Start with episode 1 at zero-to-shielded.vercel.app."
+      ],
+      "pad": 1.6
+    }
+  ],
+  "upload": {
+    "title": "Zero to Shielded in 5 videos: your first private Zcash payment | Trailer",
+    "description": "Five short videos take you from no wallet to your first private Zcash payment. Set up Zodl. Get your first ZEC. Shield it. Send a private note.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nA shielded payment hides who paid, who got paid and how much. The series:\n1. Wallet setup: install Zodl and back up your phrase\n2. Getting ZEC: swap in the app or buy on an exchange\n3. Shielding and unshielding\n4. Sending and receiving: your first shielded transaction\n5. Stay private: five habits\n\nStart with episode 1.\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+    "tags": [
+      "zcash",
+      "zec",
+      "zodl",
+      "shielded",
+      "privacy",
+      "crypto wallet",
+      "tutorial",
+      "beginner",
+      "zecathon"
+    ],
+    "category": "Education",
+    "language": "en",
+    "chapters": [
+      {
+        "at": 0,
+        "title": "Zero to Shielded in 5 videos"
+      }
+    ],
+    "climaxes": [],
+    "thumbnail": {
+      "layout": "beacon",
+      "badge": "EPISODE 0",
+      "name": "Zero to Shielded",
+      "claim": [
+        "Zero to",
+        "Shielded"
+      ],
+      "figure": [
+        "15",
+        "minutes"
+      ]
+    },
+    "platforms": {
+      "youtube": {
+        "title": "Zero to Shielded in 5 videos: your first private Zcash payment | Trailer",
+        "description": "Five short videos take you from no wallet to your first private Zcash payment. Set up Zodl. Get your first ZEC. Shield it. Send a private note.\n\nWatch the series and tick your progress: https://zero-to-shielded.vercel.app\n\nA shielded payment hides who paid, who got paid and how much. The series:\n1. Wallet setup: install Zodl and back up your phrase\n2. Getting ZEC: swap in the app or buy on an exchange\n3. Shielding and unshielding\n4. Sending and receiving: your first shielded transaction\n5. Stay private: five habits\n\nStart with episode 1.\n\nWallet steps are shown as labelled step diagrams with the exact button names from the Zodl app, not as drawings of the app. Every fact is sourced in docs/FACTS.md. No recovery phrase appears on screen.\n\nZodl was called Zashi in older guides.\n\nZodl: https://zodl.com/\nZodl support: https://support.zodl.com/\n\nVideo, narration and script: CC BY-ND 4.0. Repost with credit, no edits.\n\nScripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice (Kokoro, Apache-2.0). Music is original and generated in code.",
+        "tags": [
+          "zcash",
+          "zec",
+          "zodl",
+          "shielded",
+          "privacy",
+          "crypto wallet",
+          "tutorial",
+          "beginner",
+          "zecathon"
+        ]
+      },
+      "x": {
+        "post": "Zero to Shielded: five short videos that take you from no wallet to your first private #Zcash payment. Set up Zodl. Get your first ZEC. Shield it. Send a private note. Start with episode 1: https://zero-to-shielded.vercel.app"
+      }
+    },
+    "then": [
+      "Paste the YouTube id into site/js/episodes.js youtubeId",
+      "Copy the mp4, jpg poster and srt into site/media/"
+    ],
+    "note_ai_line": "TODO: .kiro/steering/10-house-rules.md asks every description for this line: Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice. App footage is real and recorded by the author. There is no app footage yet (footage/clean/INDEX.md), so this description uses the Kokoro and generated music line instead. Switch to the steering line once real footage replaces the diagrams. Update the honesty paragraph at the same time.",
+    "note_climaxes": "SCRIPTS.md marks no climax scene in this episode, so none is shaded.",
+    "note_chapters": "The trailer runs about 25 seconds. YouTube needs at least three chapters of 10 seconds each, so the description carries no chapters. This single entry only keeps upload.py from stopping on a missing key. Its chapter gate will still report fewer than three chapters for this file."
+  }
+}

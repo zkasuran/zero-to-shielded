@@ -1,0 +1,10 @@
+Inter 4.1, variable upright face, self-hosted. One family for the whole site.
+
+Release:  https://github.com/rsms/inter/releases/tag/v4.1 (published 2024-11-16)
+Asset:    https://github.com/rsms/inter/releases/download/v4.1/Inter-4.1.zip
+          sha256 9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e
+File:     web/InterVariable.woff2 from that zip, unmodified
+          sha256 693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3
+Licence:  SIL Open Font License 1.1. Full text in LICENSE-Inter.txt, copied from
+          LICENSE.txt in the same zip. No Reserved Font Name is declared.
+Fetched:  2026-10-04 with curl.

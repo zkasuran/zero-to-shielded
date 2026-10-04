@@ -1,0 +1,7 @@
+# Exact pins for the video kit (Python 3.12.13). Install: pip install -r requirements.txt
+# then: python3 -m playwright install chromium
+pillow==11.3.0
+edge-tts==7.2.3
+playwright==1.55.0
+pytest==8.4.2
+numpy==2.3.3

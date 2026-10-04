@@ -73,18 +73,23 @@ def themes() -> int:
     which is exactly what the house rule exists to stop. Free themes are printed so the
     next project can claim one.
     """
-    taken: dict[str, list[str]] = {}
+    # A `series` key groups episodes that are meant to read as one set (one opening card,
+    # one palette). The rule then holds per series: a palette may belong to one video or to
+    # one series, never to two of either.
+    taken: dict[str, dict[str, list[str]]] = {}
     for path in sorted((ROOT / "projects").glob("*.json")):
         project = json.loads(path.read_text(encoding="utf-8"))
-        taken.setdefault(project.get("palette", "citrus"), []).append(project["id"])
+        owner = project.get("series") or project["id"]
+        taken.setdefault(project.get("palette", "citrus"), {}).setdefault(owner, []).append(project["id"])
     problems = 0
     print("\nthemes")
-    for name, projects in sorted(taken.items()):
+    for name, owners in sorted(taken.items()):
         field = theme.palette(name).get("field", "vertical")
+        projects = [pid for group in owners.values() for pid in group]
         print(f"  {name:8s} {field:8s} {', '.join(projects)}")
-        if len(projects) > 1:
+        if len(owners) > 1:
             problems += 1
-            print(f"  FAIL {name} is used by {len(projects)} projects: {', '.join(projects)}")
+            print(f"  FAIL {name} is used by {len(owners)} videos or series: {', '.join(sorted(owners))}")
     free = [name for name in theme.PALETTES if name not in taken]
     print(f"  free: {', '.join(free) if free else 'none, add a palette to theme.py'}")
     return problems

@@ -860,6 +860,23 @@ Z.scene("e3-checker", async (S) => {
   const win = Z.browserWindow(S, { url: "zero-to-shielded.vercel.app/tools/address/", src: "/tools/address/?capture=1&theme=dark", at: -0.35, y: 476 });
   await win.ready;
   const doc = win.site.doc, w = win.site.win;
+  // house rule: an address on screen is its prefix plus blurred bars, never characters. The live
+  // page lists the full public test vectors; the capture keeps each prefix and turns the rest into
+  // bars. Built with DOM and CSSOM only (the site's CSP refuses injected <style>), before any rect is measured
+  if (doc) doc.querySelectorAll("#checker .ck-addr").forEach((code, n) => {
+    const id = (code.closest("[data-example]") || {}).dataset?.example || "";
+    const txt = code.textContent || "";
+    const pre = id && txt.startsWith(id) ? id : txt.slice(0, 2);
+    code.textContent = pre;
+    code.removeAttribute("title");
+    const R = rng(70 + n);
+    for (let i = 0; i < 4; i++) {
+      const b = doc.createElement("span");
+      Object.assign(b.style, { display: "inline-block", width: `${(2.4 + R() * 2.2).toFixed(2)}em`, height: ".6em", marginLeft: ".45em",
+        borderRadius: ".3em", background: "currentColor", opacity: ".5", filter: "blur(1.8px)", verticalAlign: "middle" });
+      code.appendChild(b);
+    }
+  });
   const box = (sel) => { const e = doc && doc.querySelector(sel); if (!e) return null; const r = e.getBoundingClientRect(), sy = w ? w.scrollY : 0; return { top: r.top + sy, bottom: r.bottom + sy }; };
   const ck = box("#checker .ck"), sec = box("#checker"), pill = box(".privacy-pill");
   // one scroll that fits the whole checker card; the privacy line too when it fits

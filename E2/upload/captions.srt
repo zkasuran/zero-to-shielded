@@ -1,0 +1,55 @@
+1
+00:00:00,300 --> 00:00:06,451
+By the end of this video, ZEC will be on its way to your wallet. There are two ways to get it.
+
+2
+00:00:07,651 --> 00:00:17,017
+Route one: swap crypto you already have, right inside Zodl. Route two: buy ZEC on an exchange and send it to your wallet.
+
+3
+00:00:18,517 --> 00:00:27,034
+Route one. On the home screen, tap Swap. You can swap other crypto into shielded ZEC right inside Zodl.
+
+4
+00:00:27,384 --> 00:00:33,221
+Shielded means the amount, the sender and the receiver are encrypted on the blockchain.
+
+5
+00:00:33,571 --> 00:00:38,300
+The swap uses NEAR Intents, not a centralized exchange.
+
+6
+00:00:39,800 --> 00:00:44,401
+Route two. Buy ZEC on an exchange, then withdraw it to your wallet.
+
+7
+00:00:44,751 --> 00:00:53,740
+Most exchanges only send ZEC to a transparent address. Transparent means public on the blockchain, like Bitcoin.
+
+8
+00:00:54,090 --> 00:00:57,994
+That is fine. Zodl will offer to shield it when it arrives.
+
+9
+00:00:59,495 --> 00:01:10,595
+To find your address, tap Receive. Your Zcash Shielded Address starts with u1. Zodl shows a new one each time. They all lead to the same wallet.
+
+10
+00:01:10,945 --> 00:01:21,973
+Below it is your Zcash Transparent Address. It starts with t1. If an exchange will not accept your u1 address, give it the t1 address.
+
+11
+00:01:23,473 --> 00:01:31,331
+Now wait a little. New ZEC needs 10 confirmations, about 12 and a half minutes, before you can spend it.
+
+12
+00:01:31,681 --> 00:01:40,726
+When it lands, Zodl shows Wallet Backup Required. You already wrote your words down. Follow the steps from episode 1.
+
+13
+00:01:42,226 --> 00:01:44,128
+Tick Getting ZEC on the site.
+
+14
+00:01:48,726 --> 00:01:56,932
+Next, episode 3: shielding, so your ZEC goes private. See you at zero-to-shielded.vercel.app.

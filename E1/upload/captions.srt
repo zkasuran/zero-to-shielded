@@ -1,0 +1,63 @@
+1
+00:00:00,300 --> 00:00:08,784
+By the end of this video, you will have a private Zcash wallet on your phone. Your recovery phrase will be safe on paper.
+
+2
+00:00:09,984 --> 00:00:17,777
+First, what is a wallet? It is an app that holds your keys. Your keys let you spend your ZEC, the coin of Zcash.
+
+3
+00:00:18,128 --> 00:00:23,810
+You do not need an email address or a phone number. Only you control this wallet.
+
+4
+00:00:25,310 --> 00:00:32,045
+We will use Zodl. Zodl is a Zcash wallet for your phone. Older guides call it Zashi.
+
+5
+00:00:32,395 --> 00:00:39,601
+Get Zodl from the App Store or the Play Store. On Android you can also use F-Droid or GitHub.
+
+6
+00:00:41,102 --> 00:00:43,817
+Open Zodl and tap Create New Wallet.
+
+7
+00:00:44,167 --> 00:00:49,888
+That is it. Your home screen has four buttons: Receive, Send, Pay and Swap.
+
+8
+00:00:51,388 --> 00:00:58,991
+Now the most important step. Your wallet has a recovery phrase. It is 24 words in a set order.
+
+9
+00:00:59,341 --> 00:01:03,764
+If you lose your phone, those words bring your wallet back on a new one.
+
+10
+00:01:05,264 --> 00:01:11,332
+Back it up right now. Open Advanced Settings, then tap Zodl Recovery Phrase.
+
+11
+00:01:11,682 --> 00:01:16,739
+Write the 24 words on paper, in order. Check every word twice.
+
+12
+00:01:17,089 --> 00:01:26,339
+Three rules. Keep it on paper. Never type it into a website. Nobody legitimate will ever ask for it, not even Zodl.
+
+13
+00:01:28,138 --> 00:01:32,784
+When your first ZEC arrives, Zodl shows Wallet Backup Required.
+
+14
+00:01:33,134 --> 00:01:41,456
+Tap Start, then Next, then Reveal security details. Check the words against your paper, then tap I've saved it.
+
+15
+00:01:42,956 --> 00:01:48,244
+Your wallet is set up. Tick Wallet setup on the site to track your progress.
+
+16
+00:01:49,956 --> 00:01:57,862
+Next, episode 2: getting your first ZEC. Every step is at zero-to-shielded.vercel.app.

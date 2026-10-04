@@ -1,0 +1,4 @@
+0:00 What you will do
+0:25 Wallet setup: install Zodl and create your wallet
+0:51 Wallet setup: back up your recovery phrase
+1:42 Next step

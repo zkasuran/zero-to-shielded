@@ -43,6 +43,7 @@ All six project files use the same voice (Kokoro `af_heart`, rate -20%) and the 
 | E5 stay private | https://youtu.be/Z7ta-yU70CE |
 
 - The site player embeds those ids from youtube-nocookie.com after a press on play; chapter buttons and transcript times restart the embed at their second (task 17, checked on all six live pages).
+- Thumbnails redone: `tools/thumbs/render.py` draws all six in the site's look (Inter, gold on ink, one shield per episode) at 3840x2160 and under 2 MB. They are live on YouTube (the public `hqdefault` images match) and as the site posters. The `thumbnail.jpg` files on `media-renders` are the old design.
 - 4:5 copies for X (task 19): 1080x1350, built locally, not committed (mp4 is gitignored).
 
 ## Pending

@@ -1,0 +1,5 @@
+0:00 Receiving: share your address
+0:25 Sending: your first shielded transaction
+0:45 Confirm and send
+1:09 Receiving: the note arrives
+1:33 You're shielded

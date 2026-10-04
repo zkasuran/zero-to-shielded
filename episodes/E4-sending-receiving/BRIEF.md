@@ -74,8 +74,10 @@ Voice: Kokoro-82M `af_heart`, rate -20%. Each cue is spoken as written; the lexi
 | chapters | 0:00 Receiving: share your address · 0:25 Sending: your first shielded transaction · 0:45 Confirm and send · 1:09 Receiving: the note arrives · 1:33 You're shielded (shortest 20 s) | pass |
 | voice gate | narration in the project file, captions.srt, the description: voice-gate: clean (2 inputs) | pass |
 | frames at each climax looked at | contact sheet of every scene climax from the final file (sheet.py, at most 1600 px) | pass |
-| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e4/ | PENDING: the site is not deployed yet |
+| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e4/ | pass: 200 on 2026-10-04 (curl, signed out) |
 
 ## Notes
 
 - Re-rendered on 2026-10-04 with written-form captions.
+
+Published on YouTube 2026-10-04: https://youtu.be/ryZUV9gx0W8 (public, oEmbed 200 signed out).

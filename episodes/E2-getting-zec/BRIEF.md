@@ -70,8 +70,10 @@ Voice: Kokoro-82M `af_heart`, rate -20%. Each cue is spoken as written; the lexi
 | chapters | 0:00 Two ways · 0:18 Getting ZEC: swap in Zodl · 0:39 Getting ZEC: buy on an exchange · 0:59 Receiving: your addresses · 1:23 Getting ZEC: it arrives (shortest 18 s) | pass |
 | voice gate | narration in the project file, captions.srt, the description: voice-gate: clean (2 inputs) | pass |
 | frames at each climax looked at | end-card frame of the final file at 1:55; scene climaxes on a contact sheet of the earlier render, which differs only in that caption (sheet.py, at most 1600 px) | pass |
-| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e2/ | PENDING: the site is not deployed yet |
+| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e2/ | pass: 200 on 2026-10-04 (curl, signed out) |
 
 ## Notes
 
 - Re-rendered on 2026-10-04 so the end-card caption shows the written URL.
+
+Published on YouTube 2026-10-04: https://youtu.be/VUJ9AWnPcJ8 (public, oEmbed 200 signed out).

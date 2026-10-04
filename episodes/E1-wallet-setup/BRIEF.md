@@ -74,8 +74,10 @@ Voice: Kokoro-82M `af_heart`, rate -20%. Each cue is spoken as written; the lexi
 | chapters | 0:00 What you will do · 0:25 Wallet setup: install Zodl and create your wallet · 0:51 Wallet setup: back up your recovery phrase · 1:42 Next step (shortest 17.8 s) | pass |
 | voice gate | narration in the project file, captions.srt, the description: voice-gate: clean (2 inputs) | pass |
 | frames at each climax looked at | contact sheet of every scene climax from the final file (sheet.py, at most 1600 px) | pass |
-| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e1/ | PENDING: the site is not deployed yet |
+| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e1/ | pass: 200 on 2026-10-04 (curl, signed out) |
 
 ## Notes
 
 - Re-rendered on 2026-10-04 for the opening title spacing and written-form captions.
+
+Published on YouTube 2026-10-04: https://youtu.be/BQoFwaKk9a0 (public, oEmbed 200 signed out).

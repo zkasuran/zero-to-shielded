@@ -13,7 +13,7 @@ scenes).
 - [x] 3. Add the `shield` palette to `tools/video-kit/theme.py`; render one check frame; confirm accent AA on the panel with `contrast.py`.
   Done: accent 5.71:1, ink 15.86:1, `contrast.py shield` ok. Preflight now accepts one palette per `series` (all episodes carry `"series": "zero-to-shielded"`).
 - [x] 4. Site skeleton: home + E1-E4 pages + checklist, light/dark, menu. Deploy to GitHub Pages (orphan `gh-pages` branch or Pages from `/site` via Actions). The URL must return 200 before any `web` scene is captured. NOTE: Pages on a private repo needs a paid plan; if Pages fails while private, tell the lead, who will flip the repo public at that point.
-  Done: full static site in `site/` (14 pages, Vercel-ready `vercel.json` with real security headers). Deploy is the one open item: the Pages API returns 403 on this private repo and Vercel needs the lead's account. See `site/README-DEPLOY.md`. Planned URL https://zero-to-shielded.vercel.app (returned DEPLOYMENT_NOT_FOUND on 2026-10-04, so the name is free).
+  Done: full static site in `site/` (14 pages, Vercel-ready `vercel.json` with real security headers). Deployed 2026-10-04 with the Vercel CLI: https://zero-to-shielded.vercel.app (all 14 pages 200 signed out, CSP and HSTS headers live). See `site/README-DEPLOY.md`.
 - [x] 5. Read `footage/SHOT-LIST.md` and `footage/clean/` to see what real footage exists. Map each script beat to a clip or to the labelled-diagram fallback.
   Done: no clips exist yet. Beat map in `footage/clean/INDEX.md`; scripts locked in `episodes/SCRIPTS.md`.
 
@@ -36,9 +36,11 @@ scenes).
 
 - [x] 15. Address checker tool page + tests from ZIP vectors. (60 unified, 15 ZIP 320 pairs, 26 transparent, BIP 173/350 vectors; tampered copies fail.)
 - [x] 16. "What the blockchain sees" page.
-- [ ] 17. Transcripts on episode pages from captions.srt; chapter seek buttons.
+- [x] 17. Transcripts on episode pages from captions.srt; chapter seek buttons.
+  Done: verified live on all six pages (transcript shown, every chapter button enabled; E1 chapter 0:51 restarts the nocookie embed at start=51). Zero console errors.
 - [x] 18. E5 Stay private.
-- [ ] 19. 4:5 crops for X.
+- [x] 19. 4:5 crops for X.
+  Done: 1080x1350 letterboxed on the series ink (0x070911), all six under 140 s, 3 to 13 MB each. Built locally (gitignored mp4), not committed.
 
 ## P2
 

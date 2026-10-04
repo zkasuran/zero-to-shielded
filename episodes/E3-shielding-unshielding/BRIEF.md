@@ -69,9 +69,11 @@ Voice: Kokoro-82M `af_heart`, rate -20%. Each cue is spoken as written; the lexi
 | chapters | 0:00 What the blockchain sees · 0:35 Shielding: tap Shield · 0:54 Ironwood · 1:09 Unshielding: when you need it · 1:38 Check an address (shortest 15 s) | pass |
 | voice gate | narration in the project file, captions.srt, the description: voice-gate: clean (2 inputs) | pass |
 | frames at each climax looked at | contact sheet of every scene climax from the final file (sheet.py, at most 1600 px) | pass |
-| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e3/ | PENDING: the site is not deployed yet |
+| web scene URL returns 200 anonymously | https://zero-to-shielded.vercel.app/episodes/e3/ | pass: 200 on 2026-10-04 (curl, signed out) |
 
 ## Notes
 
 - The checker scene shows the ZIP test-vector addresses as a prefix plus blurred bars.
 - Rendered before the caption fix. Its narration has no multi-word lexicon tokens, so the captions already match the written script.
+
+Published on YouTube 2026-10-04: https://youtu.be/ydsSzy9AXWg (public, oEmbed 200 signed out).

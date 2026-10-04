@@ -20,14 +20,14 @@ Zero to Shielded is a short video series plus a companion website: **15 minutes*
 
 ## Watch
 
-| # | Title | Length | Link |
-|---|---|---|---|
-| E0 | Zero to Shielded in 5 videos (trailer) | 0:25 | [Watch E0](https://zero-to-shielded.vercel.app/episodes/e0/) |
-| E1 | Wallet setup: install Zodl and back up your phrase | 2:00 | [Watch E1](https://zero-to-shielded.vercel.app/episodes/e1/) |
-| E2 | Getting ZEC: swap in the app or buy on an exchange | 1:59 | [Watch E2](https://zero-to-shielded.vercel.app/episodes/e2/) |
-| E3 | Shielding and unshielding | 2:03 | [Watch E3](https://zero-to-shielded.vercel.app/episodes/e3/) |
-| E4 | Sending and receiving: your first shielded transaction | 1:56 | [Watch E4](https://zero-to-shielded.vercel.app/episodes/e4/) |
-| E5 | Stay private: five habits | 1:16 | [Watch E5](https://zero-to-shielded.vercel.app/episodes/e5/) |
+| # | Title | Length | Site | YouTube |
+|---|---|---|---|---|
+| E0 | Zero to Shielded in 5 videos (trailer) | 0:25 | [Watch E0](https://zero-to-shielded.vercel.app/episodes/e0/) | [YouTube](https://youtu.be/i9wpMoQN0PQ) |
+| E1 | Wallet setup: install Zodl and back up your phrase | 2:00 | [Watch E1](https://zero-to-shielded.vercel.app/episodes/e1/) | [YouTube](https://youtu.be/BQoFwaKk9a0) |
+| E2 | Getting ZEC: swap in the app or buy on an exchange | 1:59 | [Watch E2](https://zero-to-shielded.vercel.app/episodes/e2/) | [YouTube](https://youtu.be/VUJ9AWnPcJ8) |
+| E3 | Shielding and unshielding | 2:03 | [Watch E3](https://zero-to-shielded.vercel.app/episodes/e3/) | [YouTube](https://youtu.be/ydsSzy9AXWg) |
+| E4 | Sending and receiving: your first shielded transaction | 1:56 | [Watch E4](https://zero-to-shielded.vercel.app/episodes/e4/) | [YouTube](https://youtu.be/ryZUV9gx0W8) |
+| E5 | Stay private: five habits | 1:16 | [Watch E5](https://zero-to-shielded.vercel.app/episodes/e5/) | [YouTube](https://youtu.be/Z7ta-yU70CE) |
 
 ## The site
 

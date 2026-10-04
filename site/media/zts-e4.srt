@@ -1,0 +1,63 @@
+1
+00:00:00,300 --> 00:00:07,136
+By the end of this video, you will have sent and received your first shielded payment, with a private note.
+
+2
+00:00:08,336 --> 00:00:12,341
+Every payment has two sides. Let's start with receiving.
+
+3
+00:00:12,691 --> 00:00:18,997
+To get paid, tap Receive. Copy your Zcash Shielded Address. It starts with u1.
+
+4
+00:00:19,347 --> 00:00:24,649
+Send it to the person paying you. They can also scan it if you tap QR Code.
+
+5
+00:00:26,149 --> 00:00:32,017
+Now sending. Tap Send. Paste the address into Send to, then type the amount.
+
+6
+00:00:32,367 --> 00:00:42,097
+In Message, you can add a note. A note is a private message that travels with the payment. Only you and the person you pay can read it.
+
+7
+00:00:42,447 --> 00:00:43,808
+Then tap Review.
+
+8
+00:00:45,307 --> 00:00:51,934
+Before anything is sent, Zodl shows the Confirmation screen. Check the address and the fee.
+
+9
+00:00:52,284 --> 00:01:01,943
+Zcash fees follow a public rule called ZIP 317. The smallest fee is 0.0001 ZEC.
+
+10
+00:01:02,293 --> 00:01:07,931
+Tap Send. When Zodl shows Sent!, your first shielded payment is on its way.
+
+11
+00:01:09,731 --> 00:01:15,643
+On your friend's phone, the payment arrives with your note. Only the two of you can read it.
+
+12
+00:01:15,993 --> 00:01:22,691
+Ask them to send a little back to your u1 address. Now you have received a shielded payment too.
+
+13
+00:01:24,192 --> 00:01:32,499
+And what does the blockchain show? Only scrambled data. Not who paid. Not who got paid. Not how much. Not the note.
+
+14
+00:01:33,998 --> 00:01:35,829
+You did it. You're shielded.
+
+15
+00:01:39,498 --> 00:01:43,530
+Tick Sending and Receiving on the site to finish your checklist.
+
+16
+00:01:46,498 --> 00:01:54,464
+Episode 5 shows five habits that keep it private. Find it at zero-to-shielded.vercel.app.

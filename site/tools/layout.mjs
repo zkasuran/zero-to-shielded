@@ -10,6 +10,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SITE = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -372,6 +373,17 @@ function fillData(html, media) {
   });
 }
 
+// Media is cached for a day (vercel.json), so a changed poster or captions file needs a new
+// URL: append ?v=<first 10 hex of its sha256>. Re-run the build after replacing any media file.
+function versionMedia(html) {
+  return html.replace(/\b(src|poster|data-srt)="([^"?]*media\/(zts-e\d\.(?:jpg|srt|mp4)))(?:\?v=[0-9a-f]+)?"/g, (m, attr, url, name) => {
+    const f = join(SITE, "media", name);
+    if (!existsSync(f)) return m;
+    const v = createHash("sha256").update(readFileSync(f)).digest("hex").slice(0, 10);
+    return `${attr}="${url}?v=${v}"`;
+  });
+}
+
 function relativize(html, file) {
   const depth = file.split("/").length - 1;
   const prefix = depth === 0 ? "./" : "../".repeat(depth);
@@ -397,6 +409,7 @@ export function build({ write = true } = {}) {
     html = replaceRegion(html, "footer", footer(page), page.file);
     html = fillData(html, media);
     if (!page.rootLinks) html = relativize(html, page.file);
+    html = versionMedia(html);
     if (write) { mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, html); }
     out.push({ file: page.file, html });
   }

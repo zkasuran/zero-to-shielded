@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<!-- @head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-d/trsizn3yCQ0yQzLe/VSCOJA9ivs7p5JxP/gNW1h7c='; style-src 'self'; img-src 'self' data: https://i.ytimg.com; media-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0F1A" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<script>(function(){var d=document.documentElement,q,t,s=null;try{q=new URLSearchParams(location.search)}catch(e){q=new URLSearchParams("")}t=q.get("theme");if(t==="dark"||t==="light"){d.setAttribute("data-theme-forced","")}else{try{s=localStorage.getItem("zts-theme")}catch(e){}t=(s==="dark"||s==="light")?s:((window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark")}d.setAttribute("data-theme",t);if(q.get("capture")==="1"){d.setAttribute("data-capture","");addEventListener("pagereveal",function(e){if(e.viewTransition){e.viewTransition.skipTransition()}})}})();</script>
+<link rel="preload" href="../../fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="modulepreload" href="../../js/main.js">
+<!-- /@head -->
+<title>Wallet setup: install Zodl and back up your phrase · Zero to Shielded</title>
+<meta name="description" content="Install Zodl, a Zcash wallet for your phone. Older guides call it Zashi.">
+<!-- @meta -->
+<link rel="canonical" href="https://zero-to-shielded.vercel.app/episodes/e1/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zero to Shielded">
+<meta property="og:title" content="Wallet setup: install Zodl and back up your phrase · Zero to Shielded">
+<meta property="og:description" content="Install Zodl, a Zcash wallet for your phone. Older guides call it Zashi.">
+<meta property="og:url" content="https://zero-to-shielded.vercel.app/episodes/e1/">
+<meta property="og:image" content="https://zero-to-shielded.vercel.app/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zero to Shielded: your first private Zcash payment in 15 minutes.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /@meta -->
+</head>
+<body data-page="episode">
+<!-- @header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<div class="wrap header-bar">
+<a class="brand" href="../../"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-name">Zero to Shielded</span></a>
+<nav class="nav" id="site-nav" aria-label="Main">
+<ul class="nav-list">
+<li class="nav-item" data-nav-item="start">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-start">Start<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-start">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../start/#path"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.6" cy="18.4" r="2.2"/><circle cx="18.4" cy="5.6" r="2.2"/><path d="M7.6 17.4c5.6-1.6 1.8-7.2 7.2-9.8"/></svg></span><span class="nl-title">The 5-step path</span><span class="nl-desc">Watch, do it, tick it. In order.</span></a></li>
+<li><a href="../../start/#need"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M3.8 6.4l1.4 1.4 2.4-2.6M3.8 11.9l1.4 1.4 2.4-2.6M3.8 17.4l1.4 1.4 2.4-2.6"/></svg></span><span class="nl-title">What you need</span><span class="nl-desc">A phone, 15 minutes, a pen and paper.</span></a></li>
+</ul>
+<div class="nav-foot"><span>New here?</span><a class="link-arrow" href="../../episodes/e1/">Start episode 1<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a></div>
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="episodes">
+<button class="nav-trigger is-current" type="button" aria-expanded="false" aria-controls="nav-episodes">Episodes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel nav-panel--wide" id="nav-episodes">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../episodes/e0/"><span class="nl-icon">E0</span><span class="nl-title">The whole path</span><span class="nl-desc">Episode 0, about 0:30</span></a></li>
+<li><a href="../../episodes/e1/" aria-current="page"><span class="nl-icon">E1</span><span class="nl-title">Wallet setup</span><span class="nl-desc">Episode 1, about 1:45</span></a></li>
+<li><a href="../../episodes/e2/"><span class="nl-icon">E2</span><span class="nl-title">Getting ZEC</span><span class="nl-desc">Episode 2, about 1:50</span></a></li>
+<li><a href="../../episodes/e3/"><span class="nl-icon">E3</span><span class="nl-title">Shielding and unshielding</span><span class="nl-desc">Episode 3, about 1:55</span></a></li>
+<li><a href="../../episodes/e4/"><span class="nl-icon">E4</span><span class="nl-title">Sending and receiving</span><span class="nl-desc">Episode 4, about 2:00</span></a></li>
+<li><a href="../../episodes/e5/"><span class="nl-icon">E5</span><span class="nl-title">Stay private</span><span class="nl-desc">Episode 5, about 1:15</span></a></li>
+</ul>
+<div class="nav-foot"><span>Five videos and a trailer</span><a class="link-arrow" href="../../episodes/">All episodes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a></div>
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="tools">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-tools">Tools<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-tools">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../tools/address/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.3"/><path d="M15.5 15.5l4.7 4.7"/></svg></span><span class="nl-title">Address checker</span><span class="nl-desc">Paste an address. See if it is shielded.</span></a></li>
+<li><a href="../../tools/chain/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg></span><span class="nl-title">What the blockchain sees</span><span class="nl-desc">A diagram of one private payment.</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="learn">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-learn">Learn<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-learn">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../learn/phrase-guard/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.9l7.4 2.8v5.6c0 4.8-3.1 8.5-7.4 9.9-4.3-1.4-7.4-5.1-7.4-9.9V5.7z"/><path d="M8.6 12.1l2.4 2.4 4.6-4.8"/></svg></span><span class="nl-title">Phrase Guard</span><span class="nl-desc">Six quick scam checks. Safe or scam?</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="help">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-help">Help<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-help">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../help/#glossary"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.6 5.6a2.4 2.4 0 0 1 2.4-2.4h12.4v14.6H7a2.4 2.4 0 0 0-2.4 2.4z"/><path d="M4.6 20.2a2.4 2.4 0 0 0 2.4 2.4h12.4v-4.8"/></svg></span><span class="nl-title">Glossary</span><span class="nl-desc">Every word, in plain English.</span></a></li>
+<li><a href="../../help/#mistakes"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.6l9.4 16.2H2.6z"/><path d="M12 9.6v4.6M12 17.2v.2"/></svg></span><span class="nl-title">Common mistakes</span><span class="nl-desc">Four slips and how to avoid them.</span></a></li>
+<li><a href="../../help/#support"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.6M12 16.8v.2"/></svg></span><span class="nl-title">Get support</span><span class="nl-desc">Official Zodl help only.</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+</ul>
+</nav>
+<div class="header-actions">
+<button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Change theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M5.5 18.5L7 17M17 7l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19.6 14.6A8.2 8.2 0 0 1 9.4 4.4a8.2 8.2 0 1 0 10.2 10.2z"/></svg></button>
+<button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><path class="bar bar-1" d="M4.5 7h15"/><path class="bar bar-2" d="M4.5 12h15"/><path class="bar bar-3" d="M4.5 17h15"/></svg></button>
+</div>
+</div>
+</header>
+<!-- /@header -->
+<main id="main" tabindex="-1" data-episode="e1">
+<section class="section ep-hero">
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../../episodes/">Episodes</a><span aria-hidden="true">/</span><span aria-current="page">Episode 1</span></nav>
+<div class="ep-head">
+<span class="ep-badge vt-num-e1" aria-hidden="true">E1</span>
+<div>
+<p class="eyebrow">Episode 1 · about 1:45</p>
+<h1 class="h1 ep-title vt-title-e1">Wallet setup: install Zodl and back up your phrase</h1>
+</div>
+</div>
+<p class="lede ep-summary">Install Zodl, a Zcash wallet for your phone. Older guides call it Zashi. Then write your recovery phrase on paper. Your recovery phrase is 24 words in a set order that bring your wallet back if you lose your phone.</p>
+<div class="ep-meta"><span class="chip chip--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg>Ticks Wallet setup</span><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.4l1.9 5.6 5.7 1.9-5.7 1.9L12 18.4l-1.9-5.6-5.7-1.9 5.7-1.9z"/></svg>You have a wallet and your recovery phrase is on paper.</span></div>
+</div>
+</section>
+<section class="section section--tight ep-watch" aria-label="Video and chapters">
+<div class="wrap ep-grid">
+<div class="ep-main">
+<!-- @player:e1 -->
+<div class="player" data-player="e1" data-mode="poster">
+<div class="pp">
+<span class="pp-glow" aria-hidden="true"></span><span class="pp-num" aria-hidden="true">1</span>
+<span class="pp-text"><span class="pp-kicker">Episode 1 · about 1:45</span><span class="pp-title">Wallet setup</span></span>
+<span class="player-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5.6v12.8a.6.6 0 0 0 .9.5l10.2-6.4a.6.6 0 0 0 0-1L8.9 5.1a.6.6 0 0 0-.9.5z" fill="currentColor" stroke="none"/></svg></span>
+<span class="pp-status chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.4" y="5" width="17.2" height="14" rx="2.6"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>Video coming soon</span>
+</div>
+</div>
+<!-- /@player -->
+<div class="ep-actions">
+<button class="btn btn--primary btn--lg" type="button" data-did-it="e1" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg><span data-did-label>I did it</span><span class="btn-shine" aria-hidden="true"></span></button>
+<a class="btn btn--lg" href="../../episodes/e2/">Next episode<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a>
+<p class="ep-did-note small soft" data-did-note aria-live="polite"></p>
+</div>
+<p class="credits small soft">Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice. The video is licensed <a href="https://creativecommons.org/licenses/by-nd/4.0/" rel="noopener noreferrer">CC BY-ND 4.0</a>.</p>
+</div>
+<aside class="ep-side card" aria-labelledby="chapters-title">
+<div class="ep-side-head"><h2 class="h3" id="chapters-title">Chapters</h2><span class="chip" data-chapter-note>Draft times</span></div>
+<ol class="chapters" data-chapters="e1">
+<!-- @chapters:e1 -->
+<li><button class="chapter" type="button" data-t="0" disabled><span class="chapter-t tnum">0:00</span><span class="chapter-title">What you will do</span></button></li>
+<li><button class="chapter" type="button" data-t="12" disabled><span class="chapter-t tnum">0:12</span><span class="chapter-title">Wallet setup: install Zodl</span></button></li>
+<li><button class="chapter" type="button" data-t="35" disabled><span class="chapter-t tnum">0:35</span><span class="chapter-title">Wallet setup: create your wallet</span></button></li>
+<li><button class="chapter" type="button" data-t="55" disabled><span class="chapter-t tnum">0:55</span><span class="chapter-title">Wallet setup: back up your recovery phrase</span></button></li>
+<li><button class="chapter" type="button" data-t="92" disabled><span class="chapter-t tnum">1:32</span><span class="chapter-title">Next step</span></button></li>
+<!-- /@chapters -->
+</ol>
+<p class="small soft chapters-hint" data-chapter-hint>Chapter buttons jump the video once it is live.</p>
+</aside>
+</div>
+</section>
+<section class="section" id="progress" aria-labelledby="progress-title">
+<div class="wrap">
+<div class="section-head"><div><h2 class="h2" id="progress-title">Your progress</h2><p>Tick each step when you have done it in the app. Your ticks stay in this browser only.</p></div></div>
+<div data-checklist>
+<!-- @checklist:compact -->
+<div class="checklist checklist--compact is-k0" data-checklist-root>
+<div class="cl-status">
+<div class="cl-progress">
+<p class="cl-count"><span class="cl-num tnum" aria-hidden="true"></span><span class="cl-of" aria-hidden="true">of 6 steps done</span><span class="sr-only" data-cl-live aria-live="polite"></span></p>
+<div class="cl-bar" aria-hidden="true"><span class="cl-fill"></span></div>
+</div>
+<div class="cl-done" aria-hidden="true">
+<span class="cl-badge"><svg class="cl-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+<p class="cl-done-text"><strong>You're shielded.</strong> <span>All six steps done. You made your first private payment.</span></p>
+</div>
+</div>
+<ol class="cl-steps">
+<li class="cl-step" data-step data-step-id="wallet">
+<button class="cl-toggle" type="button" aria-pressed="false" data-cl-toggle="wallet">
+<span class="cl-box" aria-hidden="true"><span class="cl-n tnum">1</span><svg class="cl-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg></span>
+<span class="cl-label">Wallet setup</span>
+</button>
+<a class="cl-ep" href="../../episodes/e1/">Episode 1</a>
+</li>
+<li class="cl-step" data-step data-step-id="zec">
+<button class="cl-toggle" type="button" aria-pressed="false" data-cl-toggle="zec">
+<span class="cl-box" aria-hidden="true"><span class="cl-n tnum">2</span><svg class="cl-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg></span>
+<span class="cl-label">Getting ZEC</span>
+</button>
+<a class="cl-ep" href="../../episodes/e2/">Episode 2</a>
+</li>
+<li class="cl-step" data-step data-step-id="shield">
+<button class="cl-toggle" type="button" aria-pressed="false" data-cl-toggle="shield">
+<span class="cl-box" aria-hidden="true"><span class="cl-n tnum">3</span><svg class="cl-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg></span>
+<span class="cl-label">Shielding</span>
+</button>
+<a class="cl-ep" href="../../episodes/e3/">Episode 3</a>
+</li>
+<li class="cl-step" data-step data-step-id="unshield">
+<button class="cl-toggle" type="button" aria-pressed="false" data-cl-toggle="unshield">
+<span class="cl-box" aria-hidden="true"><span class="cl-n tnum">4</span><svg class="cl-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg></span>
+<span class="cl-label">Unshielding</span>
+</button>
+<a class="cl-ep" href="../../episodes/e3/">Episode 3</a>
+</li>
+<li class="cl-step" data-step data-step-id="send">
+<button class="cl-toggle" type="button" aria-pressed="false" data-cl-toggle="send">
+<span class="cl-box" aria-hidden="true"><span class="cl-n tnum">5</span><svg class="cl-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg></span>
+<span class="cl-label">Sending</span>
+</button>
+<a class="cl-ep" href="../../episodes/e4/">Episode 4</a>
+</li>
+<li class="cl-step" data-step data-step-id="receive">
+<button class="cl-toggle" type="button" aria-pressed="false" data-cl-toggle="receive">
+<span class="cl-box" aria-hidden="true"><span class="cl-n tnum">6</span><svg class="cl-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg></span>
+<span class="cl-label">Receiving</span>
+</button>
+<a class="cl-ep" href="../../episodes/e4/">Episode 4</a>
+</li>
+</ol>
+<div class="cl-foot"><p class="small soft cl-note" data-cl-note>Saved in this browser only.</p><button class="btn btn--ghost btn--sm cl-reset" type="button" data-cl-reset><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.6 12a7.4 7.4 0 1 0 2.2-5.2"/><path d="M4.4 4.4v4.2h4.2"/></svg>Clear ticks</button></div>
+</div>
+<!-- /@checklist -->
+</div>
+</div>
+</section>
+<section class="section" id="transcript" aria-labelledby="transcript-title" hidden>
+<div class="wrap">
+<div class="transcript card">
+<div class="transcript-head"><h2 class="h2" id="transcript-title">Transcript</h2><p class="soft small">From the captions file. Tap a time to jump there.</p></div>
+<div class="transcript-body" data-transcript="e1"></div>
+</div>
+</div>
+</section>
+<section class="section section--tight">
+<div class="wrap ep-pager">
+<a class="pager-link" href="../../episodes/e0/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5.5M11 6.5L5.5 12l5.5 5.5"/></svg><span><span class="small soft">Previous</span><span class="pager-title">E0 The whole path</span></span></a>
+<a class="pager-link pager-link--next" href="../../episodes/e2/"><span><span class="small soft">Next</span><span class="pager-title">E2 Getting ZEC</span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a>
+</div>
+</section>
+</main>
+<!-- @footer -->
+<footer class="site-footer">
+<div class="wrap">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="brand" href="../../"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-name">Zero to Shielded</span></a>
+<p>Five short videos and a few small tools. They take you from no wallet to your first shielded Zcash payment with Zodl.</p>
+</div>
+<nav class="footer-nav" aria-label="Footer">
+<div><h2>Start</h2><ul><li><a href="../../start/">The 5-step path</a></li><li><a href="../../start/#need">What you need</a></li><li><a href="../../#checklist">Your checklist</a></li></ul></div>
+<div><h2>Episodes</h2><ul><li><a href="../../episodes/e0/">E0 The whole path</a></li><li><a href="../../episodes/e1/" aria-current="page">E1 Wallet setup</a></li><li><a href="../../episodes/e2/">E2 Getting ZEC</a></li><li><a href="../../episodes/e3/">E3 Shielding and unshielding</a></li><li><a href="../../episodes/e4/">E4 Sending and receiving</a></li><li><a href="../../episodes/e5/">E5 Stay private</a></li></ul></div>
+<div><h2>Tools</h2><ul><li><a href="../../tools/address/">Address checker</a></li><li><a href="../../tools/chain/">What the blockchain sees</a></li><li><a href="../../learn/phrase-guard/">Phrase Guard</a></li></ul></div>
+<div><h2>Help</h2><ul><li><a href="../../help/#glossary">Glossary</a></li><li><a href="../../help/#mistakes">Common mistakes</a></li><li><a href="../../help/#support">Get support</a></li><li><a href="https://support.zodl.com/" rel="noopener noreferrer">Zodl support</a></li></ul></div>
+</nav>
+</div>
+<div class="footer-legal">
+<p class="no-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.9l7.4 2.8v5.6c0 4.8-3.1 8.5-7.4 9.9-4.3-1.4-7.4-5.1-7.4-9.9V5.7z"/><path d="M8.6 12.1l2.4 2.4 4.6-4.8"/></svg>No tracking. No cookies. No analytics.</p>
+<p>Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice.</p>
+<p>An independent guide for the ZECATHON. It is not made by Zodl. Code under LicenseRef-zkasuran-SAND-1.0. Videos under CC BY-ND 4.0.</p>
+</div>
+</div>
+</footer>
+<!-- /@footer -->
+<script type="module" src="../../js/main.js"></script>
+<script type="module" src="../../js/pages/episode.js"></script>
+</body>
+</html>

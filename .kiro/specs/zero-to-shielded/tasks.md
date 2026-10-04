@@ -11,7 +11,8 @@ scenes).
 - [x] 2. Create `docs/FACTS.md`: every "Must verify" item in 40-zcash-facts.md resolved with a primary-source URL and quote. Anything unresolved is marked UNVERIFIED and kept out of scripts.
   Done: 52 rows (47 VERIFIED, 3 UNVERIFIED, 2 CONTRADICTED), labels pinned to zodl-android 9f4e719 and zodl-ios 6a7dc6b. edge-tts audio has no quotable grant (see Licence quotes).
 - [ ] 3. Add the `shield` palette to `tools/video-kit/theme.py`; render one check frame; confirm accent AA on the panel with `contrast.py`.
-- [ ] 4. Site skeleton: home + E1-E4 pages + checklist, light/dark, menu. Deploy to GitHub Pages (orphan `gh-pages` branch or Pages from `/site` via Actions). The URL must return 200 before any `web` scene is captured. NOTE: Pages on a private repo needs a paid plan; if Pages fails while private, tell the lead, who will flip the repo public at that point.
+- [x] 4. Site skeleton: home + E1-E4 pages + checklist, light/dark, menu. Deploy to GitHub Pages (orphan `gh-pages` branch or Pages from `/site` via Actions). The URL must return 200 before any `web` scene is captured. NOTE: Pages on a private repo needs a paid plan; if Pages fails while private, tell the lead, who will flip the repo public at that point.
+  Done: full static site in `site/` (14 pages, Vercel-ready `vercel.json` with real security headers). Deploy is the one open item: the Pages API returns 403 on this private repo and Vercel needs the lead's account. See `site/README-DEPLOY.md`. Planned URL https://zero-to-shielded.vercel.app (returned DEPLOYMENT_NOT_FOUND on 2026-10-04, so the name is free).
 - [ ] 5. Read `footage/SHOT-LIST.md` and `footage/clean/` to see what real footage exists. Map each script beat to a clip or to the labelled-diagram fallback.
 
 ## P0: episodes 1 to 4 (target Oct 4 08:00 IST)
@@ -31,8 +32,8 @@ scenes).
 
 ## P1
 
-- [ ] 15. Address checker tool page + tests from ZIP vectors.
-- [ ] 16. "What the blockchain sees" page.
+- [x] 15. Address checker tool page + tests from ZIP vectors. (60 unified, 15 ZIP 320 pairs, 26 transparent, BIP 173/350 vectors; tampered copies fail.)
+- [x] 16. "What the blockchain sees" page.
 - [ ] 17. Transcripts on episode pages from captions.srt; chapter seek buttons.
 - [ ] 18. E5 Stay private.
 - [ ] 19. 4:5 crops for X.
@@ -40,7 +41,7 @@ scenes).
 ## P2
 
 - [ ] 20. E0 trailer from the E1-E4 climaxes.
-- [ ] 21. Help page: glossary, common mistakes, official support links.
+- [x] 21. Help page: glossary, common mistakes, official support links. (Plus Phrase Guard at /learn/phrase-guard/.)
 
 ## Human-only (the lead and zkasuran handle these, do not block on them)
 

@@ -1,0 +1,6 @@
+# Development files that are not part of the deployed site.
+# (The /tools/address/ and /tools/chain/ pages are deployed; only the scripts are not.)
+/test
+/tools/*.mjs
+/tools/*.py
+/README-DEPLOY.md

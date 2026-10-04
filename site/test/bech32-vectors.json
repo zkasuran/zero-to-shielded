@@ -1,0 +1,105 @@
+{
+ "about": "Generic Bech32 (BIP 173) and Bech32m (BIP 350) checksum vectors, verbatim. Rows that need raw control bytes are left out.",
+ "source": {
+  "bip173": "https://github.com/bitcoin/bips/blob/927b6de9915c9262615a6399de51b200f81e5aa4/bip-0173.mediawiki#test-vectors",
+  "bip350": "https://github.com/bitcoin/bips/blob/927b6de9915c9262615a6399de51b200f81e5aa4/bip-0350.mediawiki#test-vectors-for-bech32m"
+ },
+ "bech32_valid": [
+  "A12UEL5L",
+  "a12uel5l",
+  "an83characterlonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1tt5tgs",
+  "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw",
+  "11qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqc8247j",
+  "split1checkupstagehandshakeupstreamerranterredcaperred2y9e3w",
+  "?1ezyfcl"
+ ],
+ "bech32_invalid": [
+  {
+   "s": "an84characterslonghumanreadablepartthatcontainsthenumber1andtheexcludedcharactersbio1569pvx",
+   "why": "overall max length exceeded"
+  },
+  {
+   "s": "pzry9x0s0muk",
+   "why": "No separator character"
+  },
+  {
+   "s": "1pzry9x0s0muk",
+   "why": "Empty HRP"
+  },
+  {
+   "s": "x1b4n0q5v",
+   "why": "Invalid data character"
+  },
+  {
+   "s": "li1dgmt3",
+   "why": "Too short checksum"
+  },
+  {
+   "s": "A1G7SGD8",
+   "why": "checksum calculated with uppercase form of HRP"
+  },
+  {
+   "s": "10a06t8",
+   "why": "empty HRP"
+  },
+  {
+   "s": "1qzzfhee",
+   "why": "empty HRP"
+  }
+ ],
+ "bech32m_valid": [
+  "A1LQFN3A",
+  "a1lqfn3a",
+  "an83characterlonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11sg7hg6",
+  "abcdef1l7aum6echk45nj3s0wdvt2fg8x9yrzpqzd3ryx",
+  "11llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllludsr8",
+  "split1checkupstagehandshakeupstreamerranterredcaperredlc445v",
+  "?1v759aa"
+ ],
+ "bech32m_invalid": [
+  {
+   "s": "an84characterslonghumanreadablepartthatcontainsthetheexcludedcharactersbioandnumber11d6pts4",
+   "why": "overall max length exceeded"
+  },
+  {
+   "s": "qyrz8wqd2c9m",
+   "why": "No separator character"
+  },
+  {
+   "s": "1qyrz8wqd2c9m",
+   "why": "Empty HRP"
+  },
+  {
+   "s": "y1b0jsk6g",
+   "why": "Invalid data character"
+  },
+  {
+   "s": "lt1igcx5c0",
+   "why": "Invalid data character"
+  },
+  {
+   "s": "in1muywd",
+   "why": "Too short checksum"
+  },
+  {
+   "s": "mm1crxm3i",
+   "why": "Invalid character in checksum"
+  },
+  {
+   "s": "au1s5cgom",
+   "why": "Invalid character in checksum"
+  },
+  {
+   "s": "M1VUXWEZ",
+   "why": "checksum calculated with uppercase form of HRP"
+  },
+  {
+   "s": "16plkw9",
+   "why": "empty HRP"
+  },
+  {
+   "s": "1p2gdwpf",
+   "why": "empty HRP"
+  }
+ ]
+}

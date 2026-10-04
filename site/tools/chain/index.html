@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<!-- @head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-d/trsizn3yCQ0yQzLe/VSCOJA9ivs7p5JxP/gNW1h7c='; style-src 'self'; img-src 'self' data: https://i.ytimg.com; media-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0F1A" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<script>(function(){var d=document.documentElement,q,t,s=null;try{q=new URLSearchParams(location.search)}catch(e){q=new URLSearchParams("")}t=q.get("theme");if(t==="dark"||t==="light"){d.setAttribute("data-theme-forced","")}else{try{s=localStorage.getItem("zts-theme")}catch(e){}t=(s==="dark"||s==="light")?s:((window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark")}d.setAttribute("data-theme",t);if(q.get("capture")==="1"){d.setAttribute("data-capture","");addEventListener("pagereveal",function(e){if(e.viewTransition){e.viewTransition.skipTransition()}})}})();</script>
+<link rel="preload" href="../../fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="modulepreload" href="../../js/main.js">
+<!-- /@head -->
+<title>What the blockchain sees · Zero to Shielded</title>
+<meta name="description" content="A labelled diagram of one payment. Transparent: anyone can read the sender, receiver and amount. Shielded: the details are hidden on the blockchain.">
+<!-- @meta -->
+<link rel="canonical" href="https://zero-to-shielded.vercel.app/tools/chain/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zero to Shielded">
+<meta property="og:title" content="What the blockchain sees · Zero to Shielded">
+<meta property="og:description" content="A labelled diagram of one payment. Transparent: anyone can read the sender, receiver and amount. Shielded: the details are hidden on the blockchain.">
+<meta property="og:url" content="https://zero-to-shielded.vercel.app/tools/chain/">
+<meta property="og:image" content="https://zero-to-shielded.vercel.app/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zero to Shielded: your first private Zcash payment in 15 minutes.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /@meta -->
+</head>
+<body data-page="chain">
+<!-- @header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<div class="wrap header-bar">
+<a class="brand" href="../../"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-name">Zero to Shielded</span></a>
+<nav class="nav" id="site-nav" aria-label="Main">
+<ul class="nav-list">
+<li class="nav-item" data-nav-item="start">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-start">Start<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-start">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../start/#path"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.6" cy="18.4" r="2.2"/><circle cx="18.4" cy="5.6" r="2.2"/><path d="M7.6 17.4c5.6-1.6 1.8-7.2 7.2-9.8"/></svg></span><span class="nl-title">The 5-step path</span><span class="nl-desc">Watch, do it, tick it. In order.</span></a></li>
+<li><a href="../../start/#need"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M3.8 6.4l1.4 1.4 2.4-2.6M3.8 11.9l1.4 1.4 2.4-2.6M3.8 17.4l1.4 1.4 2.4-2.6"/></svg></span><span class="nl-title">What you need</span><span class="nl-desc">A phone, 15 minutes, a pen and paper.</span></a></li>
+</ul>
+<div class="nav-foot"><span>New here?</span><a class="link-arrow" href="../../episodes/e1/">Start episode 1<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a></div>
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="episodes">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-episodes">Episodes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel nav-panel--wide" id="nav-episodes">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../episodes/e0/"><span class="nl-icon">E0</span><span class="nl-title">The whole path</span><span class="nl-desc">Episode 0, about 0:30</span></a></li>
+<li><a href="../../episodes/e1/"><span class="nl-icon">E1</span><span class="nl-title">Wallet setup</span><span class="nl-desc">Episode 1, about 1:45</span></a></li>
+<li><a href="../../episodes/e2/"><span class="nl-icon">E2</span><span class="nl-title">Getting ZEC</span><span class="nl-desc">Episode 2, about 1:50</span></a></li>
+<li><a href="../../episodes/e3/"><span class="nl-icon">E3</span><span class="nl-title">Shielding and unshielding</span><span class="nl-desc">Episode 3, about 1:55</span></a></li>
+<li><a href="../../episodes/e4/"><span class="nl-icon">E4</span><span class="nl-title">Sending and receiving</span><span class="nl-desc">Episode 4, about 2:00</span></a></li>
+<li><a href="../../episodes/e5/"><span class="nl-icon">E5</span><span class="nl-title">Stay private</span><span class="nl-desc">Episode 5, about 1:15</span></a></li>
+</ul>
+<div class="nav-foot"><span>Five videos and a trailer</span><a class="link-arrow" href="../../episodes/">All episodes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a></div>
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="tools">
+<button class="nav-trigger is-current" type="button" aria-expanded="false" aria-controls="nav-tools">Tools<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-tools">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../tools/address/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.3"/><path d="M15.5 15.5l4.7 4.7"/></svg></span><span class="nl-title">Address checker</span><span class="nl-desc">Paste an address. See if it is shielded.</span></a></li>
+<li><a href="../../tools/chain/" aria-current="page"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg></span><span class="nl-title">What the blockchain sees</span><span class="nl-desc">A diagram of one private payment.</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="learn">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-learn">Learn<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-learn">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../learn/phrase-guard/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.9l7.4 2.8v5.6c0 4.8-3.1 8.5-7.4 9.9-4.3-1.4-7.4-5.1-7.4-9.9V5.7z"/><path d="M8.6 12.1l2.4 2.4 4.6-4.8"/></svg></span><span class="nl-title">Phrase Guard</span><span class="nl-desc">Six quick scam checks. Safe or scam?</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="help">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-help">Help<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-help">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../help/#glossary"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.6 5.6a2.4 2.4 0 0 1 2.4-2.4h12.4v14.6H7a2.4 2.4 0 0 0-2.4 2.4z"/><path d="M4.6 20.2a2.4 2.4 0 0 0 2.4 2.4h12.4v-4.8"/></svg></span><span class="nl-title">Glossary</span><span class="nl-desc">Every word, in plain English.</span></a></li>
+<li><a href="../../help/#mistakes"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.6l9.4 16.2H2.6z"/><path d="M12 9.6v4.6M12 17.2v.2"/></svg></span><span class="nl-title">Common mistakes</span><span class="nl-desc">Four slips and how to avoid them.</span></a></li>
+<li><a href="../../help/#support"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.6M12 16.8v.2"/></svg></span><span class="nl-title">Get support</span><span class="nl-desc">Official Zodl help only.</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+</ul>
+</nav>
+<div class="header-actions">
+<button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Change theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M5.5 18.5L7 17M17 7l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19.6 14.6A8.2 8.2 0 0 1 9.4 4.4a8.2 8.2 0 1 0 10.2 10.2z"/></svg></button>
+<button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><path class="bar bar-1" d="M4.5 7h15"/><path class="bar bar-2" d="M4.5 12h15"/><path class="bar bar-3" d="M4.5 17h15"/></svg></button>
+</div>
+</div>
+</header>
+<!-- /@header -->
+<main id="main" tabindex="-1">
+
+<section class="page-head">
+<div class="wrap">
+<p class="eyebrow intro">Tool</p>
+<h1 class="h1 intro">What the blockchain sees</h1>
+<p class="lede intro intro-2">The blockchain is a public record of payments. Anyone can look at it. On this page we call that person the Watcher. Here is what the Watcher can read when Maya pays her friend Sam. A note is a private message that can go with a shielded payment.</p>
+</div>
+</section>
+
+<section class="section section--tight" id="chain" data-capture-section aria-labelledby="chain-title">
+<div class="wrap">
+<figure class="chain card">
+<div class="chain-head">
+<div class="chain-who">
+<!-- @cast:maya-sm -->
+<span class="cast cast--sm cast--maya" role="img" aria-label="Maya"><span class="avatar avatar--maya" aria-hidden="true">M</span></span>
+<!-- /@cast -->
+<h2 class="chain-title" id="chain-title">Maya pays Sam 0.50 ZEC</h2>
+<!-- @cast:sam-sm -->
+<span class="cast cast--sm cast--sam" role="img" aria-label="Sam"><span class="avatar avatar--sam" aria-hidden="true">S</span></span>
+<!-- /@cast -->
+</div>
+<span class="diagram-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.4" y="4.4" width="7" height="6" rx="1.6"/><rect x="13.6" y="13.6" width="7" height="6" rx="1.6"/><path d="M10.4 7.4h3.2a2 2 0 0 1 2 2v4.2"/></svg>Diagram</span>
+</div>
+<div class="chain-watch">
+<!-- @cast:watcher-sm -->
+<span class="cast cast--sm cast--watcher" role="img" aria-label="The Watcher"><span class="avatar avatar--watcher" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg></span></span>
+<!-- /@cast -->
+<p><strong>What the Watcher can read</strong><span>Anyone looking at the public blockchain</span></p>
+</div>
+<div class="chain-cols">
+<div class="chain-col chain-col--clear">
+<div class="chain-col-head"><span class="chip chip--clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</span><span class="chain-col-sub">Public, like Bitcoin</span></div>
+<div class="chain-row" data-step><span class="cr-k">Sender</span><span class="cr-v mono">t1Kx9…8Rn</span><span class="cr-s cr-s--clear">Public</span></div>
+<div class="chain-row" data-step><span class="cr-k">Receiver</span><span class="cr-v mono">t1Q4m…2Lw</span><span class="cr-s cr-s--clear">Public</span></div>
+<div class="chain-row" data-step><span class="cr-k">Amount</span><span class="cr-v">0.50 ZEC</span><span class="cr-s cr-s--clear">Public</span></div>
+<div class="chain-row" data-step><span class="cr-k">Note</span><span class="cr-v cr-v--none">No note on t1</span><span class="cr-s cr-s--muted">Not possible</span></div>
+</div>
+<div class="chain-col chain-col--gold">
+<div class="chain-col-head"><span class="chip chip--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Shielded</span><span class="chain-col-sub">Hidden on the blockchain</span></div>
+<div class="chain-row" data-step><span class="cr-k">Sender</span><span class="cr-v glyphs" data-shimmer aria-label="encrypted">▓▒░▚▞▒▓█▒</span><span class="cr-s cr-s--gold">Hidden</span></div>
+<div class="chain-row" data-step><span class="cr-k">Receiver</span><span class="cr-v glyphs" data-shimmer aria-label="encrypted">░▚▓▒█▞░▒▓</span><span class="cr-s cr-s--gold">Hidden</span></div>
+<div class="chain-row" data-step><span class="cr-k">Amount</span><span class="cr-v glyphs" data-shimmer aria-label="encrypted">▒█░▓▚▞</span><span class="cr-s cr-s--gold">Hidden</span></div>
+<div class="chain-row" data-step><span class="cr-k">Note</span><span class="cr-v glyphs" data-shimmer aria-label="encrypted">▞▓░▒▚█▒░▓▚</span><span class="cr-s cr-s--gold">Hidden</span></div>
+</div>
+</div>
+<figcaption class="chain-foot">Diagram, not the app. Maya, Sam and their addresses are made up.</figcaption>
+</figure>
+</div>
+</section>
+
+<section class="section explore" id="explore" aria-labelledby="explore-title">
+<div class="wrap">
+<div class="section-head reveal">
+<div>
+<p class="eyebrow">Try it</p>
+<h2 class="h2" id="explore-title">Flip the same payment</h2>
+<p>Scroll or use the switch. Watch what changes for the Watcher and what stays readable for Maya and Sam.</p>
+</div>
+</div>
+<div class="explore-grid">
+<div class="stage-wrap">
+<figure class="stage card" data-stage data-mode="transparent" aria-label="Diagram: one payment from Maya to Sam">
+<div class="stage-top">
+<div class="seg" role="group" aria-label="Payment type">
+<button class="seg-btn" type="button" data-mode-btn="transparent" aria-pressed="true">Transparent</button>
+<button class="seg-btn" type="button" data-mode-btn="shielded" aria-pressed="false">Shielded</button>
+<span class="seg-thumb" aria-hidden="true"></span>
+</div>
+<span class="diagram-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.4" y="4.4" width="7" height="6" rx="1.6"/><rect x="13.6" y="13.6" width="7" height="6" rx="1.6"/><path d="M10.4 7.4h3.2a2 2 0 0 1 2 2v4.2"/></svg>Diagram</span>
+</div>
+<div class="flow">
+<div class="actor">
+<!-- @cast:maya-lg -->
+<span class="cast cast--lg cast--maya" role="img" aria-label="Maya"><span class="avatar avatar--maya" aria-hidden="true">M</span></span>
+<!-- /@cast -->
+<span>Maya</span>
+</div>
+<div class="flow-track" aria-hidden="true">
+<span class="flow-line"></span>
+<span class="flow-packet"><span class="flow-coin"></span></span>
+<span class="flow-tag" data-flow-tag>0.50 ZEC, public</span>
+</div>
+<div class="actor">
+<!-- @cast:sam-lg -->
+<span class="cast cast--lg cast--sam" role="img" aria-label="Sam"><span class="avatar avatar--sam" aria-hidden="true">S</span></span>
+<!-- /@cast -->
+<span>Sam</span>
+</div>
+</div>
+<div class="panels">
+<div class="panel panel--watcher">
+<div class="panel-head">
+<!-- @cast:watcher-sm -->
+<span class="cast cast--sm cast--watcher" role="img" aria-label="The Watcher"><span class="avatar avatar--watcher" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg></span></span>
+<!-- /@cast -->
+<p><strong>The Watcher reads</strong><span>the public blockchain</span></p>
+</div>
+<dl class="panel-rows">
+<div><dt>Sender</dt><dd data-w="sender">t1Kx9…8Rn</dd></div>
+<div><dt>Receiver</dt><dd data-w="receiver">t1Q4m…2Lw</dd></div>
+<div><dt>Amount</dt><dd data-w="amount">0.50 ZEC</dd></div>
+<div><dt>Note</dt><dd data-w="note">No note on t1</dd></div>
+</dl>
+</div>
+<div class="panel panel--pair">
+<div class="panel-head">
+<!-- @cast:sam-sm -->
+<span class="cast cast--sm cast--sam" role="img" aria-label="Sam"><span class="avatar avatar--sam" aria-hidden="true">S</span></span>
+<!-- /@cast -->
+<p><strong>Maya and Sam read</strong><span>in their own wallets</span></p>
+</div>
+<dl class="panel-rows">
+<div><dt>Sender</dt><dd data-p="sender">Maya</dd></div>
+<div><dt>Receiver</dt><dd data-p="receiver">Sam</dd></div>
+<div><dt>Amount</dt><dd data-p="amount">0.50 ZEC</dd></div>
+<div><dt>Note</dt><dd data-p="note">No note on t1</dd></div>
+</dl>
+</div>
+</div>
+<p class="stage-caption" data-stage-caption aria-live="polite">Transparent: the Watcher reads everything Maya and Sam read.</p>
+</figure>
+</div>
+<div class="xsteps">
+<div class="xstep" data-xstep="transparent">
+<span class="xstep-n">1</span>
+<h3 class="h3">Transparent: everyone reads it</h3>
+<p>Maya pays Sam at his t1 address. A transparent payment is public, like Bitcoin. The Watcher sees who paid, who got paid and how much. A t1 payment cannot even carry a note.</p>
+</div>
+<div class="xstep" data-xstep="shielded">
+<span class="xstep-n">2</span>
+<h3 class="h3">Shielded: the Watcher sees noise</h3>
+<p>Now Maya pays Sam at his shielded address, the one that starts with u1. The amount, sender and receiver are encrypted on the blockchain. The Watcher cannot read them.</p>
+</div>
+<div class="xstep" data-xstep="pair">
+<span class="xstep-n">3</span>
+<h3 class="h3">Sam still reads it</h3>
+<p>Maya adds a private note: "Thanks for lunch!" Only Maya and Sam can read it. Sam sees the 0.50 ZEC arrive in his wallet.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="exception" aria-labelledby="exception-title">
+<div class="wrap">
+<div class="callout card reveal">
+<span class="tool-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.6v5.2M12 16.2v.2"/></svg></span>
+<div>
+<h2 class="h3" id="exception-title">One exception to know</h2>
+<p>When older Orchard funds move to Ironwood, the newest shielded pool, the amount that moves is public. Who sends and who receives stays private. If Zodl asks you to migrate, pick Migrate with Privacy, because the amount that moves is public. A wallet you create today already uses Ironwood, so it never needs to migrate.</p>
+<p class="small soft">Sources: <a href="https://zodl.com/" rel="noopener noreferrer">zodl.com</a>, <a href="https://support.zodl.com/article/53-what-is-the-turnstile" rel="noopener noreferrer">Zodl support: what is the turnstile</a>, <a href="https://support.zodl.com/article/56-what-is-the-ironwood-shielded-pool" rel="noopener noreferrer">Zodl support: the Ironwood pool</a>.</p>
+</div>
+</div>
+<div class="cta-row reveal">
+<a class="btn btn--primary" href="../../episodes/e3/" data-magnetic>Watch episode 3<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg><span class="btn-shine" aria-hidden="true"></span></a>
+<a class="btn" href="../../tools/address/">Check an address</a>
+</div>
+</div>
+</section>
+
+</main>
+<!-- @footer -->
+<footer class="site-footer">
+<div class="wrap">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="brand" href="../../"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-name">Zero to Shielded</span></a>
+<p>Five short videos and a few small tools. They take you from no wallet to your first shielded Zcash payment with Zodl.</p>
+</div>
+<nav class="footer-nav" aria-label="Footer">
+<div><h2>Start</h2><ul><li><a href="../../start/">The 5-step path</a></li><li><a href="../../start/#need">What you need</a></li><li><a href="../../#checklist">Your checklist</a></li></ul></div>
+<div><h2>Episodes</h2><ul><li><a href="../../episodes/e0/">E0 The whole path</a></li><li><a href="../../episodes/e1/">E1 Wallet setup</a></li><li><a href="../../episodes/e2/">E2 Getting ZEC</a></li><li><a href="../../episodes/e3/">E3 Shielding and unshielding</a></li><li><a href="../../episodes/e4/">E4 Sending and receiving</a></li><li><a href="../../episodes/e5/">E5 Stay private</a></li></ul></div>
+<div><h2>Tools</h2><ul><li><a href="../../tools/address/">Address checker</a></li><li><a href="../../tools/chain/" aria-current="page">What the blockchain sees</a></li><li><a href="../../learn/phrase-guard/">Phrase Guard</a></li></ul></div>
+<div><h2>Help</h2><ul><li><a href="../../help/#glossary">Glossary</a></li><li><a href="../../help/#mistakes">Common mistakes</a></li><li><a href="../../help/#support">Get support</a></li><li><a href="https://support.zodl.com/" rel="noopener noreferrer">Zodl support</a></li></ul></div>
+</nav>
+</div>
+<div class="footer-legal">
+<p class="no-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.9l7.4 2.8v5.6c0 4.8-3.1 8.5-7.4 9.9-4.3-1.4-7.4-5.1-7.4-9.9V5.7z"/><path d="M8.6 12.1l2.4 2.4 4.6-4.8"/></svg>No tracking. No cookies. No analytics.</p>
+<p>Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice.</p>
+<p>An independent guide for the ZECATHON. It is not made by Zodl. Code under LicenseRef-zkasuran-SAND-1.0. Videos under CC BY-ND 4.0.</p>
+</div>
+</div>
+</footer>
+<!-- /@footer -->
+<script type="module" src="../../js/main.js"></script>
+<script type="module" src="../../js/pages/chain.js"></script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<!-- @head -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-d/trsizn3yCQ0yQzLe/VSCOJA9ivs7p5JxP/gNW1h7c='; style-src 'self'; img-src 'self' data: https://i.ytimg.com; media-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0F1A" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
+<script>(function(){var d=document.documentElement,q,t,s=null;try{q=new URLSearchParams(location.search)}catch(e){q=new URLSearchParams("")}t=q.get("theme");if(t==="dark"||t==="light"){d.setAttribute("data-theme-forced","")}else{try{s=localStorage.getItem("zts-theme")}catch(e){}t=(s==="dark"||s==="light")?s:((window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark")}d.setAttribute("data-theme",t);if(q.get("capture")==="1"){d.setAttribute("data-capture","");addEventListener("pagereveal",function(e){if(e.viewTransition){e.viewTransition.skipTransition()}})}})();</script>
+<link rel="preload" href="../../fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../css/site.css">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="modulepreload" href="../../js/main.js">
+<!-- /@head -->
+<title>Address checker: is it shielded? · Zero to Shielded</title>
+<meta name="description" content="Paste a Zcash address and see if it is shielded or transparent: u1, zs1, t1, t3 or tex1. Checksum checked in your browser. Nothing you paste leaves your browser.">
+<!-- @meta -->
+<link rel="canonical" href="https://zero-to-shielded.vercel.app/tools/address/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zero to Shielded">
+<meta property="og:title" content="Address checker: is it shielded? · Zero to Shielded">
+<meta property="og:description" content="Paste a Zcash address and see if it is shielded or transparent: u1, zs1, t1, t3 or tex1. Checksum checked in your browser. Nothing you paste leaves your browser.">
+<meta property="og:url" content="https://zero-to-shielded.vercel.app/tools/address/">
+<meta property="og:image" content="https://zero-to-shielded.vercel.app/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zero to Shielded: your first private Zcash payment in 15 minutes.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /@meta -->
+</head>
+<body data-page="address">
+<!-- @header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<div class="wrap header-bar">
+<a class="brand" href="../../"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-name">Zero to Shielded</span></a>
+<nav class="nav" id="site-nav" aria-label="Main">
+<ul class="nav-list">
+<li class="nav-item" data-nav-item="start">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-start">Start<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-start">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../start/#path"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.6" cy="18.4" r="2.2"/><circle cx="18.4" cy="5.6" r="2.2"/><path d="M7.6 17.4c5.6-1.6 1.8-7.2 7.2-9.8"/></svg></span><span class="nl-title">The 5-step path</span><span class="nl-desc">Watch, do it, tick it. In order.</span></a></li>
+<li><a href="../../start/#need"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M3.8 6.4l1.4 1.4 2.4-2.6M3.8 11.9l1.4 1.4 2.4-2.6M3.8 17.4l1.4 1.4 2.4-2.6"/></svg></span><span class="nl-title">What you need</span><span class="nl-desc">A phone, 15 minutes, a pen and paper.</span></a></li>
+</ul>
+<div class="nav-foot"><span>New here?</span><a class="link-arrow" href="../../episodes/e1/">Start episode 1<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a></div>
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="episodes">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-episodes">Episodes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel nav-panel--wide" id="nav-episodes">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../episodes/e0/"><span class="nl-icon">E0</span><span class="nl-title">The whole path</span><span class="nl-desc">Episode 0, about 0:30</span></a></li>
+<li><a href="../../episodes/e1/"><span class="nl-icon">E1</span><span class="nl-title">Wallet setup</span><span class="nl-desc">Episode 1, about 1:45</span></a></li>
+<li><a href="../../episodes/e2/"><span class="nl-icon">E2</span><span class="nl-title">Getting ZEC</span><span class="nl-desc">Episode 2, about 1:50</span></a></li>
+<li><a href="../../episodes/e3/"><span class="nl-icon">E3</span><span class="nl-title">Shielding and unshielding</span><span class="nl-desc">Episode 3, about 1:55</span></a></li>
+<li><a href="../../episodes/e4/"><span class="nl-icon">E4</span><span class="nl-title">Sending and receiving</span><span class="nl-desc">Episode 4, about 2:00</span></a></li>
+<li><a href="../../episodes/e5/"><span class="nl-icon">E5</span><span class="nl-title">Stay private</span><span class="nl-desc">Episode 5, about 1:15</span></a></li>
+</ul>
+<div class="nav-foot"><span>Five videos and a trailer</span><a class="link-arrow" href="../../episodes/">All episodes<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></a></div>
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="tools">
+<button class="nav-trigger is-current" type="button" aria-expanded="false" aria-controls="nav-tools">Tools<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-tools">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../tools/address/" aria-current="page"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.3"/><path d="M15.5 15.5l4.7 4.7"/></svg></span><span class="nl-title">Address checker</span><span class="nl-desc">Paste an address. See if it is shielded.</span></a></li>
+<li><a href="../../tools/chain/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg></span><span class="nl-title">What the blockchain sees</span><span class="nl-desc">A diagram of one private payment.</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="learn">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-learn">Learn<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-learn">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../learn/phrase-guard/"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.9l7.4 2.8v5.6c0 4.8-3.1 8.5-7.4 9.9-4.3-1.4-7.4-5.1-7.4-9.9V5.7z"/><path d="M8.6 12.1l2.4 2.4 4.6-4.8"/></svg></span><span class="nl-title">Phrase Guard</span><span class="nl-desc">Six quick scam checks. Safe or scam?</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+<li class="nav-item" data-nav-item="help">
+<button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-help">Help<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 9.5L12 15l5.5-5.5"/></svg></button>
+<div class="nav-panel" id="nav-help">
+<div class="nav-card">
+<ul class="nav-links">
+<li><a href="../../help/#glossary"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.6 5.6a2.4 2.4 0 0 1 2.4-2.4h12.4v14.6H7a2.4 2.4 0 0 0-2.4 2.4z"/><path d="M4.6 20.2a2.4 2.4 0 0 0 2.4 2.4h12.4v-4.8"/></svg></span><span class="nl-title">Glossary</span><span class="nl-desc">Every word, in plain English.</span></a></li>
+<li><a href="../../help/#mistakes"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.6l9.4 16.2H2.6z"/><path d="M12 9.6v4.6M12 17.2v.2"/></svg></span><span class="nl-title">Common mistakes</span><span class="nl-desc">Four slips and how to avoid them.</span></a></li>
+<li><a href="../../help/#support"><span class="nl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.6"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.6M12 16.8v.2"/></svg></span><span class="nl-title">Get support</span><span class="nl-desc">Official Zodl help only.</span></a></li>
+</ul>
+
+</div>
+</div>
+</li>
+</ul>
+</nav>
+<div class="header-actions">
+<button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Change theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M5.5 18.5L7 17M17 7l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19.6 14.6A8.2 8.2 0 0 1 9.4 4.4a8.2 8.2 0 1 0 10.2 10.2z"/></svg></button>
+<button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><path class="bar bar-1" d="M4.5 7h15"/><path class="bar bar-2" d="M4.5 12h15"/><path class="bar bar-3" d="M4.5 17h15"/></svg></button>
+</div>
+</div>
+</header>
+<!-- /@header -->
+<main id="main" tabindex="-1">
+
+<section class="page-head">
+<div class="wrap">
+<p class="eyebrow intro">Tool</p>
+<h1 class="h1 intro">Address checker</h1>
+<p class="lede intro intro-2">Paste a Zcash address. See what kind it is and if it is shielded (hidden on the blockchain) or transparent (public, like Bitcoin).</p>
+<p class="privacy-pill intro intro-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Nothing you paste leaves your browser.</p>
+</div>
+</section>
+
+<section class="section section--tight" id="checker" data-capture-section aria-label="Check an address">
+<div class="wrap">
+<div class="ck card">
+<div class="ck-row ck-input" data-step>
+<div class="ck-label-row"><label class="ck-label" for="addr">Zcash address</label><span class="ck-local"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Checked on your device</span></div>
+<div class="ck-field">
+<textarea id="addr" class="ck-text" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" enterkeyhint="done" maxlength="4096" placeholder="Paste an address that starts with u1, zs1, t1, t3 or tex1" aria-describedby="ck-help" data-addr></textarea>
+<div class="ck-buttons">
+<button class="btn btn--sm" type="button" data-paste hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5.4" y="4.6" width="13.2" height="16.4" rx="2.4"/><path d="M9.2 4.6V3.4h5.6v1.2"/><path d="M8.8 10h6.4M8.8 13.6h6.4M8.8 17.2h3.6"/></svg>Paste</button>
+<button class="btn btn--sm btn--ghost" type="button" data-clear hidden>Clear</button>
+</div>
+</div>
+<p class="ck-help small soft" id="ck-help">An address only. Never paste your recovery phrase or a key into any website, this one included.</p>
+<div class="ck-result" data-result aria-live="polite" hidden></div>
+</div>
+<div class="ck-examples-head"><span class="small soft">Or try one of these public test addresses:</span></div>
+<!-- @examples -->
+<div class="ck-row ck-example" data-step data-example="u1">
+<div class="ck-ex-main">
+<span class="ck-ex-tag">Example</span>
+<code class="ck-addr" title="u1ay3aawlldjrmxqnjf5medr5ma6p3acnet464ht8lmwplq5cd3ugytcmlf96rrmtgwldc75x94qn4n8pgen36y8tywlq6yjk7lkf3fa8wzjrav8z2xpxqnrnmjxh8tmz6jhfh425t7f3vy6p4pd3zmqayq49efl2c4xydc0gszg660q9p">u1ay3aawlldjrmxq…gszg660q9p</code>
+</div>
+<div class="ck-ex-result">
+<span class="ck-kind">Unified address</span>
+<span class="chip chip--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Shielded</span>
+<span class="ck-sum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg>Checksum OK</span>
+</div>
+<button class="btn btn--sm ck-try" type="button" data-try="u1ay3aawlldjrmxqnjf5medr5ma6p3acnet464ht8lmwplq5cd3ugytcmlf96rrmtgwldc75x94qn4n8pgen36y8tywlq6yjk7lkf3fa8wzjrav8z2xpxqnrnmjxh8tmz6jhfh425t7f3vy6p4pd3zmqayq49efl2c4xydc0gszg660q9p">Check it<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></button>
+</div>
+<div class="ck-row ck-example" data-step data-example="t1">
+<div class="ck-ex-main">
+<span class="ck-ex-tag">Example</span>
+<code class="ck-addr" title="t1VmmGiyjVNeCjxDZzg7vZmd99WyzVby9yC">t1VmmGiyjVNeCjxDZzg7vZmd99WyzVby9yC</code>
+</div>
+<div class="ck-ex-result">
+<span class="ck-kind">Transparent address</span>
+<span class="chip chip--clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</span>
+<span class="ck-sum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg>Checksum OK</span>
+</div>
+<button class="btn btn--sm ck-try" type="button" data-try="t1VmmGiyjVNeCjxDZzg7vZmd99WyzVby9yC">Check it<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></button>
+</div>
+<div class="ck-row ck-example" data-step data-example="tex1">
+<div class="ck-ex-main">
+<span class="ck-ex-tag">Example</span>
+<code class="ck-addr" title="tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte">tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte</code>
+</div>
+<div class="ck-ex-result">
+<span class="ck-kind">TEX address</span>
+<span class="chip chip--clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</span>
+<span class="ck-sum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.6l4.4 4.4L19 7.4"/></svg>Checksum OK</span>
+</div>
+<button class="btn btn--sm ck-try" type="button" data-try="tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte">Check it<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></svg></button>
+</div>
+<!-- /@examples -->
+</div>
+</div>
+</section>
+
+<section class="section" id="kinds" aria-labelledby="kinds-title">
+<div class="wrap">
+<div class="section-head reveal">
+<div>
+<p class="eyebrow">What each kind means</p>
+<h2 class="h2" id="kinds-title">Look at how it starts</h2>
+<p>The first letters tell you most of the story. The checksum tells you nobody changed a character.</p>
+</div>
+</div>
+<!-- @kinds -->
+<ul class="kinds reveal-stagger">
+<li class="kind kind--gold">
+<div class="kind-top"><span class="kind-prefix">u1</span><span class="chip chip--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Shielded</span></div>
+<h3 class="h3">Unified address</h3>
+<p>A u1 address is a unified address. It bundles one or more receivers. A receiver is one way to get paid. The address Zodl shows as Zcash Shielded Address starts with u1 and holds only shielded receivers. An address made by another wallet may also hold a transparent receiver.</p>
+<p class="kind-limit small">This checker checks the prefix and the checksum. It does not open the address to list the receivers inside.</p>
+<p class="kind-enc small soft">Checksum: Bech32m</p>
+</li>
+<li class="kind kind--gold">
+<div class="kind-top"><span class="kind-prefix">zs1</span><span class="chip chip--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Shielded</span></div>
+<h3 class="h3">Sapling address</h3>
+<p>Older Sapling addresses start with zs1. Sapling is a shielded pool, so payments to this address are shielded. Your Zodl shielded address starts with u1 instead.</p>
+
+<p class="kind-enc small soft">Checksum: Bech32</p>
+</li>
+<li class="kind kind--clear">
+<div class="kind-top"><span class="kind-prefix">t1</span><span class="chip chip--clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</span></div>
+<h3 class="h3">Transparent address</h3>
+<p>It starts with t1 and works like a Bitcoin address. Anyone can see what is sent to it. Paying it from your shielded balance is unshielding: the amount and this address are public and you cannot add a note.</p>
+
+<p class="kind-enc small soft">Checksum: Base58Check</p>
+</li>
+<li class="kind kind--clear">
+<div class="kind-top"><span class="kind-prefix">t3</span><span class="chip chip--clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</span></div>
+<h3 class="h3">Transparent address (P2SH)</h3>
+<p>Transparent addresses start with t1 or t3. This one starts with t3. Anyone can see what is sent to it, like Bitcoin.</p>
+
+<p class="kind-enc small soft">Checksum: Base58Check</p>
+</li>
+<li class="kind kind--clear">
+<div class="kind-top"><span class="kind-prefix">tex1</span><span class="chip chip--clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</span></div>
+<h3 class="h3">TEX address</h3>
+<p>A TEX address starts with tex1. It is a form of a t1 address that can only be paid from transparent funds. Some exchanges use tex1 addresses for deposits. When you pay one from Zodl, Zodl does the two steps for you. The amount and the address are public.</p>
+
+<p class="kind-enc small soft">Checksum: Bech32m</p>
+</li>
+</ul>
+<!-- /@kinds -->
+</div>
+</section>
+
+<section class="section" id="detective" aria-labelledby="detective-title">
+<div class="wrap">
+<div class="section-head reveal">
+<div>
+<p class="eyebrow">Mini game</p>
+<h2 class="h2" id="detective-title">Address detective</h2>
+<p>Six addresses. Is each one shielded or transparent? Build a streak.</p>
+</div>
+</div>
+<div class="det card reveal" data-detective>
+<div class="det-top">
+<span class="det-round">Address <b class="tnum" data-det-round>1</b> of 6</span>
+<span class="det-stats"><span class="det-streak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21.4c-3.8 0-6.6-2.6-6.6-6.2 0-3.4 2.4-5.2 3.6-7.8.6 1.6 1.4 2.6 2.4 3.2.2-2.6 1.4-5.2 3.6-7.2.2 3.4 4.2 6.2 4.2 11.2 0 3.8-3.2 6.8-7.2 6.8z"/></svg>Streak <b class="tnum" data-det-streak>0</b></span><span class="det-best">Best <b class="tnum" data-det-best>0</b></span></span>
+</div>
+<div class="det-progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="det-stage" data-det-stage>
+<p class="det-ask">Shielded or transparent?</p>
+<code class="det-addr" data-det-addr>Loading</code>
+</div>
+<div class="det-actions">
+<button class="btn btn--lg det-pick det-pick--gold" type="button" data-det-pick="shielded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4.8" y="10.6" width="14.4" height="10" rx="2.6"/><path d="M8.2 10.6V7.8a3.8 3.8 0 0 1 7.6 0v2.8"/></svg>Shielded</button>
+<button class="btn btn--lg det-pick det-pick--clear" type="button" data-det-pick="transparent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.6 12S6 5.6 12 5.6 21.4 12 21.4 12 18 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/></svg>Transparent</button>
+</div>
+<div class="det-feedback" data-det-feedback aria-live="polite"></div>
+<div class="det-next-row"><button class="btn btn--primary" type="button" data-det-next hidden>Next address</button></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="how" aria-labelledby="how-title">
+<div class="wrap how card reveal">
+<h2 class="h3" id="how-title">How the checker works</h2>
+<p class="soft">It runs on your device and never sends what you paste anywhere. It follows <a href="https://zips.z.cash/zip-0316" rel="noopener noreferrer">ZIP 316</a> (unified addresses), <a href="https://zips.z.cash/zip-0320" rel="noopener noreferrer">ZIP 320</a> (TEX addresses) and section 5.6 of the <a href="https://zips.z.cash/protocol/protocol.pdf" rel="noopener noreferrer">Zcash protocol spec</a>.</p>
+<ul class="how-list">
+<li><b>t1 and t3</b> use Base58Check. The checker runs SHA-256 twice and compares the last 4 bytes.</li>
+<li><b>zs1</b> uses Bech32. <b>u1</b> and <b>tex1</b> use Bech32m. The checker tests the checksum, the prefix and the length.</li>
+<li><b>u1 limit:</b> a unified address is scrambled on purpose (a step called F4Jumble). This checker does not unscramble it, so it does not list the receivers inside. It checks the checksum and the prefix only.</li>
+</ul>
+<p class="soft small">Its tests use official public test vectors from the zcash-test-vectors, zcash and librustzcash projects, plus changed copies that must fail.</p>
+</div>
+</section>
+
+</main>
+<!-- @footer -->
+<footer class="site-footer">
+<div class="wrap">
+<div class="footer-grid">
+<div class="footer-brand">
+<a class="brand" href="../../"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="bm-fill" d="M16 2.6l10.6 4v7.6c0 6.6-4.4 11.8-10.6 13.9C9.8 26 5.4 20.8 5.4 14.2V6.6z"/><path class="bm-ink" d="M11 15.6l3.4 3.4 6.6-6.8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="brand-name">Zero to Shielded</span></a>
+<p>Five short videos and a few small tools. They take you from no wallet to your first shielded Zcash payment with Zodl.</p>
+</div>
+<nav class="footer-nav" aria-label="Footer">
+<div><h2>Start</h2><ul><li><a href="../../start/">The 5-step path</a></li><li><a href="../../start/#need">What you need</a></li><li><a href="../../#checklist">Your checklist</a></li></ul></div>
+<div><h2>Episodes</h2><ul><li><a href="../../episodes/e0/">E0 The whole path</a></li><li><a href="../../episodes/e1/">E1 Wallet setup</a></li><li><a href="../../episodes/e2/">E2 Getting ZEC</a></li><li><a href="../../episodes/e3/">E3 Shielding and unshielding</a></li><li><a href="../../episodes/e4/">E4 Sending and receiving</a></li><li><a href="../../episodes/e5/">E5 Stay private</a></li></ul></div>
+<div><h2>Tools</h2><ul><li><a href="../../tools/address/" aria-current="page">Address checker</a></li><li><a href="../../tools/chain/">What the blockchain sees</a></li><li><a href="../../learn/phrase-guard/">Phrase Guard</a></li></ul></div>
+<div><h2>Help</h2><ul><li><a href="../../help/#glossary">Glossary</a></li><li><a href="../../help/#mistakes">Common mistakes</a></li><li><a href="../../help/#support">Get support</a></li><li><a href="https://support.zodl.com/" rel="noopener noreferrer">Zodl support</a></li></ul></div>
+</nav>
+</div>
+<div class="footer-legal">
+<p class="no-track"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.9l7.4 2.8v5.6c0 4.8-3.1 8.5-7.4 9.9-4.3-1.4-7.4-5.1-7.4-9.9V5.7z"/><path d="M8.6 12.1l2.4 2.4 4.6-4.8"/></svg>No tracking. No cookies. No analytics.</p>
+<p>Scripts, narration and editing were produced with AI assistance (Kiro). Narration is a synthesised voice.</p>
+<p>An independent guide for the ZECATHON. It is not made by Zodl. Code under LicenseRef-zkasuran-SAND-1.0. Videos under CC BY-ND 4.0.</p>
+</div>
+</div>
+</footer>
+<!-- /@footer -->
+<script type="module" src="../../js/main.js"></script>
+<script type="module" src="../../js/pages/address.js"></script>
+</body>
+</html>

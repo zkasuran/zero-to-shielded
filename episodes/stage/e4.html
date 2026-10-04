@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zero to Shielded · Episode 4 · Sending and receiving</title>
+<link rel="stylesheet" href="./lib/series.css">
+<style>
+  /* local fix: the shared opening card sets this note at 28px, under the 30px body minimum */
+  #stage .zts-open-aka { font-size: 30px; }
+  /* local fix: the shared address card title sits under 30px; widen the card so the larger text fits */
+  #stage .zts-addr { width: 780px; }
+  #stage .zts-addr-title { font-size: 34px; }
+  #stage .fig { position: absolute; left: 0; top: 0; }
+  #stage .fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .halo { position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 214, 110, .55) 0%, rgba(244, 183, 40, .18) 34%, rgba(244, 183, 40, 0) 68%); }
+  .halo.is-soft { background: radial-gradient(circle, rgba(244, 183, 40, .28) 0%, rgba(244, 183, 40, .08) 40%, rgba(244, 183, 40, 0) 70%); }
+  .sweep { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden; }
+  .sweep::before { content: ""; position: absolute; top: -20%; bottom: -20%; width: 34%; left: calc(var(--sx, -0.5) * 100%);
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 246, 214, .28), rgba(255, 255, 255, 0)); transform: skewX(-14deg); }
+  .paths { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+  .chiprow { display: flex; gap: 30px; align-items: center; }
+  .flash { position: absolute; width: 760px; height: 760px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 250, 230, .95) 0%, rgba(255, 220, 140, .45) 22%, rgba(244, 183, 40, 0) 62%); }
+  .flyer { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+  /* local fix: the shared envelope letter sets its line at 32px inline; the note must read at full size */
+  #stage .zts-env-letter .zts-post-line { font-size: 42px !important; }
+  .mover { position: absolute; left: 0; top: 0; }
+
+  /* the address ribbon (e4-receive) */
+  .rib { fill: none; stroke-linecap: round; }
+  .rib-glow { stroke: rgba(244, 183, 40, .2); stroke-width: 30; }
+  .rib-core { stroke: #F4B728; stroke-width: 9; filter: drop-shadow(0 0 12px rgba(244, 183, 40, .75)); }
+  .rib-hi { stroke: #FFF1C8; stroke-width: 3; opacity: .8; }
+  .rib-draw { stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--draw, 0)); }
+  .rib-pulse { stroke: #FFF6DC; stroke-width: 8; stroke-dasharray: .07 3; filter: drop-shadow(0 0 10px rgba(255, 226, 140, .9)); }
+  /* a small address token: the prefix and a blurred tail of bars, never characters */
+  .utok { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 12px; height: 66px; padding: 0 26px; border-radius: 999px; white-space: nowrap;
+    background: rgba(10, 13, 24, .94); box-shadow: 0 0 0 2px rgba(244, 183, 40, .8) inset, 0 0 40px -6px rgba(244, 183, 40, .6), 0 18px 30px -12px rgba(0, 0, 0, .7); }
+  .utok b { font: 750 36px/1 "Inter", sans-serif; color: #F4B728; letter-spacing: .01em; }
+  .utok i { display: block; height: 15px; border-radius: 8px; background: rgba(245, 241, 230, .6); filter: blur(2.8px); }
+
+  /* the send form diagram (e4-send): three separate floating cards, not an app screen */
+  .fcard { width: 820px; padding: 26px 34px 30px; border-radius: 30px;
+    background: linear-gradient(180deg, rgba(34, 42, 72, .94), rgba(18, 23, 42, .95));
+    box-shadow: 0 0 0 1.5px rgba(245, 241, 230, .1) inset, 0 0 0 calc(var(--lit, 0) * 3px) rgba(244, 183, 40, .9),
+      0 0 calc(var(--lit, 0) * 80px) calc(var(--lit, 0) * -6px) rgba(244, 183, 40, .5), var(--lift); }
+  .fcard-label { font: 700 34px/1 "Inter", sans-serif; letter-spacing: -0.01em; margin-bottom: 18px;
+    color: color-mix(in oklab, var(--soft), var(--gold) calc(var(--lit, 0) * 100%)); }
+  .fcard-well { display: flex; align-items: center; gap: 16px; height: 86px; padding: 0 26px; border-radius: 20px;
+    background: rgba(5, 7, 14, .6); box-shadow: 0 0 0 1px rgba(245, 241, 230, .08) inset; }
+  .fcard-val { font: 650 44px/1 "Inter", sans-serif; letter-spacing: -0.015em; color: var(--cream); white-space: pre; }
+  .fcard-pfx { font: 750 44px/1 "Inter", sans-serif; color: var(--gold); }
+  .fcard-bars { display: flex; gap: 10px; align-items: center; filter: blur(3.2px); opacity: .85; }
+  .fcard-bars span { display: block; height: 18px; border-radius: 9px; background: rgba(245, 241, 230, .55); }
+  .fcard-coin { flex: none; }
+  .lockb { position: absolute; right: -28px; top: -28px; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: #2A1B00;
+    background: radial-gradient(circle at 34% 28%, #FFF0BE, #F4B728 55%, #C98A00);
+    box-shadow: 0 0 0 6px rgba(255, 226, 140, .3), 0 16px 30px -10px rgba(0, 0, 0, .6), 0 0 44px rgba(244, 183, 40, .5); }
+  .lockb svg { width: 44px; height: 44px; }
+
+  /* the Confirmation checklist diagram (e4-confirm) */
+  .conf { width: 700px; padding: 40px 40px 30px; }
+  .conf-title { font: 800 56px/1.05 "Inter", sans-serif; letter-spacing: -0.035em; color: var(--cream); margin: 0 0 22px 18px; transform-origin: 0 50%; }
+  .conf-row { position: relative; display: flex; align-items: center; gap: 26px; height: 84px; padding: 0 22px; border-radius: 22px; }
+  .conf-row + .conf-row { margin-top: 6px; }
+  .conf-row::before { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1;
+    background: rgba(244, 183, 40, .12); box-shadow: 0 0 0 2px rgba(244, 183, 40, .55) inset; opacity: var(--hi, 0); }
+  .conf-box { position: relative; width: 54px; height: 54px; flex: none; border-radius: 50%; box-shadow: 0 0 0 3px rgba(245, 241, 230, .28) inset; }
+  .conf-box i { position: absolute; inset: 0; border-radius: 50%; opacity: var(--on, 0); transform: scale(calc(.4 + var(--on, 0) * .6));
+    background: radial-gradient(circle at 34% 28%, #FFF0BE, #F4B728 55%, #C98A00); box-shadow: 0 0 24px rgba(244, 183, 40, .6); }
+  .conf-box svg { position: absolute; left: 10px; top: 10px; width: 34px; height: 34px; overflow: visible; }
+  .conf-box path { fill: none; stroke: #2A1B00; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--on, 0)); }
+  .conf-name { font: 650 40px/1 "Inter", sans-serif; letter-spacing: -0.02em; color: color-mix(in oklab, var(--soft), var(--cream) calc(var(--on, 0) * 100%)); }
+  .zipcard { width: 760px; display: flex; gap: 28px; align-items: center; }
+  .zip-ico { width: 80px; height: 80px; flex: none; border-radius: 24px; display: grid; place-items: center; color: #2A1B00;
+    background: linear-gradient(180deg, #FFD978, #F4B728 60%, #DB9C0C); box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 18px 36px -14px rgba(244, 183, 40, .6); }
+  .zip-ico svg { width: 46px; height: 46px; }
+  .zip-text { font: 650 44px/1.25 "Inter", sans-serif; letter-spacing: -0.02em; color: var(--cream); }
+  .zip-a { display: inline-block; color: var(--gold); font-weight: 800; }
+  .zip-b { position: relative; display: block; width: fit-content; margin-top: 6px; color: var(--gold); font-weight: 800; transform-origin: 0 50%; }
+  .zip-b::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 5px; border-radius: 3px; background: #F4B728;
+    transform-origin: 0 50%; transform: scaleX(var(--u, 0)); box-shadow: 0 0 14px rgba(244, 183, 40, .6); }
+  .conn { fill: none; stroke: #F4B728; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--draw, 0)); filter: drop-shadow(0 0 8px rgba(244, 183, 40, .5)); }
+  .sent { font: 800 250px/1 "Inter", sans-serif; letter-spacing: -0.05em; white-space: nowrap; padding: 0 .08em;
+    background: linear-gradient(176deg, #FFF0C2 0%, #FFD05A 30%, #F4B728 60%, #C98A00 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* what the blockchain sees (e4-chain) */
+  .chainblk { width: 900px; padding: 34px 36px; border-radius: 30px; display: flex; flex-direction: column; gap: 14px;
+    background: linear-gradient(180deg, #232B4C, #161C34);
+    box-shadow: 0 0 0 2px rgba(245, 241, 230, .14) inset, 16px 18px 0 #0E1328, 16px 18px 0 2px rgba(245, 241, 230, .08), 0 50px 90px -30px rgba(0, 0, 0, .85); }
+  .chainblk.is-lens { box-shadow: none; background: linear-gradient(180deg, #2A3358, #1A2140); }
+  .crow { position: relative; display: flex; align-items: center; gap: 28px; height: 96px; padding: 0 24px; border-radius: 22px; background: rgba(5, 7, 14, .45);
+    box-shadow: 0 0 0 calc(1px + var(--lit, 0) * 2px) rgba(244, 183, 40, calc(.12 + var(--lit, 0) * .7)) inset, 0 0 calc(var(--lit, 0) * 60px) calc(var(--lit, 0) * -10px) rgba(244, 183, 40, .55); }
+  .crow-name { width: 220px; flex: none; font: 700 38px/1 "Inter", sans-serif; letter-spacing: -0.02em; color: color-mix(in oklab, var(--cream), var(--gold) calc(var(--lit, 0) * 100%)); }
+  .crow-noise { flex: 1; overflow: hidden; font: 600 38px/1 "DejaVu Sans Mono", ui-monospace, monospace; letter-spacing: .02em; color: rgba(244, 183, 40, .82); white-space: pre; }
+  .chainblk.is-lens .crow-noise { color: #FFD66E; }
+
+  /* the celebration (e4-done) */
+  .done-h { font: 800 168px/1 "Inter", sans-serif; letter-spacing: -0.05em; color: var(--cream); white-space: nowrap; text-align: center; }
+  .done-h .is-gold { background: linear-gradient(176deg, #FFF0C2 0%, #FFD05A 30%, #F4B728 60%, #C98A00 100%); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .05em; margin: 0 -.05em; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script type="module">
+// Episode 4 · Sending and receiving. One scene per segment of tools/video-kit/projects/zts-e4.json
+// (scene id == segment name). On-screen strings come from S.params (verbatim from
+// episodes/SCRIPTS.md). Pure in t: seeded randomness only, every motion keyed to t.
+import * as Z from "./lib/series.js";
+import { maya, sam, watcher } from "/js/cast.js";
+
+const { ease, clamp, hash, rng, lerp } = Z;
+const setTf = (n, tf) => { if (n._tf !== tf) { n.style.transform = tf; n._tf = tf; } };
+const setOp = (n, o) => { const s = clamp(o).toFixed(3); if (n._o !== s) { n.style.opacity = s; n._o = s; } };
+
+// the honesty label comes from the segment's params.label (the kit injects STAGE_INPUT before load)
+const INPUT = window.STAGE_INPUT || {};
+const labelFor = (id, fallback) => (INPUT.scene === id && INPUT.params && INPUT.params.label) || fallback;
+
+// measure text only once Inter is in
+const fontsReady = async () => {
+  try { await document.fonts.load('700 40px "Inter"'); await document.fonts.ready; } catch (e) { /* measured with whatever is there */ }
+};
+
+// ---------------------------------------------------------------- shared helpers
+
+// a cast figure as live SVG, bottom centre at (x, y), with breathing, blinks and a head sway
+function figure(S, fn, opts, { x, y, seed = 1, parent, mirror = false } = {}) {
+  const el = S.el("div", { class: "fig", style: { width: `${opts.size}px`, transformOrigin: "50% 100%" } }, parent);
+  el.innerHTML = fn({ theme: "dark", label: false, ...opts });
+  if (mirror) el.firstElementChild.style.transform = "scaleX(-1)";
+  Z.place(el, x, y, "bottom");
+  el._parts = rig(S, el, seed);
+  return el;
+}
+
+function pivot(g) {
+  if (!g) return null;
+  const [ox, oy] = (g.getAttribute("data-origin") || "100 300").split(/\s+/).map(Number);
+  g.style.transformBox = "view-box";
+  g.style.transformOrigin = `${ox}px ${oy}px`;
+  return g;
+}
+
+function rig(S, el, seed) {
+  const q = (c) => pivot(el.querySelector(`.${c}`));
+  const parts = { body: q("cast-body"), head: q("cast-head"), eyes: q("cast-eyes") };
+  const blinks = Array.from({ length: 40 }, (_, k) => 0.9 + k * 3.5 + hash(seed, k) * 1.5);
+  S.on((t) => {
+    if (parts.body) setTf(parts.body, `scale(1,${(1 + 0.012 * (0.5 + 0.5 * Math.sin(t * 2.2 + seed))).toFixed(4)})`);
+    if (parts.head) setTf(parts.head, `rotate(${(Math.sin(t * 0.8 + seed * 1.7) * 1.8).toFixed(2)}deg)`);
+    if (parts.eyes) {
+      let v = 1;
+      for (const b of blinks) { const d = (t - b) / 0.16; if (d > 0 && d < 1) v = 1 - 0.9 * Math.sin(Math.PI * d); }
+      setTf(parts.eyes, `scale(1,${v.toFixed(3)})`);
+    }
+  });
+  return parts;
+}
+
+// a soft gold light (radial) centred at x, y
+function halo(S, { x, y, r = 300, soft = false, parent } = {}) {
+  const el = S.el("div", { class: `halo${soft ? " is-soft" : ""}`, style: { width: `${2 * r}px`, height: `${2 * r}px` } }, parent);
+  Z.place(el, x, y);
+  S.set(el, { opacity: 0 });
+  return el;
+}
+
+// a light sweep across an element (needs position and border-radius on the host)
+function sweep(S, host, at, dur = 1.1) {
+  const s = host._sweep || (host._sweep = S.el("div", { class: "sweep" }, host));
+  S.tween(s, { at, dur, ease: "inOutCubic", from: { "--sx": -0.5 }, to: { "--sx": 1.3 } });
+}
+
+// a gentle idle float (pure in t) on a wrapper element
+function floaty(S, el, { amp = 8, speed = 1, seed = 0, rot = 0 } = {}) {
+  S.on((t) => {
+    const y = Math.sin(t * 1.3 * speed + seed) * amp, r = Math.sin(t * 0.9 * speed + seed * 2) * rot;
+    setTf(el, `translate(0px,${y.toFixed(2)}px) rotate(${r.toFixed(3)}deg)`);
+  });
+}
+
+function svgLayer(S, inner, parent) {
+  const box = S.el("div", { html: `<svg class="paths" viewBox="0 0 1920 1080">${inner}</svg>`, style: "position:absolute;left:0;top:0" }, parent);
+  return box.firstChild;
+}
+
+// an element that rides along an SVG path from t0 to t1 (eased), pure in t
+function ride(S, el, path, { t0, t1, e = "inOutCubic", fadeIn = 0.15, fadeOut = 0.2, hold = false } = {}) {
+  const L = path.getTotalLength();
+  S.on((t) => {
+    const p = ease[e](clamp((t - t0) / (t1 - t0)));
+    const pt = path.getPointAtLength(L * p);
+    setTf(el, `translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px) translate(-50%,-50%)`);
+    const vis = t < t0 ? 0 : Math.min(1, (t - t0) / fadeIn) * (hold ? 1 : 1 - clamp((t - t1 + fadeOut) / fadeOut));
+    setOp(el, vis);
+  });
+}
+
+function coinEl(S, kind, size, parent, text = "ZEC") {
+  return S.el("div", { class: `zts-coin is-${kind}`, text, style: { "--d": `${size}px` } }, parent);
+}
+
+// point and heading on a path at eased progress u (0..1)
+function along(path, L, u, e = "inOutCubic") {
+  const p = ease[e](clamp(u));
+  const a = path.getPointAtLength(L * p);
+  const b = path.getPointAtLength(Math.min(L, L * p + 3));
+  const c = path.getPointAtLength(Math.max(0, L * p - 3));
+  return { x: a.x, y: a.y, ang: (Math.atan2(b.y - c.y, b.x - c.x) * 180) / Math.PI, p };
+}
+
+// a light trail along a path: its head follows the same eased progress as the flyer, the
+// tail fades behind it and slides off the end after t1
+function comet(S, svg, d, { t0, t1, e = "inOutCubic", tail = 0.3, fade = 0.55 } = {}) {
+  const g = S.el("g", {}, svg);
+  const specs = [[tail, 48, "rgba(244,183,40,.2)"], [tail * 0.62, 22, "rgba(255,206,96,.5)"], [tail * 0.3, 9, "rgba(255,240,205,.95)"]];
+  const paths = specs.map(([L, w, c]) => {
+    const p = S.el("path", { attrs: { d, pathLength: "1", fill: "none", stroke: c, "stroke-width": String(w), "stroke-linecap": "round", "stroke-dasharray": `${L} 3` } }, g);
+    p._L = L;
+    return p;
+  });
+  paths[2].style.filter = "drop-shadow(0 0 10px rgba(255,214,110,.9))";
+  S.on((t) => {
+    const u = (t - t0) / (t1 - t0);
+    const head = u <= 1 ? ease[e](clamp(u)) : 1 + ((t - t1) / fade) * tail;
+    for (const p of paths) {
+      const off = (p._L - head).toFixed(4);
+      if (p._off !== off) { p.style.strokeDashoffset = off; p._off = off; }
+    }
+    setOp(g, t < t0 ? 0 : 1 - clamp((t - t1) / fade));
+  });
+  return g;
+}
+
+// a small address token: prefix plus a blurred tail
+function utoken(S, prefix = "u1", { parent, bars = 3, seed = 2 } = {}) {
+  const el = S.el("div", { class: "utok" }, parent);
+  S.el("b", { text: prefix }, el);
+  const R = rng(seed);
+  for (let i = 0; i < bars; i++) S.el("i", { style: { width: `${(34 + R() * 30).toFixed(0)}px` } }, el);
+  return el;
+}
+
+const ICON = {
+  doc: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h7.5l4 4v14h-11.5z"/><path d="M14 3v4h4"/><path d="M9.5 11.5h5.5M9.5 15h5.5M9.5 18.5h3.5"/></svg>`,
+  tick: `<svg viewBox="0 0 24 24"><path pathLength="1" d="M5 12.6l4.4 4.4L19 7.4"/></svg>`,
+};
+
+// ------------------------------------------------------------------ 1. opening card
+Z.scene("e4-open", (S) => {
+  const P = S.params;
+  const card = Z.openingCard(S, { n: P.n ?? 4, title: P.title });
+  const nr = S.rectOf(card.num);
+  // a gold burst as the numeral lands, then light sweeps on "shielded" and "private"
+  Z.burst(S, { at: 0.95, x: nr.cx - 10, y: nr.cy + 10, seed: 4, count: 80, power: 1.0 });
+  S.tween(card.num, { at: S.word(0, "shielded") - 0.2, dur: 1.4, ease: "inOutCubic", from: { "--sweep": -0.3 }, to: { "--sweep": 1.35 } });
+  S.tween(card.num, { at: S.word(0, "private") - 0.3, dur: 1.4, ease: "inOutCubic", from: { "--sweep": -0.3 }, to: { "--sweep": 1.35 } });
+  card.words.forEach((w, i) => Z.pulse(S, w, S.word(0, "first") + i * 0.05));
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.0 },
+    { at: 0.2, dur: S.seconds, x: 975, y: 505, zoom: 1.07, ease: "inOutSine" },
+  ]);
+});
+
+// ------------------------------------------------------------------ 2. receiving: Sam shares his u1 address
+Z.scene("e4-receive", async (S) => {
+  await fontsReady();
+  const P = S.params;
+  const c1 = S.cue(1), c2 = S.cue(2);
+  const FY = 905, SZ = 430, k = SZ / 200;
+  const SX = 330, MX = 1600;
+  const sPh = { x: SX + 62 * k, y: FY - 209 * k }; // Sam's phone (the cast prop)
+  const mPh = { x: MX - 62 * k, y: FY - 209 * k }; // Maya is mirrored: her phone faces Sam
+  const hS = halo(S, { x: SX + 20, y: FY - 200 * k, r: 330, soft: true });
+  const hM = halo(S, { x: MX - 20, y: FY - 200 * k, r: 330, soft: true });
+  const fS = figure(S, sam, { size: SZ, pose: "phone" }, { x: SX, y: FY, seed: 3 });
+  const fM = figure(S, maya, { size: SZ, pose: "phone" }, { x: MX, y: FY, seed: 5, mirror: true });
+  const fMh = figure(S, maya, { size: SZ, pose: "phone", mood: "happy" }, { x: MX, y: FY, seed: 5, mirror: true });
+  S.set(fMh, { opacity: 0 });
+  Z.appear(S, fS, { at: 0.3, until: null, dur: 1.0 });
+  Z.appear(S, fM, { at: 0.55, until: null, dur: 1.0 });
+
+  // "Every payment has two sides": both light up, then the focus moves to Sam
+  const twoAt = S.word(0, "two"), recvAt = S.word(0, "receiving");
+  [hS, hM].forEach((h, i) => {
+    S.tween(h, { at: twoAt - 0.1 + i * 0.12, dur: 0.5, ease: "outCubic", to: { opacity: 0.95, scale: 1.08 } });
+    S.tween(h, { at: twoAt + 0.6 + i * 0.12, dur: 1.0, ease: "inOutSine", to: { opacity: 0.5, scale: 1 } });
+  });
+  [fS, fM].forEach((f, i) => Z.pulse(S, f, S.word(0, "sides") - 0.05 + i * 0.12));
+  S.tween(fM, { at: recvAt - 0.2, dur: 0.7, to: { opacity: 0.32 } });
+  S.tween(hM, { at: recvAt - 0.2, dur: 0.7, to: { opacity: 0 } });
+  S.tween(hS, { at: recvAt - 0.2, dur: 0.7, to: { opacity: 0.85 } });
+
+  // tap Receive
+  const tapAt = S.word(1, "Receive") + 0.08;
+  const rcv = Z.chip(S, P.tap || "Receive", { kind: "gold", size: "lg", x: 960, y: 215, at: S.word(1, "tap") - 0.45, until: c2 + 0.1 });
+  Z.tap(S, rcv, tapAt);
+  const rr = S.rectOf(rcv);
+  Z.burst(S, { at: tapAt + 0.04, x: rr.cx, y: rr.cy, seed: 11, count: 50, power: 0.6 });
+
+  // the Zcash Shielded Address card: prefix plus blurred bars only
+  const A = P.address || {};
+  const cardAt = tapAt + 0.3;
+  const cg = halo(S, { x: 960, y: 455, r: 480, soft: true });
+  const card = Z.addressCard(S, { title: A.title || "Zcash Shielded Address", prefix: A.prefix || "u1", badge: null, kind: "shielded", at: cardAt, x: 960, y: 455, seed: 4 });
+  const line = card.querySelector(".zts-addr-line"), pfx = card.querySelector(".zts-addr-prefix"), ttl = card.querySelector(".zts-addr-title");
+  line.style.position = "relative";
+  ttl.style.transformOrigin = "0 50%";
+  const [nCopy, nQR] = P.chips || ["Copy", "QR Code"];
+  const row = S.el("div", { class: "chiprow" });
+  Z.place(row, 960, 655);
+  const copy = Z.chip(S, nCopy, { kind: "gold", parent: row, at: cardAt + 0.3, until: null });
+  const qr = Z.chip(S, nQR, { kind: "gold", parent: row, at: cardAt + 0.4, until: null });
+  const rCopy = S.rectOf(copy), rQR = S.rectOf(qr), rp = S.rectOf(pfx);
+  const copyAt = S.word(1, "Copy"), qrAt = S.word(2, "QR"), u1At = S.word(1, "u1");
+  Z.pulse(S, copy, copyAt);
+  sweep(S, line, copyAt + 0.15, 0.9);
+  Z.pulse(S, ttl, S.word(1, "Zcash") - 0.05);
+  S.tween(cg, { at: S.word(1, "Shielded") - 0.2, dur: 0.6, to: { opacity: 0.8 } });
+  S.tween(cg, { at: S.word(1, "It") - 0.1, dur: 1.0, to: { opacity: 0.35 } });
+  Z.pulse(S, pfx, u1At - 0.05);
+  Z.burst(S, { at: u1At, x: rp.cx, y: rp.cy, seed: 13, count: 36, power: 0.45 });
+
+  // "Send it to the person paying you": a gold ribbon carries the address from Sam to Maya
+  const A0 = { x: sPh.x + 10, y: sPh.y - 40 }, A1 = { x: mPh.x - 10, y: mPh.y - 40 };
+  const d = `M${A0.x} ${A0.y} C${A0.x + 170} 60 ${A1.x - 170} 60 ${A1.x} ${A1.y}`;
+  const svg = svgLayer(S, `<path class="rib rib-glow rib-draw" pathLength="1" d="${d}"/><path class="rib rib-core rib-draw" pathLength="1" d="${d}"/><path class="rib rib-hi rib-draw" pathLength="1" d="${d}"/><path class="rib rib-pulse" pathLength="1" d="${d}"/>`);
+  const [pg, pc, ph, pp] = svg.querySelectorAll("path");
+  const sendAt = S.word(2, "Send"), arriveAt = S.word(2, "you") + 0.05;
+  [pg, pc, ph].forEach((p) => S.tween(p, { at: sendAt - 0.05, dur: arriveAt - sendAt, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } }));
+  S.tween([pg, pc, ph], { at: arriveAt + 0.4, dur: 1.0, to: { opacity: 0.6 } });
+  const tok = utoken(S, A.prefix || "u1", { seed: 6 });
+  ride(S, tok, pc, { t0: sendAt - 0.05, t1: arriveAt, e: "inOutCubic", fadeOut: 0.15 });
+  S.tween(fM, { at: sendAt - 0.3, dur: 0.6, to: { opacity: 1 } });
+  S.tween(hM, { at: arriveAt - 0.1, dur: 0.4, ease: "outCubic", to: { opacity: 1, scale: 1.12 } });
+  S.tween(hM, { at: arriveAt + 0.4, dur: 1.4, ease: "inOutSine", to: { opacity: 0.6, scale: 1 } });
+  S.tween(hS, { at: sendAt, dur: 1.2, to: { opacity: 0.45 } });
+  S.tween(fMh, { at: arriveAt - 0.05, dur: 0.35, to: { opacity: 1 } });
+  S.tween(fM, { at: arriveAt + 0.2, dur: 0.3, to: { opacity: 0 } });
+  Z.burst(S, { at: arriveAt, x: A1.x, y: A1.y, seed: 15, count: 70, power: 0.8 });
+  // a light keeps travelling along the ribbon, Sam to Maya
+  const T0 = arriveAt + 0.3, per = 1.7;
+  S.on((t) => {
+    if (t < T0) { setOp(pp, 0); return; }
+    const pos = (((t - T0) / per) % 1) * 1.15;
+    const off = (0.07 - pos).toFixed(4);
+    if (pp._off !== off) { pp.style.strokeDashoffset = off; pp._off = off; }
+    setOp(pp, 0.9);
+  });
+  // "They can also scan it if you tap QR Code"
+  sweep(S, card, S.word(2, "scan") - 0.05, 1.1);
+  Z.pulse(S, qr, qrAt);
+
+  S.cursor([
+    { at: tapAt - 0.9, x: rr.cx + 170, y: rr.cy + 200 },
+    { at: tapAt, x: rr.cx - 10, y: rr.cy + 8, click: true, dur: 0.7 },
+    { at: copyAt + 0.05, x: rCopy.cx - 6, y: rCopy.cy + 8, click: true, dur: 0.6 },
+    { at: copyAt + 0.9, x: rCopy.cx + 140, y: rCopy.cy + 150, dur: 0.6 },
+  ], { hide: copyAt + 1.2 });
+  S.cursor([
+    { at: qrAt - 0.9, x: rQR.cx + 170, y: rQR.cy + 170 },
+    { at: qrAt + 0.05, x: rQR.cx - 6, y: rQR.cy + 8, click: true, dur: 0.7 },
+    { at: qrAt + 0.8, x: rQR.cx + 140, y: rQR.cy + 140, dur: 0.6 },
+  ], { hide: S.seconds - 0.4 });
+  S.camera([
+    { at: 0, x: 960, y: 500, zoom: 1.0 },
+    { at: recvAt - 0.4, dur: 1.4, x: 700, y: 450, zoom: 1.16, ease: "inOutCubic" },
+    { at: tapAt - 0.9, dur: 0.9, x: 860, y: 330, zoom: 1.38, ease: "inOutCubic" },
+    { at: copyAt - 0.5, dur: 0.9, x: 900, y: 500, zoom: 1.26, ease: "inOutCubic" },
+    { at: S.word(1, "starts") - 0.4, dur: 1.0, x: 820, y: 470, zoom: 1.45, ease: "inOutCubic" },
+    { at: c2 - 0.3, dur: 1.4, x: 960, y: 470, zoom: 1.0, ease: "inOutQuint" },
+    { at: S.word(2, "scan") - 0.5, dur: 1.2, x: 1000, y: 540, zoom: 1.16, ease: "inOutCubic" },
+  ]);
+  void c1;
+}, { label: labelFor("e4-receive", "Diagram, not the app") });
+
+// ------------------------------------------------------------------ 3. sending: the form diagram
+Z.scene("e4-send", async (S) => {
+  await fontsReady();
+  const P = S.params;
+  const c1 = S.cue(1), c2 = S.cue(2);
+  const F = P.fields || [{ label: "Send to", prefix: "u1" }, { label: "Amount", value: "0.05 ZEC" }, { label: "Message", value: "Thanks for lunch!" }];
+  const FY = 905, SZ = 430, k = SZ / 200, MX = 330;
+  const ph = { x: MX + 62 * k, y: FY - 209 * k };
+  const glow = halo(S, { x: MX + 20, y: FY - 200 * k, r: 330, soft: true });
+  const fig = figure(S, maya, { size: SZ, pose: "phone" }, { x: MX, y: FY, seed: 2 });
+  Z.appear(S, fig, { at: 0.2, until: null, dur: 1.0 });
+  S.tween(glow, { at: 0.3, dur: 1.2, to: { opacity: 0.6 } });
+
+  // "Tap Send": the button opens into the form
+  const FCX = 1160, FCY = 455;
+  const sendAt = S.word(0, "Send") + 0.08;
+  const send = Z.chip(S, "Send", { kind: "gold", size: "lg", x: FCX, y: FCY });
+  S.enter(send, { at: S.word(0, "Tap") - 0.4, dur: 0.8, ease: "outBack", from: { opacity: 0, y: 30, scale: 0.85, blur: 8 } });
+  Z.tap(S, send, sendAt);
+  S.exit(send, { at: sendAt + 0.3, dur: 0.35, to: { opacity: 0, scale: 0.7, blur: 10 } });
+  const rs = S.rectOf(send);
+  Z.burst(S, { at: sendAt + 0.04, x: rs.cx, y: rs.cy, seed: 21, count: 50, power: 0.6 });
+
+  // three separate floating cards: Send to, Amount, Message
+  const box = S.el("div", { style: `position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:${FCX - 20}px ${FCY}px` });
+  const spots = [{ x: FCX, y: 250 }, { x: FCX - 50, y: 455 }, { x: FCX, y: 660 }];
+  const openAt = sendAt + 0.22;
+  const cards = F.slice(0, 3).map((f, i) => {
+    const wrap = S.el("div", { style: `position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:${spots[i].x}px ${spots[i].y}px` }, box);
+    const c = S.el("div", { class: "fcard" }, wrap);
+    Z.place(c, spots[i].x, spots[i].y);
+    S.el("div", { class: "fcard-label", text: f.label }, c);
+    const well = S.el("div", { class: "fcard-well" }, c);
+    S.enter(c, { at: openAt + i * 0.09, dur: 0.85, ease: "outExpo", from: { opacity: 0, x: FCX - spots[i].x, y: FCY - spots[i].y, scale: 0.35, blur: 12 } });
+    floaty(S, wrap, { amp: 5, speed: 0.8, seed: i * 1.7, rot: 0.35 });
+    return { wrap, c, well };
+  });
+  const [w0, w1, w2] = cards.map((c) => c.well);
+  const lit = (c, at, off) => {
+    S.tween(c, { at, dur: 0.35, ease: "outCubic", to: { "--lit": 1 } });
+    if (off != null) S.tween(c, { at: off, dur: 0.5, to: { "--lit": 0 } });
+  };
+
+  // "Paste the address into Send to": the u1 token flies from her phone into the field
+  const pasteAt = S.word(0, "Paste") + 0.1;
+  const pf = S.el("div", { class: "fcard-pfx", text: F[0].prefix || "u1" }, w0);
+  const bars = S.el("div", { class: "fcard-bars" }, w0);
+  bars.dataset.filter = "blur(3.2px)";
+  const R = rng(7);
+  for (let i = 0; i < 6; i++) S.el("span", { style: { width: `${(46 + R() * 50).toFixed(0)}px` } }, bars);
+  [pf, bars].forEach((e, i) => S.tween(e, { at: pasteAt + i * 0.05, dur: 0.5, ease: "outBack", from: { opacity: 0, scale: 1.25, blur: 8 }, to: { opacity: 1, scale: 1, blur: 0 } }));
+  const rw0 = S.rectOf(w0);
+  const tgt = { x: rw0.x + 130, y: rw0.cy };
+  const tokPath = svgLayer(S, `<path d="M${ph.x} ${ph.y - 30} C${ph.x + 120} ${ph.y - 260} ${tgt.x - 260} ${tgt.y - 160} ${tgt.x} ${tgt.y}" fill="none" stroke="none"/>`).querySelector("path");
+  const tok = utoken(S, F[0].prefix || "u1", { seed: 6 });
+  ride(S, tok, tokPath, { t0: pasteAt - 0.6, t1: pasteAt + 0.02, e: "inOutCubic", fadeOut: 0.12 });
+  Z.burst(S, { at: pasteAt, x: tgt.x, y: tgt.y, seed: 22, count: 40, power: 0.45 });
+  sweep(S, w0, S.word(0, "address") - 0.05, 0.9);
+  w0.style.position = "relative";
+  const intoAt = S.word(0, "Send", 1);
+  const typeAt = S.word(0, "type") + 0.05;
+  const msgAt = S.word(1, "Message");
+  lit(cards[0].c, pasteAt - 0.05, typeAt - 0.35);
+  Z.pulse(S, cards[0].c, intoAt);
+
+  // "then type the amount", "In Message, you can add a note"
+  const coin = coinEl(S, "gold", 54, w1, "");
+  coin.classList.add("fcard-coin");
+  const amt = S.el("span", { class: "fcard-val" }, w1);
+  const msg = S.el("span", { class: "fcard-val" }, w2);
+  S.tween(coin, { at: typeAt - 0.25, dur: 0.6, ease: "outBack", from: { opacity: 0, scale: 0.4, rotate: -40 }, to: { opacity: 1, scale: 1, rotate: 0 } });
+  const defAt = S.word(1, "note", 1) - 0.15;
+  S.type(amt, F[1].value || "0.05 ZEC", { at: typeAt, cps: 9, seed: 3, until: msgAt - 0.2 });
+  S.type(msg, F[2].value || "Thanks for lunch!", { at: msgAt + 0.45, cps: 12, seed: 5, until: defAt - 0.15 });
+  lit(cards[1].c, typeAt - 0.3, msgAt - 0.15);
+  lit(cards[2].c, msgAt - 0.1, defAt - 0.15);
+
+  // the definition: the form steps up to make room
+  const def = P.definition || "Note: a private message that travels with a shielded payment";
+  const [term, ...rest] = def.split(": ");
+  S.tween(box, { at: defAt - 0.25, dur: 1.0, ease: "inOutCubic", to: { y: -95, scale: 0.9 } });
+  Z.defCard(S, { term, text: rest.join(": "), at: defAt, until: c2 - 0.05, x: FCX - 20, y: 766, width: 1040 });
+  S.tween(box, { at: c2 - 0.45, dur: 0.9, ease: "inOutCubic", to: { y: 0, scale: 1 } });
+  // "Only you and the person you pay can read it": a lock on the message
+  const onlyAt = S.word(1, "Only");
+  const lockb = S.el("div", { class: "lockb", html: Z.icons.lock }, cards[2].c);
+  S.tween(lockb, { at: onlyAt - 0.1, dur: 0.7, ease: "outBack", from: { opacity: 0, scale: 0.3, rotate: -30 }, to: { opacity: 1, scale: 1, rotate: 0 } });
+  lit(cards[2].c, onlyAt - 0.1, c2 - 0.3);
+  const rl = S.rectOf(lockb);
+  const inBox = (x, y) => ({ x: FCX - 20 + (x - (FCX - 20)) * 0.9, y: FCY + (y - FCY) * 0.9 - 95 });
+  const lp = inBox(rl.cx, rl.cy);
+  Z.burst(S, { at: onlyAt + 0.1, x: lp.x, y: lp.y, seed: 23, count: 50, power: 0.6 });
+
+  // "Then tap Review"
+  const revAt = S.word(2, "Review") + 0.06;
+  const rev = Z.chip(S, P.tap || "Review", { kind: "gold", size: "lg", x: FCX, y: 850, at: c2 - 0.05, until: null });
+  Z.tap(S, rev, revAt);
+  const rv = S.rectOf(rev);
+  Z.burst(S, { at: revAt + 0.04, x: rv.cx, y: rv.cy, seed: 25, count: 70, power: 0.8 });
+  sweep(S, rev, revAt + 0.4, 1.0);
+  cards.forEach((c, i) => {
+    S.tween(c.c, { at: revAt + 0.1 + i * 0.06, dur: 0.3, to: { "--lit": 0.8 } });
+    S.tween(c.c, { at: revAt + 0.5 + i * 0.06, dur: 0.8, to: { "--lit": 0 } });
+  });
+
+  S.cursor([
+    { at: sendAt - 0.75, x: rs.cx + 170, y: rs.cy + 190 },
+    { at: sendAt, x: rs.cx - 10, y: rs.cy + 8, click: true, dur: 0.6 },
+    { at: sendAt + 0.8, x: rs.cx + 180, y: rs.cy + 260, dur: 0.6 },
+  ], { hide: sendAt + 1.0 });
+  S.cursor([
+    { at: revAt - 0.75, x: rv.cx + 200, y: rv.cy - 60 },
+    { at: revAt, x: rv.cx - 10, y: rv.cy + 8, click: true, dur: 0.6 },
+    { at: revAt + 0.9, x: rv.cx + 170, y: rv.cy - 30, dur: 0.6 },
+  ], { hide: S.seconds - 0.4 });
+  S.camera([
+    { at: 0, x: 960, y: 500, zoom: 1.0 },
+    { at: S.word(0, "Tap") - 0.4, dur: 0.9, x: 1000, y: 455, zoom: 1.28, ease: "inOutCubic" },
+    { at: sendAt + 0.25, dur: 1.1, x: 900, y: 420, zoom: 1.12, ease: "inOutCubic" },
+    { at: typeAt - 0.6, dur: 1.0, x: 1110, y: 470, zoom: 1.3, ease: "inOutCubic" },
+    { at: c1 - 0.1, dur: 1.0, x: 1120, y: 560, zoom: 1.25, ease: "inOutCubic" },
+    { at: defAt - 0.4, dur: 1.4, x: 1080, y: 540, zoom: 1.08, ease: "inOutQuint" },
+    { at: onlyAt - 0.3, dur: 1.2, x: 1150, y: 540, zoom: 1.1, ease: "inOutCubic" },
+    { at: c2 - 0.6, dur: 1.1, x: 1120, y: 600, zoom: 1.12, ease: "inOutCubic" },
+    { at: revAt + 0.6, dur: 1.2, x: 1060, y: 560, zoom: 1.04, ease: "inOutCubic" },
+  ]);
+}, { label: labelFor("e4-send", "Diagram, not the app") });
+
+// ------------------------------------------------------------------ 4. confirm and send (climax)
+Z.scene("e4-confirm", async (S) => {
+  await fontsReady();
+  const P = S.params;
+  const c1 = S.cue(1), c2 = S.cue(2);
+  const rows = P.rows || ["Total Amount", "Send to", "Amount", "Fee", "Message"];
+  const CX = 620, CY = 470;
+  const cg = halo(S, { x: CX, y: CY, r: 520, soft: true });
+  const card = S.el("div", { class: "zts-card conf" });
+  Z.place(card, CX, CY);
+  const title = S.el("div", { class: "conf-title", text: P.title || "Confirmation" }, card);
+  const rowEls = rows.map((name) => {
+    const r = S.el("div", { class: "conf-row" }, card);
+    S.el("div", { class: "conf-box", html: `<i></i>${ICON.tick}` }, r);
+    S.el("div", { class: "conf-name", text: name }, r);
+    return r;
+  });
+  S.enter(card, { at: 0.35, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 46, scale: 0.97, blur: 12 } });
+  rowEls.forEach((r, i) => S.enter(r, { at: 0.75 + i * 0.1, dur: 0.8, ease: "outExpo", from: { opacity: 0, x: -30, blur: 6 } }));
+  S.tween(cg, { at: 0.4, dur: 1.2, to: { opacity: 0.7 } });
+  const confAt = S.word(0, "Confirmation");
+  Z.pulse(S, title, confAt);
+  sweep(S, card, confAt + 0.1, 1.2);
+
+  // "Check the address and the fee": every row ticks, the two named ones stay lit
+  const T = [S.word(0, "Check"), S.word(0, "address"), 0, S.word(0, "fee"), 0];
+  T[2] = (T[1] + T[3]) / 2;
+  T[4] = T[3] + 0.42;
+  const named = rows.map((r) => r === "Send to" || r === "Fee");
+  rowEls.forEach((r, i) => {
+    const at = T[i] ?? T[T.length - 1] + 0.3 * (i - T.length + 1);
+    S.tween(r, { at, dur: 0.45, ease: "outCubic", from: { "--on": 0 }, to: { "--on": 1 } });
+    S.tween(r, { at, dur: 0.16, ease: "outCubic", to: { scale: 1.035 } });
+    S.tween(r, { at: at + 0.16, dur: 0.5, ease: "outBack", to: { scale: 1 } });
+    S.tween(r, { at: at - 0.05, dur: 0.3, to: { "--hi": named[i] ? 1 : 0.55 } });
+    if (!named[i]) S.tween(r, { at: at + 0.5, dur: 0.6, to: { "--hi": 0 } });
+    const rb = S.rectOf(r.firstChild);
+    Z.burst(S, { at: at + 0.05, x: rb.cx, y: rb.cy, seed: 30 + i, count: named[i] ? 40 : 18, power: named[i] ? 0.5 : 0.3, ring: named[i] });
+  });
+  const iSend = rows.indexOf("Send to"), iFee = rows.indexOf("Fee");
+  if (iSend >= 0) S.tween(rowEls[iSend], { at: c1 - 0.2, dur: 0.6, to: { "--hi": 0 } });
+
+  // the fee rule card
+  const ZX = 1400, ZY = 400;
+  const zip = S.el("div", { class: "zts-card zipcard" });
+  Z.place(zip, ZX, ZY);
+  S.el("div", { class: "zip-ico", html: ICON.doc }, zip);
+  const zt = S.el("div", { class: "zip-text" }, zip);
+  const str = P.card || "ZIP 317 · smallest fee 0.0001 ZEC";
+  const m = /^(ZIP\s*\d+)(.*?)(\d+(?:\.\d+)?\s*ZEC)$/.exec(str);
+  let za = null, zb = null;
+  if (m) {
+    za = S.el("span", { class: "zip-a", text: m[1] }, zt);
+    zt.appendChild(document.createTextNode(m[2]));
+    zb = S.el("span", { class: "zip-b", text: m[3] }, zt);
+  } else zt.textContent = str;
+  const whenAt = S.word(2, "When");
+  Z.appear(S, zip, { at: c1 + 0.05, until: whenAt + 0.3, from: { opacity: 0, x: 60, scale: 0.96, blur: 12 }, dur: 1.0 });
+  const rf = S.rectOf(rowEls[iFee >= 0 ? iFee : 3]), rz = S.rectOf(zip);
+  const conSvg = svgLayer(S, `<path class="conn" pathLength="1" d="M${rf.right + 4} ${rf.cy} C${rf.right + 50} ${rf.cy} ${rz.x - 50} ${rz.bottom - 40} ${rz.x - 4} ${rz.bottom - 46}"/>`);
+  S.tween(conSvg.querySelector("path"), { at: c1 + 0.45, dur: 0.8, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
+  S.exit(conSvg.parentNode, { at: whenAt - 0.15, dur: 0.4, to: { opacity: 0 } });
+  const zipAt = S.word(1, "zip"), zeroAt = S.word(1, "zero");
+  if (za) {
+    Z.pulse(S, za, zipAt - 0.05);
+    const ra = S.rectOf(za);
+    Z.burst(S, { at: zipAt + 0.05, x: ra.cx, y: ra.cy, seed: 36, count: 34, power: 0.45 });
+  }
+  sweep(S, zip, zipAt + 0.1, 1.1);
+  if (iFee >= 0) Z.pulse(S, rowEls[iFee], S.word(1, "fee") - 0.05);
+  if (zb) {
+    Z.pulse(S, zb, zeroAt - 0.05);
+    S.tween(zb, { at: zeroAt, dur: 2.3, ease: "inOutSine", from: { "--u": 0 }, to: { "--u": 1 } });
+  }
+
+  // "Tap Send"
+  const sendAt = S.word(2, "Send") + 0.06;
+  const send = Z.chip(S, P.tap || "Send", { kind: "gold", size: "lg", x: ZX, y: 665 });
+  S.enter(send, { at: c2 - 0.55, dur: 0.85, ease: "outBack", from: { opacity: 0, y: 40, scale: 0.85, blur: 10 } });
+  Z.tap(S, send, sendAt);
+  const rsd = S.rectOf(send);
+  Z.burst(S, { at: sendAt + 0.04, x: rsd.cx, y: rsd.cy, seed: 41, count: 70, power: 0.8 });
+  // everything clears for "Sent!"
+  S.exit(card, { at: whenAt - 0.15, dur: 0.55, to: { opacity: 0, x: -50, scale: 0.94, blur: 10 } });
+  S.exit(send, { at: whenAt - 0.05, dur: 0.5, to: { opacity: 0, y: -30, scale: 0.9, blur: 10 } });
+  S.tween(cg, { at: whenAt - 0.15, dur: 0.5, to: { opacity: 0 } });
+
+  // "When Zodl shows Sent!": huge, with a gold burst
+  const sentAt = S.word(2, "Sent");
+  const sg = halo(S, { x: 960, y: 360, r: 560 });
+  const sent = S.el("div", { class: "sent", text: P.done || "Sent!" });
+  sent.dataset.filter = "drop-shadow(0 0 40px rgba(244,183,40,.45))";
+  sent.style.filter = sent.dataset.filter;
+  Z.place(sent, 960, 360);
+  S.enter(sent, { at: sentAt - 0.12, dur: 0.9, ease: "outBack", from: { opacity: 0, scale: 0.55, blur: 22 } });
+  const flash = S.el("div", { class: "flash" });
+  Z.place(flash, 960, 360);
+  S.set(flash, { opacity: 0 });
+  S.tween(flash, { at: sentAt - 0.02, dur: 0.7, ease: "outCubic", from: { opacity: 1, scale: 0.4 }, to: { opacity: 0, scale: 1.6 } });
+  S.tween(sg, { at: sentAt - 0.05, dur: 0.5, ease: "outCubic", to: { opacity: 1, scale: 1.1 } });
+  S.tween(sg, { at: sentAt + 0.6, dur: 1.6, ease: "inOutSine", to: { opacity: 0.55, scale: 1 } });
+  Z.burst(S, { at: sentAt, x: 960, y: 360, seed: 44, count: 170, power: 1.6 });
+  Z.burst(S, { at: sentAt + 0.25, x: 680, y: 330, seed: 45, count: 60, power: 0.8, ring: false });
+  Z.burst(S, { at: sentAt + 0.35, x: 1240, y: 330, seed: 46, count: 60, power: 0.8, ring: false });
+
+  // a sealed gold envelope rises, then launches with a light trail: on its way
+  const envAt = S.word(2, "your") - 0.25;
+  const launchAt = S.word(2, "on") - 0.1;
+  const flyEnd = launchAt + 1.05;
+  const E0 = { x: 960, y: 700 };
+  const dPath = `M${E0.x} ${E0.y} C${E0.x + 360} ${E0.y + 40} ${E0.x + 760} 420 ${E0.x + 1320} 120`;
+  const tsvg = svgLayer(S, `<path d="${dPath}" fill="none" stroke="none"/>`);
+  const fp = tsvg.querySelector("path");
+  comet(S, tsvg, dPath, { t0: launchAt, t1: flyEnd, e: "inCubic", tail: 0.36 });
+  const fly = S.el("div", { class: "flyer" });
+  const eg = halo(S, { x: 0, y: 0, r: 330, parent: fly });
+  Z.envelope(S, { parent: fly, x: 0, y: 0 });
+  S.tween(eg, { at: envAt + 0.2, dur: 0.8, to: { opacity: 0.85 } });
+  const L = fp.getTotalLength();
+  S.on((t) => {
+    let x = E0.x, y = E0.y, r = 0, s = 0.62, o = 0;
+    if (t >= envAt) {
+      const a = ease.outBack(clamp((t - envAt) / 0.8));
+      o = clamp((t - envAt) / 0.35);
+      y = E0.y + (1 - a) * 90;
+      s = 0.62 * (0.75 + 0.25 * a);
+      y += Math.sin(Math.PI * clamp((t - (launchAt - 0.32)) / 0.32)) * 14; // a small wind-up dip
+    }
+    if (t >= launchAt) {
+      const q = along(fp, L, (t - launchAt) / (flyEnd - launchAt), "inCubic");
+      x = q.x; y = q.y; r = clamp(q.ang * 0.5, -28, 28); s = 0.62 - 0.22 * q.p; o = 1;
+    }
+    setTf(fly, `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(4)})`);
+    setOp(fly, o);
+  });
+  Z.burst(S, { at: launchAt + 0.05, x: E0.x, y: E0.y, seed: 48, count: 60, power: 0.7, ring: false });
+
+  S.cursor([
+    { at: sendAt - 0.8, x: rsd.cx + 170, y: rsd.cy + 150 },
+    { at: sendAt, x: rsd.cx - 10, y: rsd.cy + 8, click: true, dur: 0.65 },
+    { at: sendAt + 0.7, x: rsd.cx + 150, y: rsd.cy + 120, dur: 0.5 },
+  ], { hide: sendAt + 0.75 });
+  S.camera([
+    { at: 0, x: 640, y: 470, zoom: 1.1 },
+    { at: confAt - 0.5, dur: 0.9, x: 640, y: 455, zoom: 1.22, ease: "inOutCubic" },
+    { at: T[0] - 0.4, dur: 0.8, x: 640, y: 470, zoom: 1.3, ease: "inOutCubic" },
+    { at: T[3] - 0.5, dur: 0.9, x: 700, y: 560, zoom: 1.3, ease: "inOutCubic" },
+    { at: c1 - 0.2, dur: 1.4, x: 1000, y: 470, zoom: 1.02, ease: "inOutQuint" },
+    { at: zipAt - 0.5, dur: 1.0, x: 1420, y: 420, zoom: 1.4, ease: "inOutCubic" },
+    { at: S.word(1, "The") - 0.2, dur: 1.2, x: 1430, y: 440, zoom: 1.45, ease: "inOutCubic" },
+    { at: c2 - 0.7, dur: 1.0, x: 1100, y: 540, zoom: 1.12, ease: "inOutCubic" },
+    { at: whenAt - 0.2, dur: 1.0, x: 960, y: 480, zoom: 1.0, ease: "inOutCubic" },
+    { at: sentAt - 0.05, dur: 0.25, x: 960, y: 470, zoom: 1.06, ease: "outCubic" },
+    { at: sentAt + 0.2, dur: 1.4, x: 960, y: 490, zoom: 1.02, ease: "inOutCubic" },
+    { at: launchAt - 0.2, dur: 1.4, x: 1040, y: 480, zoom: 1.04, ease: "inOutCubic" },
+  ]);
+}, { label: labelFor("e4-confirm", "Diagram, not the app") });
+
+// ------------------------------------------------------------------ 5. it arrives: the note decrypts for Sam
+Z.scene("e4-arrive", async (S) => {
+  await fontsReady();
+  const P = S.params;
+  const c1 = S.cue(1);
+  const FY = 905;
+  const MX = 360, MS = 420, mk = MS / 200;
+  const SX = 1560, SS = 440, sk = SS / 200;
+  const mPh = { x: MX + 62 * mk, y: FY - 209 * mk };
+  const sHands = { x: SX, y: FY - 121 * sk };
+  const sPh = { x: SX - 62 * sk, y: FY - 209 * sk }; // mirrored: his phone faces Maya
+  const hM = halo(S, { x: MX + 20, y: FY - 200 * mk, r: 320, soft: true });
+  const hS = halo(S, { x: SX - 20, y: FY - 200 * sk, r: 330, soft: true });
+  const fM = figure(S, maya, { size: MS, pose: "phone" }, { x: MX, y: FY, seed: 2 });
+  const fMh = figure(S, maya, { size: MS, pose: "phone", mood: "happy" }, { x: MX, y: FY, seed: 2 });
+  const fS = figure(S, sam, { size: SS, pose: "receive" }, { x: SX, y: FY, seed: 4 });
+  const fSh = figure(S, sam, { size: SS, pose: "receive", mood: "happy" }, { x: SX, y: FY, seed: 4 });
+  const fSp = figure(S, sam, { size: SS, pose: "phone", mood: "happy" }, { x: SX, y: FY, seed: 4, mirror: true });
+  [fMh, fSh, fSp].forEach((f) => S.set(f, { opacity: 0 }));
+  Z.appear(S, fM, { at: 0.2, until: null, dur: 1.0 });
+  Z.appear(S, fS, { at: 0.3, until: null, dur: 1.0 });
+  const twoAt = S.word(0, "two");
+  S.tween(fM, { at: 1.0, dur: 0.6, to: { opacity: 0.45 } });
+  S.tween(fM, { at: twoAt - 0.25, dur: 0.5, to: { opacity: 1 } });
+  S.tween(hS, { at: 0.6, dur: 1.0, to: { opacity: 0.6 } });
+
+  // the envelope flies in and lands in Sam's hands
+  const t0 = 0.35, t1 = S.word(0, "arrives") + 0.05;
+  const openAt = S.word(0, "note") + 0.15;
+  const liftAt = S.word(0, "with") - 0.15, liftEnd = openAt - 0.02;
+  const outAt = c1 - 0.1;
+  const RP = { x: 1100, y: 450 }, RS = 0.94, FS = 0.34;
+  const HP = { x: sHands.x - 6, y: sHands.y - 58 };
+  const d1 = `M-200 330 C320 90 1080 60 ${HP.x} ${HP.y}`;
+  const svg = svgLayer(S, `<path d="${d1}" fill="none" stroke="none"/>`);
+  const p1 = svg.querySelector("path");
+  const L1 = p1.getTotalLength();
+  comet(S, svg, d1, { t0, t1, tail: 0.3 });
+  const fly = S.el("div", { class: "flyer" });
+  const eg = halo(S, { x: 0, y: 0, r: 380, parent: fly });
+  Z.envelope(S, { parent: fly, x: 0, y: 0, open: openAt, lines: [P.note || "Thanks for lunch!"], seed: 12 });
+  S.on((t) => {
+    let x = -200, y = 330, s = FS, r = 0, o = 1;
+    if (t < t0) o = 0;
+    else if (t < t1) {
+      const q = along(p1, L1, (t - t0) / (t1 - t0), "inOutCubic");
+      x = q.x; y = q.y; r = clamp(q.ang * 0.4, -22, 22);
+    } else if (t < liftAt) {
+      const u = clamp((t - t1) / 0.32);
+      x = HP.x; y = HP.y - 16 * Math.sin(Math.PI * u) * (1 - u);
+    } else {
+      const e = ease.inOutCubic(clamp((t - liftAt) / (liftEnd - liftAt)));
+      x = lerp(HP.x, RP.x, e); y = lerp(HP.y, RP.y, e) + Math.sin((t - liftEnd) * 1.6) * 5 * clamp((t - liftEnd) / 0.6);
+      s = lerp(FS, RS, e);
+    }
+    if (t >= outAt) {
+      const e2 = ease.inCubic(clamp((t - outAt) / 0.5));
+      s *= 1 - 0.6 * e2; o = 1 - e2;
+    }
+    setTf(fly, `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(4)})`);
+    setOp(fly, o);
+  });
+  Z.burst(S, { at: t1, x: HP.x, y: HP.y, seed: 50, count: 60, power: 0.7 });
+  S.tween(hS, { at: t1 - 0.1, dur: 0.4, ease: "outCubic", to: { opacity: 1, scale: 1.1 } });
+  S.tween(hS, { at: t1 + 0.5, dur: 1.2, to: { opacity: 0.55, scale: 1 } });
+  // it opens and the note decrypts for him
+  S.tween(eg, { at: openAt, dur: 0.8, to: { opacity: 0.9 } });
+  S.tween(fSh, { at: openAt + 0.6, dur: 0.35, to: { opacity: 1 } });
+  S.tween(fS, { at: openAt + 0.85, dur: 0.3, to: { opacity: 0 } });
+  Z.burst(S, { at: openAt + 1.3, x: RP.x, y: RP.y - 150, seed: 52, count: 60, power: 0.7, ring: false });
+  // "Only the two of you can read it"
+  [hM, hS].forEach((h, i) => {
+    S.tween(h, { at: twoAt - 0.1 + i * 0.1, dur: 0.5, ease: "outCubic", to: { opacity: 1, scale: 1.12 } });
+    S.tween(h, { at: twoAt + 0.6 + i * 0.1, dur: 1.2, ease: "inOutSine", to: { opacity: 0.5, scale: 1 } });
+  });
+
+  // "Ask them to send a little back to your u1 address": a smaller envelope flies to Maya
+  S.tween(fSp, { at: c1 + 0.05, dur: 0.4, to: { opacity: 1 } });
+  S.tween(fSh, { at: c1 + 0.3, dur: 0.35, to: { opacity: 0 } });
+  const backAt = S.word(1, "send"), landAt = S.word(1, "u1") + 0.05;
+  const MP = { x: mPh.x + 4, y: mPh.y - 40 };
+  const d2 = `M${sPh.x} ${sPh.y - 10} C${sPh.x - 320} 120 ${MP.x + 320} 120 ${MP.x} ${MP.y}`;
+  const svg2 = svgLayer(S, `<path d="${d2}" fill="none" stroke="none"/>`);
+  const p2 = svg2.querySelector("path");
+  const L2 = p2.getTotalLength();
+  comet(S, svg2, d2, { t0: backAt, t1: landAt, tail: 0.28 });
+  const fly2 = S.el("div", { class: "flyer" });
+  const eg2 = halo(S, { x: 0, y: 0, r: 380, parent: fly2 });
+  const small = Z.envelope(S, { parent: fly2, x: 0, y: 0 });
+  S.on((t) => {
+    let x = sPh.x, y = sPh.y - 10, r = 0, s = 0.24, o = 0;
+    if (t >= backAt) {
+      const q = along(p2, L2, (t - backAt) / (landAt - backAt), "inOutCubic");
+      x = q.x; y = q.y; o = clamp((t - backAt) / 0.15);
+      r = t < landAt ? clamp((q.ang - 180) * 0.4, -22, 22) : 0;
+      if (t >= landAt) y += Math.sin((t - landAt) * 1.5) * 4 * clamp((t - landAt) / 0.6);
+    }
+    setTf(fly2, `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(4)})`);
+    setOp(fly2, o);
+  });
+  Z.burst(S, { at: landAt, x: MP.x, y: MP.y, seed: 54, count: 70, power: 0.8 });
+  S.tween(hM, { at: landAt - 0.1, dur: 0.4, to: { opacity: 0.9 } });
+  // her u1 address: the prefix and a blurred tail
+  const pill = utoken(S, "u1", { seed: 9 });
+  Z.place(pill, mPh.x + 210, mPh.y - 150);
+  S.enter(pill, { at: S.word(1, "u1") - 0.2, dur: 0.8, ease: "outBack", from: { opacity: 0, y: 24, scale: 0.8, blur: 8 } });
+  Z.pulse(S, pill, S.word(1, "address"));
+  // "Now you have received a shielded payment too"
+  const nowAt = S.word(1, "Now"), gotAt = S.word(1, "received"), shAt = S.word(1, "shielded");
+  S.tween(fMh, { at: nowAt, dur: 0.35, to: { opacity: 1 } });
+  S.tween(fM, { at: nowAt + 0.25, dur: 0.3, to: { opacity: 0 } });
+  S.tween(hM, { at: gotAt - 0.1, dur: 0.4, ease: "outCubic", to: { opacity: 1, scale: 1.15 } });
+  S.tween(hM, { at: gotAt + 0.6, dur: 1.4, ease: "inOutSine", to: { opacity: 0.6, scale: 1 } });
+  S.tween(eg2, { at: gotAt - 0.1, dur: 0.5, to: { opacity: 1 } });
+  Z.burst(S, { at: gotAt, x: MP.x, y: MP.y, seed: 56, count: 100, power: 1.0 });
+  const shw = S.el("div", { style: "position:absolute;left:0;top:0" });
+  Z.shield(S, { size: 92, parent: shw });
+  Z.place(shw, mPh.x, mPh.y - 175);
+  S.enter(shw, { at: shAt - 0.1, dur: 0.9, ease: "outBack", from: { opacity: 0, scale: 0.4, rotate: -14, blur: 8 } });
+  Z.burst(S, { at: shAt + 0.1, x: mPh.x, y: mPh.y - 175, seed: 58, count: 50, power: 0.6 });
+  void small;
+
+  S.camera([
+    { at: 0, x: 1000, y: 470, zoom: 1.0 },
+    { at: 1.3, dur: 1.3, x: 1320, y: 500, zoom: 1.18, ease: "inOutCubic" },
+    { at: liftAt - 0.1, dur: 0.9, x: 1200, y: 420, zoom: 1.3, ease: "inOutCubic" },
+    { at: S.word(0, "Only") - 0.1, dur: 1.5, x: 960, y: 470, zoom: 1.02, ease: "inOutCubic" },
+    { at: backAt - 0.3, dur: 1.6, x: 900, y: 450, zoom: 1.04, ease: "inOutCubic" },
+    { at: S.word(1, "u1") - 0.4, dur: 1.2, x: 640, y: 440, zoom: 1.25, ease: "inOutCubic" },
+    { at: gotAt - 0.4, dur: 1.6, x: 700, y: 450, zoom: 1.15, ease: "inOutCubic" },
+    { at: S.cueEnd(1) - 0.4, dur: 1.4, x: 960, y: 480, zoom: 1.02, ease: "inOutCubic" },
+  ]);
+}, { label: labelFor("e4-arrive", "Illustration") });
+
+// ------------------------------------------------------------------ 6. what the blockchain sees
+Z.scene("e4-chain", async (S) => {
+  await fontsReady();
+  const P = S.params;
+  const rows = P.rows || ["Sender", "Receiver", "Amount", "Note"];
+  Z.headline(S, { text: P.title || "What the blockchain sees", at: 0.3, y: 150, until: null });
+  const wf = figure(S, watcher, { size: 470, pose: "point", lens: "scramble", mood: "thinking" }, { x: 430, y: 905, seed: 6 });
+  Z.appear(S, wf, { at: 0.25, until: null, dur: 1.0 });
+  const BX = 1210, BY = 545;
+  const bg = halo(S, { x: BX, y: BY, r: 560, soft: true });
+  // placeholder strings only: the scramble never resolves, so no value is ever shown
+  const NOISE = ["0000000 0000000 000", "00000 000000000 0000", "000000000 00000 00", "0000 0000000 000000"];
+  const mkBlock = (cls, seedBase) => {
+    const b = S.el("div", { class: `chainblk${cls}` });
+    const rs = rows.map((name, i) => {
+      const r = S.el("div", { class: "crow" }, b);
+      S.el("div", { class: "crow-name", text: name }, r);
+      const n = S.el("div", { class: "crow-noise" }, r);
+      S.scramble(n, { text: NOISE[i % NOISE.length], mode: "noise", seed: seedBase + i, rate: 12 });
+      return { r, n };
+    });
+    return { b, rs };
+  };
+  const blk = mkBlock("", 60);
+  Z.place(blk.b, BX, BY);
+  S.enter(blk.b, { at: 0.55, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 50, scale: 0.97, blur: 12 } });
+  blk.rs.forEach(({ r }, i) => S.enter(r, { at: 0.8 + i * 0.1, dur: 0.8, ease: "outExpo", from: { opacity: 0, x: 30, blur: 6 } }));
+  S.tween(bg, { at: 0.6, dur: 1.2, to: { opacity: 0.6 } });
+  const br = S.rectOf(blk.b);
+  const nr = blk.rs.map(({ n }) => S.rectOf(n));
+  // what the lens sees: the same rows, closer, still nothing but glyphs
+  const view = mkBlock(" is-lens", 80);
+  view.b.style.width = `${br.w}px`;
+  Z.place(view.b, br.x, br.y, "topleft");
+  sweep(S, blk.b, S.word(0, "scrambled") - 0.1, 1.2);
+
+  // "Not who paid. Not who got paid. Not how much. Not the note.": each row lights in turn
+  const beats = rows.map((_, i) => S.word(0, "Not", i));
+  beats.forEach((at, i) => {
+    [blk.rs[i].r, view.rs[i].r].forEach((r) => S.tween(r, { at: at - 0.05, dur: 0.4, ease: "outCubic", from: { "--lit": 0 }, to: { "--lit": 1 } }));
+    Z.pulse(S, blk.rs[i].r, at);
+    Z.burst(S, { at: at + 0.05, x: br.x + 140, y: nr[i].cy, seed: 70 + i, count: 28, power: 0.4 });
+  });
+  Z.lens(S, {
+    r: 118, zoom: 1.45, layers: [view.b], at: beats[0] - 0.45, until: null,
+    keys: [
+      { at: 0, x: nr[0].x + 180, y: nr[0].cy },
+      ...beats.slice(1).map((b, i) => ({ at: b - 0.3, dur: 0.5, x: nr[i + 1].x + 180 + (i % 2) * 60, y: nr[i + 1].cy })),
+    ],
+  });
+  S.camera([
+    { at: 0, x: 960, y: 500, zoom: 1.0 },
+    { at: 0.8, dur: 2.4, x: 1000, y: 510, zoom: 1.05, ease: "inOutSine" },
+    { at: beats[0] - 0.5, dur: 1.1, x: 1100, y: 540, zoom: 1.13, ease: "inOutCubic" },
+    { at: beats[2] - 0.3, dur: 1.4, x: 1120, y: 580, zoom: 1.15, ease: "inOutCubic" },
+    { at: beats[3] + 0.4, dur: 1.3, x: 980, y: 510, zoom: 1.02, ease: "inOutCubic" },
+  ]);
+}, { label: labelFor("e4-chain", "Diagram") });
+
+// ------------------------------------------------------------------ 7. you're shielded
+Z.scene("e4-done", async (S) => {
+  await fontsReady();
+  const P = S.params;
+  const tYou = S.word(0, "You're"), tSh = S.word(0, "shielded"), tDid = S.word(0, "did");
+  const FY = 905, SZ = 350, k = SZ / 200;
+  const glow = halo(S, { x: 960, y: 650, r: 470 });
+  const fM = figure(S, maya, { size: SZ, pose: "cheer" }, { x: 600, y: FY, seed: 2 });
+  const fS = figure(S, sam, { size: SZ, pose: "cheer" }, { x: 1320, y: FY, seed: 4 });
+  const hop = (f, at) => {
+    S.tween(f, { at, dur: 0.22, ease: "outCubic", to: { y: -46 } });
+    S.tween(f, { at: at + 0.22, dur: 0.3, ease: "inQuad", to: { y: 0 } });
+  };
+  [[fM, 0], [fS, 0.08]].forEach(([f, dl]) => {
+    Z.appear(S, f, { at: 0.12 + dl, until: null, dur: 0.8 });
+    [tDid - 0.05, tSh - 0.1, tSh + 1.4].forEach((at) => hop(f, at + dl));
+  });
+  // the gold shield, a big burst
+  const shw = S.el("div", { style: "position:absolute;left:0;top:0" });
+  Z.shield(S, { size: 190, parent: shw });
+  Z.place(shw, 960, 660);
+  S.enter(shw, { at: tSh - 0.15, dur: 1.0, ease: "outBack", from: { opacity: 0, scale: 0.3, rotate: -20, blur: 10 } });
+  const flash = S.el("div", { class: "flash" });
+  Z.place(flash, 960, 660);
+  S.set(flash, { opacity: 0 });
+  S.tween(flash, { at: tSh - 0.02, dur: 0.7, ease: "outCubic", from: { opacity: 1, scale: 0.4 }, to: { opacity: 0, scale: 1.7 } });
+  S.tween(glow, { at: tSh - 0.1, dur: 0.5, ease: "outCubic", to: { opacity: 1, scale: 1.12 } });
+  S.tween(glow, { at: tSh + 0.6, dur: 2.0, ease: "inOutSine", to: { opacity: 0.6, scale: 1 } });
+  Z.burst(S, { at: tSh + 0.05, x: 960, y: 660, seed: 80, count: 180, power: 1.6 });
+  const fist = (fx, side) => ({ x: fx + (side < 0 ? 43 - 100 : 157 - 100) * k, y: FY - (320 - 96) * k });
+  [[fist(600, -1), tSh + 1.45], [fist(1320, 1), tSh + 1.6], [fist(600, 1), tSh + 2.5], [fist(1320, -1), tSh + 2.65]].forEach(([p, at], i) => {
+    Z.burst(S, { at, x: p.x, y: p.y, seed: 82 + i, count: 40, power: 0.6, ring: false });
+  });
+  // huge "You're shielded."
+  const hl = S.el("div", { class: "done-h" });
+  Z.place(hl, 960, 205);
+  const ws = Z.words(S, hl, P.headline || "You're shielded.", { at: tYou - 0.1, stagger: 0.14, dur: 0.9, from: { opacity: 0, y: 60, scale: 0.9, blur: 14 } });
+  ws[ws.length - 1].classList.add("is-gold");
+  ws.forEach((w, i) => Z.pulse(S, w, tSh + 0.3 + i * 0.06));
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.04 },
+    { at: tSh - 0.05, dur: 0.25, x: 960, y: 500, zoom: 1.1, ease: "outCubic" },
+    { at: tSh + 0.25, dur: S.seconds, x: 960, y: 510, zoom: 1.04, ease: "inOutSine" },
+  ]);
+}, { label: labelFor("e4-done", "Illustration") });
+
+// ------------------------------------------------------------------ 8. the real site: tick Sending and Receiving
+Z.scene("e4-site", async (S) => {
+  const P = S.params;
+  const win = Z.browserWindow(S, { url: P.url_bar || "zero-to-shielded.vercel.app", src: "/?capture=1&theme=dark", at: -0.35, y: 476 });
+  await win.ready;
+  // the cue starts on "Tick": the window opens already at the checklist, the whole card in view
+  const doc = win.site.doc;
+  const sec = doc && doc.querySelector("#checklist"), root = doc && doc.querySelector("#checklist [data-checklist-root]");
+  let extra = 0;
+  if (sec && root) {
+    const top0 = sec.getBoundingClientRect().top, rb = root.getBoundingClientRect();
+    extra = clamp(rb.bottom - top0 + 24 + 30 - 900, 0, Math.max(0, rb.top - top0 - 10));
+  }
+  win.site.scroll([{ at: 0, y: 0 }, { at: 0, dur: 0.05, to: "#checklist", offset: -24 + extra, ease: "linear" }]);
+  const tSend = S.word(0, "Sending") + 0.05, tRecv = S.word(0, "Receiving") + 0.05;
+  win.site.reveal([{ at: 0, k: 4 }, { at: tSend, k: 5 }, { at: tRecv, k: 6 }], "#checklist");
+  const rs = win.rect('#checklist [data-step-id="send"] .cl-label', { at: 1 });
+  const rr = win.rect('#checklist [data-step-id="receive"] .cl-label', { at: 1 });
+  const rd = win.rect("#checklist .cl-done", { at: 3 });
+  const wr = S.rectOf(win.el);
+  S.camera([
+    { at: 0, x: 960, y: 520, zoom: 1.04 },
+    { at: 0.1, dur: 0.6, x: Math.min((rs.cx + rr.cx) / 2, wr.right - 960 / 1.6 - 10), y: rs.cy + 20, zoom: 1.6, ease: "inOutCubic" },
+    { at: tRecv + 0.45, dur: 1.0, x: rd.cx, y: rd.cy + 10, zoom: 1.55, ease: "inOutCubic" },
+    { at: S.seconds - 2.2, dur: 1.5, x: 960, y: 520, zoom: 1.05, ease: "inOutCubic" },
+  ]);
+  S.cursor([
+    { at: 0.15, x: rs.x + 380, y: rs.cy + 160 },
+    { at: tSend, x: rs.x + 40, y: rs.cy + 2, click: true, dur: 0.4 },
+    { at: tRecv, x: rr.x + 40, y: rr.cy + 2, click: true, dur: 0.55 },
+    { at: tRecv + 1.6, x: rr.x + 300, y: rr.cy + 120, dur: 1.0 },
+  ], { hide: S.seconds - 0.3 });
+});
+
+// ------------------------------------------------------------------ 9. end card
+Z.scene("e4-end", (S) => {
+  const P = S.params;
+  const end = Z.endCard(S, { next: P.next || "Next: Episode 5 · Stay private", url: P.url || "zero-to-shielded.vercel.app" });
+  const urlAt = S.word(0, "zero");
+  Z.pulse(S, end.url, urlAt);
+  sweep(S, end.url, urlAt + 0.1, 1.2);
+  const sr = S.rectOf(end.el.querySelector(".zts-shield"));
+  Z.burst(S, { at: 0.75, x: sr.cx, y: sr.cy, seed: 53, count: 60, power: 0.8 });
+  S.camera([
+    { at: 0, x: 960, y: 470, zoom: 1.0 },
+    { at: 0.3, dur: S.seconds, x: 960, y: 480, zoom: 1.06, ease: "inOutSine" },
+  ]);
+});
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@
     "crf": 14,
     "preset": "slow",
     "colour": "bt709",
-    "workers": 1
+    "workers": 0
   },
   "lexicon": {
     "Zodl": "[Zodl](/zˈɑdᵊl/)",

@@ -266,7 +266,9 @@ def cache_key(html_path: Path, stage_input: dict, canvas) -> str:
     digest = hashlib.sha256()
     digest.update(f"{CAPTURE_VERSION}\n".encode("utf-8"))
     _digest_file(digest, html_path, f"html:{html_path.relative_to(REPO).as_posix()}")
-    _digest_tree(digest, SERIES, "episodes/stage")
+    # Only the shared library: each episode page is keyed by its own html above, so editing
+    # e2.html never recaptures e1.
+    _digest_tree(digest, SERIES / "lib", "episodes/stage/lib")
     _digest_file(digest, ENGINE_JS, "stage.js")
     _digest_tree(digest, SITE, "site")
     _digest_tree(digest, FOOTAGE, "footage/clean")

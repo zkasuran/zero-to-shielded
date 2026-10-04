@@ -297,6 +297,10 @@ export function chip(S, text, opts = {}) {
   const ico = opts.icon ?? (kind === "banner" ? "alert" : null);
   if (ico) S.el("span", { class: "zts-chip-ico", html: I[ico] || ico }, el);
   const label = S.el("span", { class: "zts-chip-text", text }, el);
+  // hidden until a tap() or pulse() drives them: a tween's `from` value applies before it
+  // starts, so without this the ring and ripple would show at 0.9 from the first frame
+  S.set(ripple, { opacity: 0 });
+  S.set(ring, { opacity: 0 });
   el._ripple = ripple;
   el._ring = ring;
   el._label = label;

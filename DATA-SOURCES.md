@@ -1,10 +1,17 @@
 # Data sources
 
-Every third-party input, with the exact sentence that grants us the right to use it.
-No quotable grant, it does not ship.
+Every third-party input, with the exact sentence that grants the right to use it. No quotable grant, it does not ship.
 
-| Input | Used for | Licence | Granting sentence (quoted) | URL |
-|---|---|---|---|---|
-| DejaVu fonts (system) | video text fallback | Bitstream Vera / DejaVu licence | to be quoted by the agent | https://dejavu-fonts.github.io/License.html |
-| edge-tts voice | narration | Microsoft service terms | to be quoted by the agent | |
-| Music track | background bed | must be CC0 or explicit commercial grant | pending | |
+Checked 2026-10-04. Quotes are verbatim and at most 30 words each. "..." marks a cut.
+
+| Input | Used for | Licence | Granting sentence (verbatim) | Source | Notes |
+|---|---|---|---|---|---|
+| Kokoro-82M text-to-speech model with the `af_heart` voice | the narration in every episode | Apache-2.0 | "This is an Apache-licensed model, and Kokoro has been deployed in numerous projects and commercial APIs. We welcome the deployment of the model in real use cases." | https://huggingface.co/hexgrad/Kokoro-82M | The model card metadata says `license: apache-2.0`. `af_heart` is a voice in the same repository (`VOICES.md`). The files used match the published hashes: `kokoro-v1_0.pth` SHA-256 starts `496dba11`, `voices/af_heart.pt` starts `0ab5709b`. It runs on this machine through the `kokoro` 0.9.4 package, with no account and no online service. <!-- voice-gate:allow --> |
+| Inter 4.1, variable upright face (`site/fonts/InterVariable.woff2`) | all site text and the text in the video scenes | SIL Open Font License 1.1 | "This Font Software is licensed under the SIL Open Font License, Version 1.1." / "Permission is hereby granted, free of charge, to any person ... to use, study, copy, merge, embed, modify, redistribute, and sell modified and unmodified copies ... subject to the following conditions:" | [`site/fonts/LICENSE-Inter.txt`](site/fonts/LICENSE-Inter.txt), copied from the release at https://github.com/rsms/inter/releases/tag/v4.1 | The second quote is one 40-word sentence cut to 29 words. The font file ships unmodified with its copyright notice and the full licence beside it. It is never sold on its own. No Reserved Font Name is declared ([`site/fonts/SOURCE.txt`](site/fonts/SOURCE.txt)). <!-- voice-gate:allow --> |
+| DejaVu fonts 2.37 (system package) | thumbnail text and the scrambled glyph rows in episodes 3 and 4 | Bitstream Vera licence. DejaVu changes are public domain. Arev glyphs carry the Arev licence. | "Permission is hereby granted, free of charge, to any person obtaining a copy of the fonts ... including without limitation the rights to use, copy, merge, publish, distribute" | https://dejavu-fonts.github.io/License.html | 27 words cut from one long sentence. Its notice condition covers copies of the font files. No font file ships here, only pictures and video made with them. The page also says "DejaVu changes are in public domain." |
+| Music: `zts-bed.wav` and `zts-trailer.wav` | the bed under every episode and the trailer music | Original to this project, released with the videos under CC BY-ND 4.0 | None needed. Nothing in it is third-party: "No samples. No third-party audio. No AI music model." | [`music/README.md`](music/README.md) | `tools/music/compose.py` generates every sound in code at render time. Fixed seeds, so a re-render gives the same bytes. |
+| Cast figures (Maya, Sam, the Watcher) and icons | the site and the video scenes | Original to this project | None needed. Both are drawn in code for this project. | [`site/js/cast.js`](site/js/cast.js), [`site/js/icons.js`](site/js/icons.js) | The file headers say so: "the cast of Zero to Shielded as SVG strings" and "Small stroke icons drawn for this site". No third-party icon set. |
+
+**No longer used: edge-tts and the Microsoft voices.** The narration is Kokoro now, so their missing grant (Licence quotes in [`docs/FACTS.md`](docs/FACTS.md)) no longer blocks shipping.
+
+**No logos and no third-party screenshots.** Zcash and Zodl appear as plain text names only.

@@ -1,6 +1,6 @@
 # How every episode is built
 
-Use the kit in `tools/video-kit/` (Python, Pillow, ffmpeg, edge-tts, Playwright Chromium).
+Use the kit in `tools/video-kit/` (Python, Pillow, ffmpeg, Kokoro, Playwright Chromium).
 Read `tools/video-kit/README.md` and `tools/video-kit/docs/project-file.md` first.
 Its tests must stay green: `cd tools/video-kit && python3 -m pytest -q tests`.
 
@@ -56,8 +56,8 @@ the honesty framing, the gates and their measured results.
 
 ## Narration
 
-- Voice: edge-tts, one voice for the whole series (pick a warm clear one, e.g.
-  `en-US-AndrewNeural` or `en-US-AvaNeural` and keep it). Rate slightly slow (`-5%`).
+- Voice: Kokoro-82M `af_heart` (Apache-2.0), one voice for the whole series. Rate `-20%`.
+  edge-tts is no longer used: its audio has no quotable grant (docs/FACTS.md, Licence quotes).
 - ~140 words per minute. A 2:00 episode is ~260 words. Count before building.
 - Every episode opens with the outcome ("By the end of this video you will have...")
   and closes with the next step and the site URL.

@@ -443,15 +443,15 @@ Z.scene("e5-end", (S) => {
 
   // "Need help?" opens in the middle of the frame, then rises to make room for the line
   const top = S.el("div", { class: "e5-ill" });
-  S.tween(top, { at: S.word(0, "zodl", 1) - 0.55, dur: 1.0, ease: "inOutCubic", from: { y: 220 }, to: { y: 0 } });
+  S.tween(top, { at: S.word(0, "zodl") - 0.55, dur: 1.0, ease: "inOutCubic", from: { y: 220 }, to: { y: 0 } });
   const kick = S.el("div", { class: "e5-kicker", text: "Need help?" }, top);
   place(kick, 960, 182);
   S.enter(kick, { at: W("Need") - 0.1, dur: 0.9, ease: "outExpo", from: { opacity: 0, y: 18, blur: 8 } });
   const sp = S.el("div", { class: "e5-pill", html: `${Z.icons.info}<span></span><u></u>` }, top);
   sp.children[1].textContent = support;
   place(sp, 960, 278);
-  S.enter(sp, { at: W("support") - 0.15, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 34, scale: 0.95, blur: 10 } });
-  S.tween(sp.querySelector("u"), { at: W("support") + 0.6, dur: 1.0, ease: "outExpo", from: { "--draw": 0 }, to: { "--draw": 1 } });
+  S.enter(sp, { at: W("support.zodl.com") - 0.15, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 34, scale: 0.95, blur: 10 } });
+  S.tween(sp.querySelector("u"), { at: W("support.zodl.com") + 0.6, dur: 1.0, ease: "outExpo", from: { "--draw": 0 }, to: { "--draw": 1 } });
 
   // the line, word by word as it is said
   const big = S.el("div", { class: "e5-big" });
@@ -465,7 +465,7 @@ Z.scene("e5-end", (S) => {
     else if (i < ws.length - 1) big.appendChild(document.createTextNode(" "));
     const key = w.toLowerCase();
     seen[key] = (seen[key] ?? -1) + 1;
-    S.enter(s, { at: S.word(0, key, key === "zodl" ? 1 : seen[key]) - 0.07, dur: 0.9, ease: "outExpo", from: { opacity: 0, y: 46, blur: 12 } });
+    S.enter(s, { at: S.word(0, key, seen[key]) - 0.07, dur: 0.9, ease: "outExpo", from: { opacity: 0, y: 46, blur: 12 } });
   });
 
   // "That is the whole path": 1..5 light in a run, then the shield at the end of the row

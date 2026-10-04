@@ -638,7 +638,7 @@ Z.scene("e1-end", (S) => {
   const P = S.params;
   const end = Z.endCard(S, { next: P.next || "Next: Episode 2 · Getting ZEC", url: P.url || "zero-to-shielded.vercel.app" });
   const ur = S.rectOf(end.url);
-  const urlAt = S.word(0, "zero");
+  const urlAt = S.word(0, "zero-to-shielded.vercel.app");
   Z.pulse(S, end.url, urlAt);
   sweep(S, end.url, urlAt + 0.1, 1.2);
   const sr = S.rectOf(end.el.querySelector(".zts-shield"));

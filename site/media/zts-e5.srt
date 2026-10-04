@@ -1,0 +1,31 @@
+1
+00:00:00,300 --> 00:00:05,558
+By the end of this video, you will know five habits that keep your payments private.
+
+2
+00:00:06,758 --> 00:00:11,913
+One. Keep your ZEC shielded. If ZEC lands at your t1 address, shield it.
+
+3
+00:00:12,263 --> 00:00:21,252
+Two. Do not shield an amount and then send the same amount to a transparent address soon after. That pattern is easy to spot.
+
+4
+00:00:22,753 --> 00:00:37,193
+Three. Turn on Tor Protection. It sends your connection through the Tor network for extra privacy. Open Advanced Settings, tap Tor Protection, choose Enable, then tap Save changes.
+
+5
+00:00:37,543 --> 00:00:44,594
+Four. Guard your recovery phrase. Keep it on paper. Anyone who asks for it is trying to scam you.
+
+6
+00:00:44,944 --> 00:00:54,240
+Five. Check the address before you send. A t1 address is public. If you are not sure, use the address checker on the site.
+
+7
+00:00:55,740 --> 00:01:01,873
+Test yourself with Phrase Guard on the site. Six quick questions, safe or scam.
+
+8
+00:01:03,373 --> 00:01:13,719
+Need help? Go to support.zodl.com. Zodl will never ask for your recovery phrase. That is the whole path, zero to shielded.

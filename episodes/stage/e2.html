@@ -502,7 +502,7 @@ Z.scene("e2-end", (S) => {
   const P = S.params;
   const end = Z.endCard(S, { next: P.next || "Next: Episode 3 · Shielding and unshielding", url: P.url || "zero-to-shielded.vercel.app" });
   const sr = S.rectOf(end.el.querySelector(".zts-shield"));
-  const urlAt = S.word(0, "zero");
+  const urlAt = S.word(0, "zero-to-shielded.vercel.app");
   Z.pulse(S, end.url, urlAt);
   sweep(S, end.url, urlAt + 0.1, 1.2);
   Z.burst(S, { at: 0.75, x: sr.cx, y: sr.cy, seed: 52, count: 60, power: 0.8 });

@@ -1,6 +1,6 @@
 # Handoff
 
-State on 2026-10-04 at about 12:15 UTC. Branch `build/finish`, merged into `main` once `./verify.sh` printed ALL GREEN.
+State on 2026-10-04 at about 12:15 UTC, launch section updated about 14:00 UTC. Branch `build/finish`, merged into `main` once `./verify.sh` printed ALL GREEN.
 
 ## What shipped
 
@@ -28,15 +28,31 @@ Total 9 min 39 s. Every episode passed every gate: at most 140 s, video plus aud
 
 All six project files use the same voice (Kokoro `af_heart`, rate -20%) and the same `shield` palette. E1 to E5 open on the opening card; E0 opens on its trailer cut. Every episode is at most 140 s (longest E3, 123.0 s). Loudness sits between -16.5 and -16.3 LUFS, so nothing jumps between episodes. Glossary wording was not diffed by a script.
 
+## Launch state (2026-10-04, about 14:00 UTC)
+
+- Site live: https://zero-to-shielded.vercel.app (Vercel project `zero-to-shielded`, CLI deploy from `site/`). Every page returns 200 signed out; `browser-check.py` against production: 84 page loads, zero console errors, zero CSP violations. `interaction-check.py` locally: 36 checks passed.
+- YouTube, all public on the zkasuran channel (oEmbed 200 signed out), each with its title, description with chapters, tags, thumbnail, category Education, not made for kids:
+
+| Episode | YouTube |
+|---|---|
+| E0 trailer | https://youtu.be/i9wpMoQN0PQ |
+| E1 wallet setup | https://youtu.be/BQoFwaKk9a0 |
+| E2 getting ZEC | https://youtu.be/VUJ9AWnPcJ8 |
+| E3 shielding and unshielding | https://youtu.be/ydsSzy9AXWg |
+| E4 sending and receiving | https://youtu.be/ryZUV9gx0W8 |
+| E5 stay private | https://youtu.be/Z7ta-yU70CE |
+
+- The site player embeds those ids from youtube-nocookie.com after a press on play; chapter buttons and transcript times restart the embed at their second (task 17, checked on all six live pages).
+- 4:5 copies for X (task 19): 1080x1350, built locally, not committed (mp4 is gitignored).
+
 ## Pending
 
-1. **Deploy the site.** No Vercel token was available in this session, so https://zero-to-shielded.vercel.app is not live yet. Steps are below.
-2. **Web check in each brief.** The row "web scene URL returns 200 anonymously" says PENDING until the deploy is live.
-3. **Repo visibility.** The repo is private, so the repo links in the README and the thread return 404 until it is public.
+1. **Captions on YouTube.** The SRT files are not attached to the YouTube videos yet; YouTube will make automatic English captions, which may mishear "Zodl". Upload each `EN/upload/captions.srt` (on `media-renders`) under Subtitles, "Upload file", "With timing".
+2. **Duplicate drafts.** Studio holds three leftover private drafts from upload retries (two of E1, one of E2: `yfXqyeDB4XM`, `1mbbKSlYkpI`, `iG5KeTrh0r0`). Delete them in Studio. They are private, so nobody else sees them.
+3. **Repo visibility.** Private until the lead flips it; the repo links in the README and the last thread reply 404 until then.
 4. **Footage gaps.** Footage slots named in the briefs (for example `F-swap.mp4`, `E-receive.mp4`, `G-arrive.mp4`) are still empty. Those scenes are diagrams labelled "Diagram, not the app". Real phone footage per `footage/SHOT-LIST.md` is a human task.
-5. **The "15 minutes" headline.** New ZEC needs 10 confirmations, about 12.5 minutes (F33), plus about 10 minutes of video. Check the claim before launch.
-6. **Transcripts (task 17).** The SRT files are now in `site/media/`. Check the transcript and the chapter buttons on a live episode page.
-7. **Not done:** task 19 (4:5 crops for X), E0 polish, the Google Drive copy (no Drive connection in this session; put the masters, thumbnails and SRTs in a Drive folder named "Zero to Shielded" by hand).
+5. **The "15 minutes" headline.** New ZEC needs 10 confirmations, about 12.5 minutes (F33), plus about 10 minutes of video. The start page says so; the headline still reads 15 minutes.
+6. **Not done:** E0 polish, the Google Drive copy.
 
 ## Deploy steps
 
@@ -62,8 +78,8 @@ The Vercel project must be named `zero-to-shielded` so the address is exactly ht
 
 ## Upload order
 
-1. Deploy the site (above), so every URL said in the videos resolves.
+1. Deploy the site (above), so every URL said in the videos resolves. Done 2026-10-04.
 2. Make the repo public.
-3. YouTube, from each `EN/upload/UPLOAD-zts-eN.html` on `media-renders` (title, description, chapters, `captions.srt`, `thumbnail.jpg`): E1, E2, E3, E4, E5, then E0 last so the trailer can point at live episodes.
-4. Put each 11-character YouTube id into `youtubeId` in `site/js/episodes.js`, run `node site/tools/build.mjs` and `node --test site/test/`, commit, deploy again.
+3. Done 2026-10-04 except captions (see Pending). YouTube, from each `EN/upload/UPLOAD-zts-eN.html` on `media-renders` (title, description, chapters, `captions.srt`, `thumbnail.jpg`): E1, E2, E3, E4, E5, then E0 last so the trailer can point at live episodes.
+4. Done 2026-10-04. Put each 11-character YouTube id into `youtubeId` in `site/js/episodes.js`, run `node site/tools/build.mjs` and `node --test site/test/`, commit, deploy again.
 5. X: post the thread in `docs/THREAD.md`. Post 1 with the trailer tags @zksnarks_, one reply per episode E1 to E5, the last reply links the repo.

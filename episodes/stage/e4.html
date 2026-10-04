@@ -566,7 +566,7 @@ Z.scene("e4-confirm", async (S) => {
   const conSvg = svgLayer(S, `<path class="conn" pathLength="1" d="M${rf.right + 4} ${rf.cy} C${rf.right + 50} ${rf.cy} ${rz.x - 50} ${rz.bottom - 40} ${rz.x - 4} ${rz.bottom - 46}"/>`);
   S.tween(conSvg.querySelector("path"), { at: c1 + 0.45, dur: 0.8, ease: "inOutCubic", from: { "--draw": 0 }, to: { "--draw": 1 } });
   S.exit(conSvg.parentNode, { at: whenAt - 0.15, dur: 0.4, to: { opacity: 0 } });
-  const zipAt = S.word(1, "zip"), zeroAt = S.word(1, "zero");
+  const zipAt = S.word(1, "ZIP"), zeroAt = S.word(1, "0.0001");
   if (za) {
     Z.pulse(S, za, zipAt - 0.05);
     const ra = S.rectOf(za);
@@ -939,7 +939,7 @@ Z.scene("e4-site", async (S) => {
 Z.scene("e4-end", (S) => {
   const P = S.params;
   const end = Z.endCard(S, { next: P.next || "Next: Episode 5 · Stay private", url: P.url || "zero-to-shielded.vercel.app" });
-  const urlAt = S.word(0, "zero");
+  const urlAt = S.word(0, "zero-to-shielded.vercel.app");
   Z.pulse(S, end.url, urlAt);
   sweep(S, end.url, urlAt + 0.1, 1.2);
   const sr = S.rectOf(end.el.querySelector(".zts-shield"));

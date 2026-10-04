@@ -200,7 +200,82 @@ def _plan_for(segment: dict, plans: list[dict]) -> dict:
     raise RuntimeError(f"stage segment {name!r} is not in the project, so it has no timing")
 
 
-def _cue_words(cue, start: float) -> list:
+_MARKUP = re.compile(r"\[([^\]]*)\]\(/[^)]*/\)")
+
+
+def _said(replacement) -> list[str]:
+    """The words the engine says for a lexicon replacement (phoneme markup keeps its word)."""
+    return _MARKUP.sub(r"\1", str(replacement)).split()
+
+
+def _share(tokens: list[str], said: list[str]):
+    """How many spoken words each written token of a lexicon phrase takes: tokens that read
+    as themselves (ZIP and zip, ZEC and ZEC) take one word from either end, the rest share
+    the middle. None when they cannot be placed."""
+    key = lambda s: re.sub(r"[^\w']", "", s).lower()  # noqa: E731
+    counts = [0] * len(tokens)
+    lo, hi, slo, shi = 0, len(tokens), 0, len(said)
+    while lo < hi - 1 and slo < shi and key(tokens[lo]) == key(said[slo]):
+        counts[lo] = 1; lo += 1; slo += 1  # noqa: E702
+    while hi - 1 > lo and shi > slo and key(tokens[hi - 1]) == key(said[shi - 1]):
+        counts[hi - 1] = 1; hi -= 1; shi -= 1  # noqa: E702
+    rest, words = hi - lo, shi - slo
+    if words < rest:
+        return None
+    base, extra = divmod(words, rest)
+    for k in range(rest):
+        counts[lo + k] = base + (1 if k < extra else 0)
+    return counts
+
+
+def _written_words(words: list, text: str, lexicon: dict | None) -> list:
+    """Carry the engine's word times over to the written words of the line.
+
+    The engine reads the line after the lexicon ("ZIP 317" is read "zip three seventeen"),
+    so its words are the respelling. Captions keep the written form (episodes/SCRIPTS.md), so
+    each written token of a respelled phrase takes the times of the spoken words it became:
+    "ZIP" gets "zip", "317." gets "three seventeen.". A line with no respelled phrase (phoneme
+    markup keeps its word) comes back unchanged, and so do counts that do not line up.
+    """
+    if not words or not lexicon or not text:
+        return words
+    keys = tuple(key for key in lexicon if key)
+    if not keys:
+        return words
+    import voice  # the same phrase matching the engine input went through
+
+    pattern = voice._lexicon_pattern(keys)
+    found = list(pattern.finditer(text))
+    if not any(_said(lexicon[m.group(0)]) != m.group(0).split() for m in found):
+        return words
+    units: list[list] = []  # [written token, spoken word count]
+
+    def plain(chunk: str) -> None:
+        tokens = chunk.split()
+        if tokens and units and chunk[:1].strip():  # punctuation glued to the phrase before it
+            units[-1][0] += tokens.pop(0)
+        units.extend([token, 1] for token in tokens)
+
+    pos = 0
+    for match in found:
+        plain(text[pos:match.start()])
+        tokens, said = match.group(0).split(), _said(lexicon[match.group(0)])
+        counts = _share(tokens, said)
+        if counts is None:
+            return words
+        units.extend([token, count] for token, count in zip(tokens, counts))
+        pos = match.end()
+    plain(text[pos:])
+    if sum(count for _, count in units) != len(words) or any(count < 1 for _, count in units):
+        return words
+    out, i = [], 0
+    for token, count in units:
+        out.append([words[i][0], words[i + count - 1][1], token])
+        i += count
+    return out
+
+
+def _cue_words(cue, start: float, lexicon: dict | None = None) -> list:
     words = cue.words
     if words is None:
         marks = Path(cue.path).with_suffix(".words.json")
@@ -209,7 +284,8 @@ def _cue_words(cue, start: float) -> list:
                 words = json.loads(marks.read_text(encoding="utf-8"))
             except ValueError:
                 words = None
-    return [[round(start + float(w[0]), 4), round(start + float(w[1]), 4), str(w[2])] for w in (words or [])]
+    words = _written_words([[float(w[0]), float(w[1]), str(w[2])] for w in (words or [])], cue.text, lexicon)
+    return [[round(start + float(w[0]), 4), round(start + float(w[1]), 4), str(w[2])] for w in words]
 
 
 def segment_timing(segment: dict, project: dict, work: Path) -> dict:
@@ -228,7 +304,7 @@ def segment_timing(segment: dict, project: dict, work: Path) -> dict:
             "start": round(start, 4),
             "end": round(start + cue.seconds, 4),
             "text": cue.text,
-            "words": _cue_words(cue, start),
+            "words": _cue_words(cue, start, project.get("lexicon")),
         })
     return {"seconds": plan["seconds"], "offset": plan["offset"], "cues": cues}
 

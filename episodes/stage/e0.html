@@ -636,7 +636,7 @@ Z.scene("e0-why", (S) => {
 // ------------------------------------------------------------------ 4. end
 Z.scene("e0-end", (S) => {
   const W = (w, n = 0) => S.word(0, w, n);
-  const tOne = W("1"), tUrl = W("zero");
+  const tOne = W("1"), tUrl = W("zero-to-shielded.vercel.app");
   const url = S.params.url || "zero-to-shielded.vercel.app";
 
   const halo = S.el("div", { class: "e0-halo", style: { width: "900px", height: "900px" } });
@@ -667,7 +667,7 @@ Z.scene("e0-end", (S) => {
   S.enter(pill, { at: tUrl - 0.1, dur: 1.0, ease: "outExpo", from: { opacity: 0, y: 40, scale: 0.94, blur: 10 } });
   S.tween(pill.querySelector("u"), { at: tUrl + 0.5, dur: 1.1, ease: "outExpo", from: { "--draw": 0 }, to: { "--draw": 1 } });
   const shine = pill.querySelector("em");
-  S.tween(shine, { at: W("app") - 0.2, dur: 0.9, ease: "inOutCubic", from: { x: -200 }, to: { x: 980 } });
+  S.tween(shine, { at: S.wordSpan(0, "zero-to-shielded.vercel.app").end - 0.6, dur: 0.9, ease: "inOutCubic", from: { x: -200 }, to: { x: 980 } });
 
   // Maya and Sam cheer on either side
   const figs = [
